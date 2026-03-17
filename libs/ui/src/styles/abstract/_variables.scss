@@ -1,0 +1,43 @@
+@use "functions" as *;
+
+// Кольори
+$color-oyster: var(--color-oyster);
+$color-claudy: var(--color-claudy);
+$color-stormy: var(--color-stormy);
+$color-opal: var(--color-opal);
+$color-light: var(--color-light);
+$color-white: var(--color-white);
+$color-linen: var(--color-linen);
+$color-snow: var(--color-snow);
+$color-opal-white: var(--color-opal-white);
+
+// Шрифти
+$fontFamily: "Manrope-Regular";
+$headingFont: "Literata-Regular";
+$headingFontItalic: "Literata-Italic";
+$fontSize: toRem(15); // Розмір шрифту сторінки
+
+// Основні кольори
+$mainColor: #000; // Колір шрифту за замовчуванням (чорний)
+
+// Мінімальна ширина сторінки
+$minWidth: 320;
+
+// Ширина полотна (макету)
+$maxWidth: 1440;
+
+// Ширина обмежуючого контейнера (0 = немає обмеження)
+$maxWidthContainer: 1380;
+
+// Загальний відступ у контейнера
+// (30 = по 15px ліворуч і праворуч, 0 = немає відступу)
+$containerPadding: 30;
+
+// Ширина спрацьовування першого брейкпоінту
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Брейк-поїнти
+$desktop: toRem(1199.98); // Десктопи, ноутбуки у горизонтальному положенні
+$pc: toRem(1023.98); // ПК, ноутбуки, деякі планшети у горизонтальному положенні
+$tablet: toEm(767.98); // Планшети, деякі телефони в горизонтальному положенні
+$mobile: toEm(479.98); // Телефони L

@@ -1,0 +1,79 @@
+@use "@org/ui/styles/index" as *;
+
+.articles {
+	position: relative;
+
+	&__container {
+		@include container(30);
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		padding-bottom: toRem(24);
+		position: relative;
+	}
+
+	&__title {
+		margin: toRem(24) 0 toRem(57);
+	}
+
+	&__wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column-reverse;
+		row-gap: toRem(10);
+
+		@media (min-width: toRem(880)) {
+			flex-direction: row;
+
+			&_reverse {
+				flex-direction: row-reverse;
+				padding-left: toRem(35);
+			}
+		}
+	}
+
+	&__content {
+		flex: 1 1 60%;
+		max-width: 100%;
+		padding: 0;
+		padding-inline: toRem(16);
+
+		&_center {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		@media (min-width: $tablet) {
+			@include adaptiveValueMF(padding-inline, 33, 15);
+		}
+	}
+
+	&__content-title {
+		@include adaptiveValueMF(font-size, 56, 24);
+		@include adaptiveValueMF(line-height, 64, 24);
+	}
+
+	&__description {
+		@include adaptiveValueMF(margin-block, 56, 24);
+	}
+
+	&__button {
+		margin-top: toRem(24);
+	}
+
+	&__picture {
+		flex: 1 0 toRem(360);
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+
+		@media (min-width: toRem(880)) {
+		}
+	}
+
+	&__side-title {
+		left: 0;
+	}
+}

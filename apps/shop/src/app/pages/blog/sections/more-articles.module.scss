@@ -1,0 +1,11 @@
+@use "@org/ui/styles/index" as *;
+
+.more-articles {
+	&__container {
+		@include container();
+		display: flex;
+		flex-direction: column;
+		padding-bottom: toRem(24);
+		position: relative;
+	}
+}

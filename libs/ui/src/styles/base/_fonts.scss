@@ -1,0 +1,36 @@
+@use "@org/ui/styles/index" as *;
+
+// Підключення шрифтів
+
+@include LoadFont("Manrope-Regular", (400), normal, "/assets/fonts/Manrope-Regular/");
+@include LoadFont("Literata-Regular", (400), normal, "/assets/fonts/Literata/");
+@include LoadFont("Literata-Italic", (400), italic, "/assets/fonts/Literata/");
+@include LoadFont("icons", (400), italic, "/assets/icon-fonts");
+
+// Іконки
+
+%ic {
+	font-family: 'icons';
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	@extend %ic;
+}
+
+.icon-comment:before {
+  content: "\e900";
+}
+.icon-heart:before {
+  content: "\e901";
+}
+.icon-search:before {
+  content: "\e902";
+}

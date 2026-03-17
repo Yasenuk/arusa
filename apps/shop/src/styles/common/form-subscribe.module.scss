@@ -1,0 +1,61 @@
+@use "@org/ui/styles/index" as *;
+
+.subscribe {
+	padding: 0;
+
+	@media (min-width: $mobile) {
+		padding: toRem(80) toRem(40);
+	}
+
+	&__container {
+		@include container();
+		height: toRem(677);
+
+		[class*="webp"] & {
+			background-image: url("/assets/images/subscribe/subscribe-picture.webp");
+		}
+
+		[class*="no-webp"] & {
+			background-image: url("/assets/images/subscribe/subscribe-picture.png");
+		}
+
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		row-gap: toRem(48);
+	}
+
+	&__title {
+		color: $color-claudy;
+		max-width: toRem(540);
+	}
+
+	&__form {
+		width: 100%;
+
+		@media (min-width: $mobile) {
+			max-width: toRem(350);
+		}
+	}
+
+	&__email {
+		padding: toRem(16);
+		border-radius: toRem(8);
+		border: toRem(1.5) solid $color-oyster;
+		margin-bottom: toRem(15);
+		position: relative;
+
+		&,
+		&::placeholder {
+			font-size: toRem(12);
+			line-height: toRem(14);
+			color: $color-claudy;
+			transition: all 0.3s;
+		}
+	}
+}

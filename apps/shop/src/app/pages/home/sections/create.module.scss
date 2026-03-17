@@ -1,0 +1,80 @@
+@use "@org/ui/styles/index" as *;
+
+.create {
+	@include adaptiveValueMF(height, 1088, 700);
+
+	&__container {
+		@include container();
+
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		flex-direction: column;
+		position: relative;
+	}
+
+	&__title { max-width: toRem(630); }
+
+	&__subtitle {
+		max-width: toRem(520);
+		margin: toRem(36) 0 toRem(24);
+	}
+
+	&__background {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+
+		&_item {
+			position: absolute;
+			height: auto;
+
+			&_1 {
+				right: 55%;
+				@include adaptiveValueMF(top, 41, 34);
+				@include adaptiveValueMF(width, 332, 147);
+
+				@media (min-width: $tablet) {
+					right: 50%;
+					transform: translateX(50%);
+				}
+			}
+
+			&_2 {
+				@include adaptiveValueMF(width, 172, 76);
+				left: 80%;
+				@include adaptiveValueMF(top, 266, 110);
+			}
+
+			&_3 {
+				@include adaptiveValueMF(width, 200, 88);
+				@include adaptiveValueMF(top, 445, 222);
+				left: 97%;
+			}
+
+			&_4 {
+				@include adaptiveValueMF(width, 231, 102);
+				left: -20%;
+				@include adaptiveValueMF(top, 215, 238);
+
+				@media (min-width: $tablet) {
+					left: 5%;
+				}
+			}
+
+			&_5 {
+				@include adaptiveValueMF(width, 413, 182);
+				right: 90%;
+				@include adaptiveValueMF(bottom, 290, 116);
+			}
+
+			&_6 {
+				@include adaptiveValueMF(width, 355, 156);
+				left: 70%;
+				@include adaptiveValueMF(bottom, 109, 54);
+			}
+		}
+	}
+}

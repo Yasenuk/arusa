@@ -1,0 +1,32 @@
+@use "@org/ui/styles/index" as *;
+
+.hero {
+	@include adaptiveValueMF(height, 737, 701);
+	position: relative;
+
+	&__container {
+		@include container();
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		height: inherit;
+	}
+
+	&__title {
+		margin-bottom: toRem(48);
+		@include adaptiveValueMF(max-width, 830, 300);
+		color: $color-white;
+		text-shadow: 0 0 toRem(8) $color-opal;
+	}
+
+	&__picture {
+		position: absolute;
+		inset: 0;
+		object-fit: cover;
+		object-position: center;
+		width: 100%;
+		max-width: 100%;
+		z-index: -1;
+	}
+}

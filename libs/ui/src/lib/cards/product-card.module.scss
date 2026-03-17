@@ -1,0 +1,52 @@
+@use "@org/ui/styles/index" as *;
+
+.product-card {
+  flex: 0 1 toRem(290);
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  justify-content: space-between;
+  border: toRem(1) solid $color-oyster;
+  padding: toRem(8);
+  overflow: hidden;
+  @include adaptiveValueMF(row-gap, 20, 8);
+
+  @media (min-width: $mobile) {
+    max-width: 50%;
+  }
+
+  @media (min-width: $tablet) {
+    max-width: toRem(330);
+    border: none;
+    padding: 0;
+  }
+
+  &__picture {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    transform: scale(1);
+    transition: transform 0.3s;
+    margin-bottom: toRem(8);
+
+    @media (any-hover: hover) {
+      &:hover {
+        transform: scale(1.1);
+        transition: transform 0.3s;
+      }
+    }
+  }
+
+  &__title {
+    flex: 1 1 80%;
+    line-height: 1.5;
+  }
+
+  &__price {
+    flex: 1 1 auto;
+    text-align: right;
+  }
+}

@@ -1,0 +1,45 @@
+@use "@org/ui/styles/index" as *;
+
+.about {
+	background-color: $color-opal;
+	color: $color-claudy;
+
+	&__container {
+		@include container();
+		position: relative;
+
+		@media (min-width: $tablet) {
+			display: flex;
+			padding-left: toRem(32);
+		}
+	}
+
+	&__content {
+		border-left: toRem(1) solid $color-claudy;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		@include adaptiveValue(padding-inline, 50, 10);
+		@include adaptiveValue(padding-block, 120, 40);
+		@include adaptiveValue(max-width, 945, 300);
+		width: 100%;
+	}
+
+	&__subtitle {
+		@include adaptiveValue(margin-block, 40, 20);
+	}
+
+	&__description {
+		max-width: toRem(960);
+
+		&:not(:last-child) {
+			margin-bottom: toRem(30);
+		}
+	}
+
+	&__side-title {
+		left: 0;
+		white-space: nowrap;
+	}
+}

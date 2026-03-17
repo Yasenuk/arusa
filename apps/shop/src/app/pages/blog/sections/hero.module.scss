@@ -1,0 +1,67 @@
+@use "@org/ui/styles/index" as *;
+
+.hero {
+	margin-top: toRem(80);
+	margin-left: toRem(30);
+
+	&__container {
+		@include container();
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		padding-bottom: toRem(24);
+		position: relative;
+	}
+
+	&__wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column-reverse;
+		row-gap: toRem(10);
+
+		@media (min-width: toRem(880)) {
+			flex-direction: row;
+		}
+	}
+
+	&__content {
+		flex: 1 1 60%;
+		max-width: 100%;
+		padding: 0;
+		padding-inline: toRem(16);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		@media (min-width: $tablet) {
+			@include adaptiveValueMF(padding-inline, 33, 15);
+		}
+	}
+
+	&__title {
+		@include adaptiveValueMF(font-size, 56, 24);
+		@include adaptiveValueMF(line-height, 64, 24);
+		@include adaptiveValue("margin-bottom", 100, 40);
+	}
+
+	&__description {
+		@include adaptiveValueMF(margin-block, 20, 10);
+	}
+
+	&__button {
+		margin-top: toRem(24);
+	}
+
+	&__picture {
+		flex: 1 0 toRem(360);
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+	}
+
+	&__side-title {
+		left: toRem(-20);
+		bottom: toRem(50);
+	}
+}

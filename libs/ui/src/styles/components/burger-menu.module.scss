@@ -1,0 +1,212 @@
+@use "@org/ui/styles/index" as *;
+
+.menu {
+	position: relative;
+
+	&_open {
+		pointer-events: none;
+	}
+	
+	&__close-button {
+		z-index: 2;
+		width: toRem(27);
+		height: toRem(10);
+		position: relative;
+
+		span, &::before, &::after{
+			width: 100%;
+			position: absolute;
+			left: 0;
+			border-top: toRem(1) solid;
+
+			border-color: $color-white;
+			transition: border-color 0.3s ease-in-out;
+			
+			[class*=_open] &, [class*=_menu-open] & {
+				border-color: $color-stormy;
+				transition: border-color 0.3s ease-in-out 0.1s;
+			}
+		}
+
+		span {
+			opacity: 1;
+			transition: opacity 0.3s ease-in-out;
+
+			[class*=_open] & {
+				opacity: 0;
+				transition: opacity 0.3s ease-in-out 0.1s;
+			}
+		}
+
+		&::before, &::after{
+			content: "";
+		}
+
+		&::after{
+			top: 100%;
+			transition: top 0.3s ease-in-out 0.2s, transform 0.3s ease-in-out;
+
+			[class*=_open] & {
+				top: 50%;
+				transform: rotateZ(45deg) translateY(-50%);
+
+				transition: top 0.3s ease-in-out, transform 0.3s ease-in-out 0.2s;
+			}
+		}
+
+		&::before{
+			bottom: 100%;
+			transition: bottom 0.3s ease-in-out 0.2s, transform 0.3s ease-in-out;
+
+			[class*=_open] & {
+				bottom: 50%;
+				transform: rotateZ(-45deg) translateY(50%);
+				transition: bottom 0.3s ease-in-out, transform 0.3s ease-in-out 0.2s;
+			}
+		}
+	}
+
+	&__body {
+		position: fixed;
+		left: 0;
+		top: 0;
+		@include adaptiveValueMF(padding-block, 70, 82);
+		width: 100%;
+		height: 100dvh;
+		opacity: 0;
+		transition: opacity 0.3s;
+
+		@media (min-width:$pc){
+			overflow: hidden;
+			height: toRem(270);
+		}
+		
+		[class*=_open] & {
+			overflow-y: auto;
+			overflow-x: hidden;
+			opacity: 1;
+		}
+		
+		&::before,&::after{
+			content:'';
+			position: fixed;
+			z-index: 0;
+			max-height: 0;
+			height: 150dvh;
+			border-radius: 50%;
+			aspect-ratio: 1 / 1;
+			transition: all 0.3s ease;
+			background-color: $color-white;
+
+			@media (min-width:$pc){
+				height: auto;
+				max-width: 0;
+				width: 100vw;
+				max-height: 100dvh;
+
+				transition-duration: 0.5s;
+			}
+			
+			[class*=_open] &{
+				border-radius: 0;
+				max-height: 100dvh;
+
+				@media (min-width:$pc){
+					max-width: 100vw;
+					transition-duration: 0.5s;
+				}
+
+				transition: max-height 0.3s ease, border-radius 0.3s ease, max-width 0.3s ease;
+			}
+		}
+
+		&::after {
+			top: 0;
+			left: 0;
+		}
+
+		&::before{
+			top: 0;
+			right: 0;
+		}
+	}
+
+	&__container {
+		max-width: toRem(1326);
+		height: 100%;
+
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(28);
+		@include adaptiveValueMF(column-gap, 115, 40);
+
+		@media (min-width:$mobile){
+			flex-wrap: wrap;
+			flex-direction: row;
+			align-content: flex-start;
+		}
+
+		[class*=_open] & {
+			@for $i from 1 through 3 {
+				.menu__group:nth-child(#{$i}) {
+					transition-delay: $i * 0.12s;
+					transform: translateX(0) translateY(0);
+				}
+			}
+		}
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(12);
+		margin-top: toRem(15);
+	}
+
+	
+	&__group {
+		max-width: toRem(1440);
+		padding: 0 toRem(15);
+		z-index: 1;
+		transition: transform 0.3s ease;
+		transform: translateX(-100%);
+		max-height: toRem(150);
+		flex: 1 1 100%;
+		pointer-events: all;
+
+		@media (min-width:$mobile){
+			&:nth-child(2) {
+				transform: translateY(-150%) translateX(0);
+			}
+
+			flex: 1 1 30%;
+		}
+
+		@media (min-width:$pc){
+			flex: 1 1 auto;
+			transform: translateY(-150%) translateX(0);
+		}
+	}
+
+	&__caption {
+		font-family: $headingFont;
+		color: $color-stormy;
+	}
+
+	&__item {
+	}
+
+	&__link {
+		text-transform: uppercase;
+		padding-bottom: toRem(3);
+		color: #7C7F84;
+		transition: color 0.3s;
+
+		@media (any-hover: hover){
+			&:hover {
+				color: $color-opal;
+				transition: color 0.3s;
+			}
+		}
+	}
+}

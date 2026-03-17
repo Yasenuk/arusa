@@ -1,0 +1,96 @@
+@use '@org/ui/styles/index' as *;
+
+.team {
+	&__suptitle {
+		padding-block: toRem(20);
+	}
+
+	&__container {
+		@include container(0);
+		display: flex;
+		row-gap: toRem(25);
+		border-top: toRem(1) solid $color-oyster;
+		position: relative;
+		flex-direction: column;
+		justify-content: space-between;
+
+		@media (min-width: $pc) {
+			flex-direction: row;
+			align-items: stretch;
+			padding-inline: toRem(36);
+		}
+	}
+
+	&__picture-wrap {
+		flex: 1 1 46%;
+		width: 100%;
+		max-height: toRem(580);
+		overflow: hidden;
+
+		@media (min-width: $pc) {
+			height: toRem(540);
+			@include adaptiveValue(max-width, 670, 220, 0, $maxWidth, 767.98);
+			height: 100%;
+		}
+	}
+
+	&__picture {
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
+		object-position: top;
+
+		@media (min-width: $pc) {
+			object-fit: contain;
+			object-position: center;
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
+		
+		@media (min-width: $pc) {
+			flex: 1 1 54%;
+			justify-content: space-between;
+		}
+	}
+
+	&__title {
+		margin-bottom: toRem(50);
+		@include adaptiveValue(padding-inline, 36, 16);
+	}
+
+	&__row {
+		display: flex;
+		align-items: start;
+		flex-direction: column;
+		justify-content: space-between;
+		border-top: toRem(1) solid $color-oyster;
+		gap: toRem(15);
+		@include adaptiveValue(padding-inline, 36, 16);
+		padding-block: toRem(20);
+		flex: 1 1 100%;
+	}
+
+	&__description {
+		@media (min-width: $pc) {
+			flex: 1 1 50%;
+		}
+	}
+
+	&__signature {
+		display: block;
+		margin-top: toRem(24);
+	}
+
+	&__side-title {
+		left: 0;
+		display: none;
+
+		@media (min-width: $pc) {
+			display: block;
+		}
+	}
+}

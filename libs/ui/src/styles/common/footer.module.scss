@@ -1,0 +1,74 @@
+@use "@org/ui/styles/index" as *;
+
+
+.footer {
+	background-color: $color-opal;
+	color: $color-claudy;
+
+	&__container {
+		@include container(0);
+		border-left: toRem(1) solid $color-oyster;
+		border-right: toRem(1) solid $color-oyster;
+	}
+
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+
+		@media (min-width:$tablet){
+		}
+	}
+
+	&__links-group {
+		flex: 1 1 50%;
+		@include adaptiveValueMF(padding-block, 25, 16);
+		@include adaptiveValueMF(padding-inline, 56, 16);
+		border-bottom: toRem(1) solid $color-oyster;
+
+		@media (min-width:$tablet){
+			flex: 1 1 25%;
+		}
+
+		&:not(:last-child) {
+			border-right: toRem(1) solid $color-oyster;
+		}
+	}
+
+	&__caption {
+	}
+
+	&__list {
+		margin-top: toRem(16);
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(14);
+	}
+
+	&__link {
+		padding-bottom: toRem(3);
+
+		&::after{
+			background-color: $color-claudy;
+		}
+	}
+
+	&__logo {
+		display: block;
+		@include adaptiveValueMF(padding-block, 92, 35);
+		@include adaptiveValueMF(padding-inline, 27, 15);
+
+		img {
+			max-width: 100%;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	&__copy {
+		padding: toRem(24) toRem(15);
+		margin-bottom: toRem(22);
+		text-align: center;
+		border-top: toRem(1) solid $color-oyster;
+		border-bottom: toRem(1) solid $color-oyster;
+	}
+}

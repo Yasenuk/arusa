@@ -1,0 +1,45 @@
+@use "@org/ui/styles/index" as *;
+
+.feature-products {
+	border-top: toRem(1) solid $color-oyster;
+	border-bottom: toRem(1) solid $color-oyster;
+	@include adaptiveValueMF(margin-bottom, 22, 0);
+
+	&._dark {
+		border-color: $color-claudy;
+		color: $color-claudy;
+		background-color: $color-opal;
+	}
+
+	&__container {
+		@include container();
+		max-width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__title { padding-block: toRem(24); }
+
+	&__items {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		column-gap: 0;
+		row-gap: 0;
+
+		&_first { display: none; }
+
+		@media (min-width: $mobile) { display: flex; }
+
+		@media (min-width: $tablet) {
+			flex-wrap: nowrap;
+			column-gap: toRem(30);
+			@include adaptiveValueMF(row-gap, 20, 8);
+
+			&_first { margin-bottom: toRem(40); }
+		}
+	}
+
+	&__button { margin-block: toRem(24); }
+}

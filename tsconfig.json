@@ -2,5 +2,33 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./apps/shop-e2e"
+    },
+    {
+      "path": "./apps/shop"
+    },
+    {
+      "path": "./apps/adnim-e2e"
+    },
+    {
+      "path": "./apps/adnim"
+    },
+    {
+      "path": "./apps/api-e2e"
+    },
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./libs/ui"
+    },
+    {
+      "path": "./libs/shared-types"
+    },
+    {
+      "path": "./libs/utils"
+    }
+  ]
 }

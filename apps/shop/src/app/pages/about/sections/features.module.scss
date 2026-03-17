@@ -1,0 +1,76 @@
+@use '@org/ui/styles/index' as *;
+
+.features {
+	background-color: $color-opal;
+	color: $color-claudy;
+
+	&__container {
+		@include container();
+		position: relative;
+
+		@media (min-width: $tablet) {
+			display: flex;
+			padding-left: toRem(32);
+		}
+	}
+
+	&__wrap {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		@include adaptiveValue(padding-inline, 80, 15);
+		@include adaptiveValue(padding-block, 90, 30);
+		@include adaptiveValue(min-width, 945, 300);
+		width: 100%;
+
+		@media (min-width: $tablet) {
+			border-left: toRem(1) solid $color-claudy;
+		}
+	}
+
+	&__list {
+		width: 100%;
+		@include adaptiveValue(margin-top, 120, 60);
+		list-style-type: none;
+		counter-reset: item;
+	}
+
+	&__list-item {
+		position: relative;
+		&:before {
+			counter-increment: item;
+			content: "0" counter(item) ".";
+			position: absolute;
+			left: 0;
+			top: toRem(20);
+		}
+
+		border-top: toRem(1) solid $color-claudy;
+		padding-block: toRem(20);
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(30);
+
+		@media (min-width: $tablet) {
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		&_title {
+			line-height: 1;
+			@include adaptiveValue(padding-left, 80, 20);
+		}
+
+		&_text {
+			@media (min-width: $tablet) {
+				@include adaptiveValue(max-width, 395, 300);
+			}
+		}
+	}
+
+	&__side-title {
+		left: 0;
+		white-space: nowrap;
+	}
+}

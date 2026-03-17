@@ -1,0 +1,85 @@
+@use '@org/ui/styles/index' as *;
+
+.popup {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  width: 100dvw;
+  height: 100dvh;
+  padding: toRem(30) toRem(15);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+	&::after{
+		content:'';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-color: #00000080;
+	}
+
+  &__wrapper {
+    position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+  }
+
+	&__body {
+		flex: 0 1 toRem(650);
+		background-color: $color-white;
+		color: $color-opal;
+		padding: toRem(30);
+
+		.popup_open & {
+			animation: fadeIn 0.3s forwards;
+
+			@keyframes fadeIn {
+				from { scale: 0; }
+				to { scale: 1; }
+			}
+		}
+
+		animation: fadeOut 0.3s forwards;
+
+		@keyframes fadeOut {
+			to { scale: 0; }
+		}
+	}
+
+	&__header {
+		display: flex;
+		justify-content: end;
+	}
+
+	&__title {
+		flex: 1 1 auto;
+		text-align: center;
+	}
+
+	&__close {
+		position: relative;
+		width: toRem(20);
+		aspect-ratio: 1 / 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&::before,&::after{
+			content:'';
+			position: absolute;
+			width: 100%;
+			height: toRem(2);
+			background: #000;
+		}
+
+		&::before{
+			rotate: 45deg;
+		}
+		&::after{
+			rotate: -45deg;
+		}
+	}
+}

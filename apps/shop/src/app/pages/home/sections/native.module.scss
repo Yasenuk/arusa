@@ -1,0 +1,46 @@
+@use "@org/ui/styles/index" as *;
+
+.native {
+	color: $color-opal;
+	position: relative;
+
+	// &._dark {
+		background-color: $color-opal;
+		color: $color-claudy;
+	// }
+
+	&__container {
+		@include container();
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-direction: column-reverse;
+		padding-block: toRem(16) toRem(60);
+		row-gap: toRem(56);
+		margin: 0 auto;
+
+		@media (min-width: $tablet) {
+			flex-direction: row-reverse;
+			padding: 0;
+		}
+	}
+
+	&__picture {
+		flex: 1 1 50%;
+		max-width: 100%;
+		height: auto;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	&__content {
+		flex: 1 0 50%;
+		max-width: toRem(405);
+		padding-inline: toRem(15);
+
+		@media (min-width: $mobile) { max-width: 100%; }
+		@media (min-width: $tablet) { width: 50%; }
+	}
+
+	&__description { margin-block: toRem(48) toRem(24); }
+}

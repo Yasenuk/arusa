@@ -1,0 +1,59 @@
+@use '@org/ui/styles/index' as *;
+
+.article {
+	flex: 0 1 calc(100% / 3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  // height: 100%;
+
+	&__picture {
+		flex: 1 0 toRem(360);
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+	}
+
+	&__content {
+		flex: 1 1 60%;
+		max-width: 100%;
+		padding: 0;
+		padding-inline: toRem(16);
+
+		&_center {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		@media (min-width: $tablet) {
+			@include adaptiveValueMF(padding-inline, 33, 15);
+		}
+
+		&_m {
+			display: flex;
+			flex-direction: column;
+			align-items: start;
+			height: 100%;
+			padding: 0;
+		}
+	}
+
+	&__title {
+		margin-top: toRem(12);
+	}
+
+	&__description {
+		flex: 1 1 auto;
+		display: flex;
+		align-items: end;
+		margin-block: toRem(24);
+	}
+
+	&__button {
+		margin-top: toRem(24);
+		height: 100%;
+		display: flex;
+		align-items: end;
+	}
+}

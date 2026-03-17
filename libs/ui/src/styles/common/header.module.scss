@@ -1,0 +1,102 @@
+@use "@org/ui/styles/index" as *;
+
+.header {
+	width: 100%;
+	position: fixed;
+	z-index: 2;
+	transform: translateY(0);
+	transition: transform 0.3s, background-color 0.3s;
+	
+	&._hidden {
+		transform: translateY(-100%);
+		transition: transform 0.3s;
+	}
+
+	&._menu-open {
+		transform: translateY(0);
+		transition: transform 0.3s;
+	}
+
+	 &._dark, &[data-scrolled="true"] {
+		background-color: $color-opal;
+		border-bottom: toRem(1) solid $color-oyster;
+	}
+
+	@media (min-width:$pc){
+		position: fixed;
+	}
+
+	&__container {
+		@include container();
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		@include adaptiveValueMF(padding-block, 16.5, 22.5);
+		color: $color-white;
+		position: relative;
+		background-color: none;
+		column-gap: toRem(15);
+		padding-inline: toRem(15);
+
+		&::after{
+			content:'';
+			position: absolute;
+			inset: 0;
+			background: none;
+			z-index: 1;
+			transition: background-color 0.2s ease-in-out;
+		}
+
+		[class*=_menu-open] &::after {
+			transition: background-color 0.3s ease-in-out 0.2s;
+			background-color: $color-white;
+		}
+	}
+
+	&__menu-group {
+		display: flex;
+		align-items: center;
+		column-gap: toRem(16);
+	}
+
+	&__menu-caption {
+		z-index: 2;
+		text-transform: uppercase;
+
+		transition: color 0.3s ease-in-out;
+		color: $color-white;
+
+		[class*=_dark] & {
+			color: $color-white;
+		}
+		
+		[class*=_open] + &, [class*=_menu-open] & {
+			color: $color-stormy;
+			transition: color 0.3s ease-in-out;
+		}
+
+		@media (max-width:$mobile){
+			display: none;
+		}
+	}
+
+	&__logo {
+		flex: 1 1 auto;
+		text-align: center;
+		z-index: 2;
+		
+		&-picture {
+			transition: filter 0.1s ease-in-out;
+			@include adaptiveValue("width", 117, 90);
+
+			[class*=_dark] &, & {
+				filter: brightness(1) saturate(0%);
+			}
+			
+			[class*=_menu-open] &{
+				filter: brightness(0) saturate(100%);
+				transition: filter 0.3s ease-in-out 0.3s;
+			}
+		}
+	}
+}

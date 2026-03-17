@@ -1,0 +1,178 @@
+@use "sass:math";
+@use "functions" as *;
+@use "variables" as *;
+
+@mixin LoadFont($font_name, $font_weights: (400), $style: normal, $dir: "../../assets/fonts") {
+  @each $weight in $font_weights {
+    @font-face {
+      font-family: "#{$font_name}";
+      font-display: swap;
+      src:
+        url("#{$dir}/#{$font_name}.woff2") format("woff2"),
+        url("#{$dir}/#{$font_name}.woff") format("woff");
+      font-weight: #{$weight};
+      font-style: #{$style};
+    }
+  }
+}
+
+//Adaptive
+@mixin adaptiveValue(
+	$property,
+	$startSize,
+	$minSize,
+	$keepSize: 0,
+	$widthFrom: $containerWidth,
+	$widthTo: $minWidth
+) {
+	@if ($startSize==0) {
+		$startSize: 0.000001;
+	}
+	@if ($minSize==0) {
+		$minSize: 0.000001;
+	}
+
+	$addSize: math.div($startSize - $minSize, 16);
+
+	@if ($widthFrom == $containerWidth and $maxWidthContainer == 0) {
+		$widthFrom: $maxWidth;
+	}
+
+	$widthFromMedia: toEm($widthFrom);
+	$widthToMedia: toEm($widthTo);
+  
+	$slope: math.div(($startSize - $minSize), ($widthFrom - $widthTo));
+	$yIntersection: -$widthTo * $slope + $minSize;
+
+	@if ($yIntersection==0) {
+		$yIntersection: 0.000001;
+	}
+	$flyValue: #{toRem($yIntersection)}" + " #{$slope * 100}vw;
+
+	$propertyValue: #{"clamp(" toRem($minSize) "," $flyValue "," toRem($startSize)")"};
+
+	@if ($minSize > $startSize) {
+		$propertyValue: #{"clamp("toRem($startSize)","$flyValue","toRem($minSize)")"};
+	}
+
+	// Встановлюємо значення за замовчуванням
+	@if $keepSize != 1 and $keepSize != 3 {
+		@media (min-width: $widthFromMedia) {
+			#{$property}: toRem($startSize);
+		}
+	}
+
+	// Адаптуємо розмір у проміжку між зазначеними ширинами в'юпорту
+	@media (min-width: $widthToMedia) and (max-width: $widthFromMedia) {
+		// Якщо підтримується clamp();
+		@supports (#{$property}: $propertyValue) {
+			#{$property}: $propertyValue;
+		}
+
+		// Якщо не підтримується clamp();
+		@supports not (#{$property}: $propertyValue) {
+			#{$property}: calc(
+				#{toRem($minSize)} + #{$addSize} * (100vw - #{toRem($widthTo)}) / #{math.div(
+						$widthFrom,
+						16
+					) - math.div($widthTo, 16)}
+			);
+		}
+	}
+
+	@if $keepSize != 1 and $keepSize != 2 {
+		@media (max-width: $widthToMedia) {
+			#{$property}: toRem($minSize);
+		}
+	}
+}
+
+@mixin adaptiveValueMF(
+  $property,
+  $startSize,  // розмір на великих екранах
+  $minSize,    // розмір на мобільних
+  $keepSize: 0,
+  $widthFrom: $minWidth,        // mobile breakpoint
+  $widthTo: $containerWidth     // desktop breakpoint
+) {
+  @if ($startSize == 0) { $startSize: 0.000001; }
+  @if ($minSize == 0) { $minSize: 0.000001; }
+
+  $addSize: math.div($startSize - $minSize, 16);
+
+  $widthFromMedia: toEm($widthFrom);
+  $widthToMedia: toEm($widthTo);
+
+  $slope: math.div(($startSize - $minSize), ($widthTo - $widthFrom));
+  $yIntersection: -$widthFrom * $slope + $minSize;
+
+  @if ($yIntersection == 0) { $yIntersection: 0.000001; }
+
+  $flyValue: #{toRem($yIntersection)}" + " #{$slope * 100}vw;
+  $propertyValue: #{"clamp(" toRem($minSize) "," $flyValue "," toRem($startSize)")"};
+
+  @if ($startSize < $minSize) {
+    $propertyValue: #{"clamp(" toRem($startSize) "," $flyValue "," toRem($minSize) ")"};
+  }
+
+  // MOBILE FIRST
+  // базове значення (мінімум)
+  @if $keepSize != 1 and $keepSize != 2 {
+    #{$property}: toRem($minSize);
+  }
+
+  // між брейкпоінтами
+  @media (min-width: $widthFromMedia) and (max-width: $widthToMedia) {
+    @supports (#{$property}: $propertyValue) {
+      #{$property}: $propertyValue;
+    }
+
+    @supports not (#{$property}: $propertyValue) {
+      #{$property}: calc(
+        #{toRem($minSize)} + #{$addSize} * (100vw - #{toRem($widthFrom)}) / #{math.div($widthTo, 16) - math.div($widthFrom, 16)}
+      );
+    }
+  }
+
+  // велике значення після desktop-брейкпоінта
+  @if $keepSize != 1 and $keepSize != 3 {
+    @media (min-width: $widthToMedia) {
+      #{$property}: toRem($startSize);
+    }
+  }
+}
+
+// Контейнер
+
+@mixin container(
+  $padding: $containerPadding,
+  $customWidth: null
+) {
+  margin-inline: auto;
+
+  $width: $customWidth or $containerWidth;
+
+  @if $maxWidthContainer > 0 {
+    max-width: toRem($width);
+  }
+
+  @media (min-width: $mobile) {
+    max-width: none;
+
+    @if $padding > 0 {
+      padding-inline: toRem(math.div($padding, 2));
+    }
+  }
+
+  @media (min-width: $tablet) {
+    @include adaptiveValueMF(max-width, 970, 750);
+  }
+
+  @media (min-width: $pc) {
+    @include adaptiveValueMF(max-width, 1080, 970);
+  }
+
+  @media (min-width: $desktop) {
+    max-width: toRem($width);
+  }
+}

@@ -1,0 +1,83 @@
+@use "@org/ui/styles/index" as *;
+
+.lookbook {
+	background-color: $color-opal;
+	color: $color-claudy;
+
+	&__container {
+		@include container(0);
+		position: relative;
+		border-right: toRem(1) solid $color-claudy;
+
+		@media (min-width: $tablet) { display: flex; }
+	}
+
+	&__content {
+		flex: 1 1 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-direction: column;
+		padding-inline: toRem(15);
+		row-gap: toRem(50);
+		@include adaptiveValueMF(padding-top, 50, 16);
+		@include adaptiveValueMF(padding-bottom, 170, 56);
+
+		@media (min-width: $tablet) {
+			margin-left: toRem(60);
+			border-left: toRem(1) solid $color-claudy;
+			border-right: toRem(1) solid $color-claudy;
+			min-width: toRem(380);
+		}
+	}
+
+	&__description { max-width: toRem(420); text-align: center; }
+
+	&__item {
+		flex: 1 1 toRem(620);
+		padding-block: toRem(20);
+		display: flex;
+		flex-direction: column-reverse;
+
+		@media (min-width: $tablet) { flex-direction: column; }
+	}
+
+	&__text-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		text-transform: uppercase;
+		padding: toRem(6) toRem(20);
+		font-size: toRem(12);
+
+		border-bottom: toRem(1) solid $color-claudy;
+		border-top: toRem(1) solid $color-claudy;
+
+		&:first-child { display: none; }
+
+		&:not(:first-child) { border-top: none; }
+
+		@media (min-width: $tablet) { &:first-child { display: flex; } }
+	}
+
+	&__picture-wrap {
+		padding: toRem(20) toRem(20) toRem(75);
+		margin: toRem(20);
+		background-color: $color-snow;
+	}
+
+	&__picture {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+	}
+
+	&__buttons {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		color: $color-stormy;
+	}
+
+	&__side-title { left: toRem(20); }
+}
