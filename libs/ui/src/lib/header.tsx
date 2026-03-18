@@ -83,7 +83,7 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
         <div className={styles.header__logo}>
           <Link to="/" className={styles.header__logo_link}>
             <img
-              src="./src/assets/images/logo.svg"
+              src="/assets/images/logo.svg"
               alt="Arusa лого"
               className={styles['header__logo-picture']}
               width={117}

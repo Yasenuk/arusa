@@ -50,7 +50,7 @@ export function Footer() {
           ))}
         </nav>
         <Link to="/" className={styles.footer__logo}>
-          <img loading="lazy" width="1359" height="220" src="./src/assets/images/logo.svg" alt="Arusa лого" />
+          <img loading="lazy" width="1359" height="220" src="/assets/images/logo.svg" alt="Arusa лого" />
         </Link>
         <p className={`${styles.footer__copy} upper small`}>&copy; Arusa 2025 Владислав Яценюк</p>
       </div>
