@@ -52,26 +52,11 @@ function mapVariant(variants: any[]) {
   }));
 }
 
-export async function getProducts(ids: number[]) {
-  const variants = await prisma.product_variants.findMany({
-    where: { id: { in: ids } },
-    include: {
-      products: {
-        include: {
-          categories: true,
-        },
-      },
-      product_images: {
-        orderBy: { position: "asc" },
-      },
-    },
-  });
+export async function getProducts(ids?: number[]) {
+  const where = ids ? { id: { in: ids } } : {};
 
-  return mapVariant(variants);
-}
-
-export async function getCatalogVariants() {
   const variants = await prisma.product_variants.findMany({
+    where,
     include: {
       products: {
         include: {

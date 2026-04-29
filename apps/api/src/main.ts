@@ -4,16 +4,16 @@ import * as path from 'path';
 import dotenv from "dotenv";
 import morgan from "morgan";
 
-import authRefresh from "./routes/auth/auth";
-import authRegister from "./routes/auth/register";
-import authLogin from "./routes/auth/login";
+import authRefresh from "./routes/auth";
+import authRegister from "./routes/register";
+import authLogin from "./routes/login";
 
-import adminCategories from "./routes/admin/categories";
-import adminProducts from "./routes/admin/products";
+import adminCategories from "./routes/categories";
+import adminProducts from "./routes/products";
 
-import shopArticles from "./routes/shop/articles";
-import shopCart from "./routes/shop/cart";
-import users from "./routes/auth/users";
+import shopArticles from "./routes/articles";
+import shopCart from "./routes/cart";
+import users from "./routes/users";
 
 dotenv.config();
 

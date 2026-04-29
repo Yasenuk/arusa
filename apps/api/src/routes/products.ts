@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, getCatalogVariants, getProducts } from "../../services/product.service";
+import { createProduct, getProducts } from "../services/product.service";
 
 const router = Router();
 
@@ -65,7 +65,7 @@ router.get("/products", async (req, res) => {
 
 router.get("/products/all", async (req, res) => {
   try {
-    const products = await getCatalogVariants();
+    const products = await getProducts();
     res.json(products);
   } catch (err) {
     console.error(err);

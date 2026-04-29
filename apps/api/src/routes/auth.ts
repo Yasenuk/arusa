@@ -1,4 +1,4 @@
-import { createAccessToken, verifyRefreshToken } from "../../services/auth.service";
+import { createAccessToken, verifyRefreshToken } from "../services/auth.service";
 import { Router } from "express";
 
 const router = Router();

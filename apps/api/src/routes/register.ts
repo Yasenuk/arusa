@@ -1,9 +1,9 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { prisma } from '../../db/prisma';
-import { createAccessToken, createRefreshToken } from "../../services/auth.service";
-import { createUser } from "../../services/user.service";
-import { createCart } from "../../services/cart.service";
+import { prisma } from '../db/prisma';
+import { createAccessToken, createRefreshToken } from "../services/auth.service";
+import { createUser } from "../services/user.service";
+import { createCart } from "../services/cart.service";
 
 const router = Router();
 
