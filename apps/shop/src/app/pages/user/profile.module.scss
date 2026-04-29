@@ -1,0 +1,87 @@
+@use '@org/ui/styles/index' as *;
+
+.active {
+  font-weight: 600;
+}
+
+.profile {
+  &__container {
+    @include container();
+    @include adaptiveValue(padding-top, 70, 82);
+    padding-bottom: toRem(5);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: toRem(20);
+  }
+
+  &__sidebar {
+    flex: 1 1 toRem(280);
+    padding-top: toRem(30);
+  }
+
+  &__menu {
+    position: sticky;
+    @include adaptiveValue(top, 90, 102);
+    transition: top 0.3s;
+    display: flex;
+    flex-direction: column;
+    row-gap: toRem(10);
+
+    [class*='_hidden'] + * & {
+      top: toRem(20);
+      transition: top 0.3s;
+    }
+
+    &_item {
+    }
+
+    &_button {
+    }
+  }
+
+  &__main {
+    border-left: toRem(1) solid $color-oyster;
+    flex: 1 1 calc(100% - toRem(300));
+    padding-left: toRem(15);
+  }
+
+  &__section {
+    border-bottom: toRem(1) solid $color-oyster;
+    padding-block: toRem(30);
+  }
+
+  &__title {
+    margin-bottom: toRem(20);
+  }
+
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: toRem(10);
+    margin-bottom: toRem(20);
+
+    &_item {
+      padding: toRem(15);
+      width: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: toRem(5);
+    }
+
+    &_label {
+      font-weight: 600;
+    }
+
+    &_value {
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: toRem(10);
+  }
+
+  &__button {
+  }
+}

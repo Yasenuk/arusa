@@ -40,6 +40,7 @@ export default function LoginForm({ goRegister, onSuccess }: {
 
       const data = await res.json();
       localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
 
       login(data.accessToken);
       onSuccess();

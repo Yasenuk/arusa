@@ -5,12 +5,15 @@ import styles from "../styles/common/header.module.scss";
 import BurgerMenu from "./menues/burger-menu";
 import Cart from "./menues/cart";
 import AuthPopup from "./auth/AuthPopup";
+import { useAuth } from "./auth/AuthProvider";
 
 export function Header({ isDark = false }: { isDark?: boolean }) {
   const [isHidden, setIsHidden] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const { isAuth } = useAuth();
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -93,7 +96,7 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
         </div>
 
         <AuthPopup />
-        <Cart isOpen={isCartOpen} setIsOpen={setIsCartOpen} />
+        {isAuth && <Cart isOpen={isCartOpen} setIsOpen={setIsCartOpen} />}
       </div>
     </header>
   );

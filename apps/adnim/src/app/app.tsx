@@ -3,8 +3,8 @@ import AdminCreateProduct from "./AdminCreateProduct";
 
 export function App() {
   return (<>
-    <AdminCreateCategory />
-    <AdminCreateProduct />
+      <AdminCreateCategory />
+      <AdminCreateProduct />
   </>);
 }
 

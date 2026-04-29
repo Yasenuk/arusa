@@ -2,16 +2,14 @@
 
 .menu {
 	position: relative;
-
-	&_open {
-		pointer-events: none;
-	}
+	pointer-events: none;
 	
 	&__close-button {
 		z-index: 2;
 		width: toRem(27);
 		height: toRem(10);
 		position: relative;
+		pointer-events: all;
 
 		span, &::before, &::after{
 			width: 100%;
@@ -82,9 +80,11 @@
 		}
 		
 		[class*=_open] & {
+			height: 100dvh;
 			overflow-y: auto;
 			overflow-x: hidden;
 			opacity: 1;
+			pointer-events: painted;
 		}
 		
 		&::before,&::after{

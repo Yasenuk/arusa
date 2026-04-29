@@ -6,7 +6,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   const header = req.headers.authorization;
 
   if (!header) {
-    return res.status(401).json({ error: "Немає авторизаційного токена" });
+    return res.status(401).json({ error: "No token" });
   }
 
   const token = header.split(" ")[1];
@@ -15,7 +15,11 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     const decoded = verifyAccessToken(token);
     req.user = decoded;
     next();
-  } catch {
-    return res.status(401).json({ error: "Невірний токен" });
+  } catch (err: any) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "Token expired" });
+    }
+
+    return res.status(401).json({ error: "Invalid token" });
   }
 }

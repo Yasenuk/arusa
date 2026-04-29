@@ -3,7 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
 
-import './styles/globals.scss';
+import '@org/ui/styles/global';
+import { NotificationProvider } from '@org/ui';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <NotificationProvider>
+        <App />
+      </NotificationProvider>
     </BrowserRouter>
   </StrictMode>
 );

@@ -1,4 +1,4 @@
-export * from './lib/cards/product-card';
+export * from './lib/cards/cart-product-card';
 export * from './lib/menues/cart';
 export * from './lib/menues/burger-menu';
 export * from './lib/modals/popup';

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { prisma } from '../db/prisma';
+import { prisma } from '../../db/prisma';
 import bcrypt from "bcrypt";
-import { createAccessToken, createRefreshToken } from "../services/auth.service";
+import { createAccessToken, createRefreshToken } from "../../services/auth.service";
 
 const router = Router();
 

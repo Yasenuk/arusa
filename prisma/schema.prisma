@@ -8,9 +8,9 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model cart_items {
-  id                 BigInt           @id @default(autoincrement())
-  cart_id            BigInt
-  product_variant_id BigInt
+  id                 Int              @id @default(autoincrement())
+  cart_id            Int
+  product_variant_id Int
   quantity           Int
   carts              carts            @relation(fields: [cart_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   product_variants   product_variants @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -19,8 +19,8 @@ model cart_items {
 }
 
 model carts {
-  id         BigInt       @id @default(autoincrement())
-  user_id    BigInt?      @unique
+  id         Int          @id @default(autoincrement())
+  user_id    Int?         @unique
   created_at DateTime     @default(now()) @db.Timestamp(6)
   updated_at DateTime     @default(now()) @db.Timestamp(6)
   cart_items cart_items[]
@@ -28,17 +28,17 @@ model carts {
 }
 
 model categories {
-  id               BigInt       @id @default(autoincrement())
+  id               Int          @id @default(autoincrement())
   name             String       @db.VarChar(150)
-  parent_id        BigInt?
+  parent_id        Int?
   categories       categories?  @relation("categoriesTocategories", fields: [parent_id], references: [id], onUpdate: NoAction)
   other_categories categories[] @relation("categoriesTocategories")
   products         products[]
 }
 
 model deliveries {
-  id              BigInt          @id @default(autoincrement())
-  order_id        BigInt
+  id              Int             @id @default(autoincrement())
+  order_id        Int
   provider        String          @db.VarChar(100)
   tracking_number String?         @db.VarChar(255)
   status          delivery_status @default(PENDING)
@@ -49,8 +49,8 @@ model deliveries {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model inventory {
-  id                 BigInt           @id @default(autoincrement())
-  product_variant_id BigInt
+  id                 Int              @id @default(autoincrement())
+  product_variant_id Int
   quantity           Int
   reserved_quantity  Int              @default(0)
   product_variants   product_variants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -60,9 +60,9 @@ model inventory {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model order_items {
-  id                 BigInt            @id @default(autoincrement())
-  order_id           BigInt
-  product_variant_id BigInt?
+  id                 Int               @id @default(autoincrement())
+  order_id           Int
+  product_variant_id Int?
   title_snapshot     String            @db.VarChar(255)
   price_snapshot     Decimal           @db.Decimal(12, 2)
   quantity           Int
@@ -72,9 +72,9 @@ model order_items {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model orders {
-  id             BigInt          @id @default(autoincrement())
-  user_id        BigInt
-  address_id     BigInt?
+  id             Int             @id @default(autoincrement())
+  user_id        Int
+  address_id     Int?
   status         order_status    @default(PENDING_CONFIRMATION)
   total_amount   Decimal         @db.Decimal(12, 2)
   currency       String          @default("ГРН") @db.VarChar(10)
@@ -91,8 +91,8 @@ model orders {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model payments {
-  id             BigInt         @id @default(autoincrement())
-  order_id       BigInt
+  id             Int            @id @default(autoincrement())
+  order_id       Int
   provider       String         @db.VarChar(100)
   status         payment_status @default(PENDING)
   amount         Decimal        @db.Decimal(12, 2)
@@ -105,8 +105,8 @@ model payments {
 }
 
 model product_images {
-  id               BigInt           @id @default(autoincrement())
-  variant_id       BigInt
+  id               Int              @id @default(autoincrement())
+  variant_id       Int
   image_url        String
   position         Int?             @default(0)
   product_variants product_variants @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -114,13 +114,15 @@ model product_images {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model product_variants {
-  id             BigInt           @id @default(autoincrement())
-  product_id     BigInt
+  id             Int              @id @default(autoincrement())
+  product_id     Int
   size           String?          @db.VarChar(100)
   color          String?          @db.VarChar(100)
   sku            String           @unique @db.VarChar(100)
   price          Decimal?         @db.Decimal(12, 2)
   quantity       Int?             @default(0)
+  material       String?          @db.VarChar(150)
+  weight         Decimal?         @db.Decimal(10, 2)
   cart_items     cart_items[]
   inventory      inventory[]
   order_items    order_items[]
@@ -130,14 +132,12 @@ model product_variants {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model products {
-  id               BigInt             @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   title            String             @db.VarChar(255)
   description      String?
-  material         String?            @db.VarChar(150)
   article          String             @unique @db.VarChar(100)
-  weight           Decimal?           @db.Decimal(10, 2)
   is_active        Boolean            @default(true)
-  category_id      BigInt?
+  category_id      Int?
   created_at       DateTime           @default(now()) @db.Timestamp(6)
   updated_at       DateTime           @default(now()) @db.Timestamp(6)
   product_variants product_variants[]
@@ -147,8 +147,8 @@ model products {
 }
 
 model user_addresses {
-  id          BigInt   @id @default(autoincrement())
-  user_id     BigInt
+  id          Int      @id @default(autoincrement())
+  user_id     Int
   region      String   @db.VarChar(100)
   city        String   @db.VarChar(100)
   street      String   @db.VarChar(150)
@@ -161,10 +161,11 @@ model user_addresses {
 }
 
 model users {
-  id             BigInt           @id @default(autoincrement())
+  id             Int              @id @default(autoincrement())
   first_name     String           @db.VarChar(100)
   last_name      String           @db.VarChar(100)
   middle_name    String?          @db.VarChar(100)
+  phone          String?          @db.VarChar(20)
   email          String           @unique @db.VarChar(255)
   password_hash  String
   role           user_role        @default(user)

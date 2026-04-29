@@ -1,0 +1,28 @@
+@use "@org/ui/styles/index" as *;
+
+.view {
+	@include adaptiveValueMF(height, 1080, 664);
+
+	[class*="webp"] & { background-image: url(/assets/images/view/view-picture.webp); }
+
+	[class*="no-webp"] & { background-image: url(/assets/images/view/view-picture.png); }
+
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+
+	&__container { position: relative; height: 100%; }
+
+	&__item {
+		position: absolute;
+		background: $color-claudy;
+		max-width: toRem(291);
+		padding: toRem(20);
+		display: none;
+
+		@media (min-width: $tablet) { display: flex; }
+
+		&_1 { bottom: 20%; right: 10%; }
+		&_2 { top: 10%; left: 10%; }
+	}
+}

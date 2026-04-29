@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 
-type Category = {
-	id: number;
-	name: string;
-	parent_id: number | null;
-};
+import { Category } from "@org/shared-types";
+
+import styles from "./app.module.scss";
 
 export default function AdminCreateCategory() {
 	const [name, setName] = useState("");
@@ -27,9 +25,7 @@ export default function AdminCreateCategory() {
 			.catch(console.error);
 	}, []);
 
-	async function submit(e: React.FormEvent) {
-		e.preventDefault();
-
+	async function submit() {
 		await fetch("/api/admin/categories", {
 			method: "POST",
 			headers: {
@@ -46,34 +42,46 @@ export default function AdminCreateCategory() {
 
 
 	return (
-		<form onSubmit={submit}>
-			<h2>Створити категорію</h2>
+		<div className={styles.admin__section}>
+			<section className={styles.admin__container}>
+				<h2 className={`${styles.admin__title} h h_s`}>Створити категорію</h2>
 
-			<input
-				placeholder="Назва категорії"
-				value={name}
-				onChange={e => setName(e.target.value)}
-			/>
+				<form className={styles.admin__form} onSubmit={e => e.preventDefault()}>
+					<div className={styles.admin__form_group}>
+						<label className={`${styles.admin__label} reular`} htmlFor="category-name">Назва</label>
+						<input
+							className={`${styles.admin__input} small _button_border`}
+							id="category-name"
+							placeholder="Назва категорії"
+							value={name}
+							onChange={e => setName(e.target.value)}
+						/>
+					</div>
 
-			<select
-				value={parentId}
-				onChange={e => setParentId(Number(e.target.value))}
-			>
-				<option value="">Без батьківської</option>
+					<div className={styles.admin__form_group}>
+						<label className={`${styles.admin__label} reular`} htmlFor="category-parent">Категорія</label>
+						<select
+							className={`${styles.admin__input} small _button_border`}
+							id="category-parent"
+							value={parentId}
+							onChange={e => setParentId(Number(e.target.value))}
+						>
+							<option value="">Без батьківської</option>
 
-				{categories.map((c) => (
-					// category
-					// _subcategory
-					// __subcategory with products
-					<option key={c.id} value={c.id}>
-						{c.name}
-					</option>
-				))}
-			</select>
+							{categories.map((c) => (
+								<option key={c.id} value={c.id}>
+									{c.name}
+								</option>
+							))}
+						</select>
+					</div>
 
-			<button type="submit">
-				Створити
-			</button>
-		</form>
+				</form>
+
+				<button className={`${styles.admin__button} regular _button _button_main _button_border regular upper`} onClick={submit}>
+					Створити
+				</button>
+			</section>
+		</div>
 	);
 }

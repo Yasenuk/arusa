@@ -1,10 +1,6 @@
-import axios from 'axios';
+import { test, expect } from '@playwright/test';
 
-describe('GET /', () => {
-  it('should return a message', async () => {
-    const res = await axios.get(`/`);
-
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
-  });
+test('should return 200', async ({ request }) => {
+  const response = await request.get('/api');
+  expect(response.status()).toBe(200);
 });

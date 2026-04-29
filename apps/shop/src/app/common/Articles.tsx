@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import styles from "./articles.module.scss";
+import styles from "../../styles/common/articles.module.scss";
 
 export default function Articles() {
 	return (

@@ -98,7 +98,7 @@
 
   &_open {
     .cart__wrapper {
-      width: 50dvw;
+      width: 100dvw;
       height: 100dvh;
       max-height: calc(100dvh - toRem(69.42));
       top: toRem(69.42);
@@ -111,7 +111,11 @@
       &::before {
         border-radius: 0;
         max-height: 150dvh;
-        max-width: 50%;
+        max-width: 100%;
+        
+        @media (min-width: $pc) {
+          max-width: 50%;
+        }
       }
     }
 
@@ -163,7 +167,13 @@
     overflow-x: hidden;
   }
 
-  &__title {
+  &__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title, &__summary-title, &__summary-price {
     color: $color-opal;
   }
 

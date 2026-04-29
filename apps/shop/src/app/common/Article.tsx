@@ -17,7 +17,7 @@ export default function Article({ id }: { id: number }) {
 		fetch(`/api/articles/${id}`)
 			.then(async r => {
 				if (!r.ok) {
-					throw new Error("Failed to fetch article");
+					throw new Error("Помилка при завантаженні статті");
 				}
 
 				const text = await r.text();

@@ -1,0 +1,235 @@
+@use '@org/ui/styles/index' as *;
+
+.shop {
+  &__title {
+    @include adaptiveValue('margin-top', 74, 84);
+    padding-bottom: toRem(20);
+    border-top: toRem(1) solid $color-oyster;
+    border-bottom: toRem(1) solid $color-oyster;
+  }
+
+  &__topbar-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    @media (min-width: $tablet) {
+      border-bottom: toRem(1) solid $color-oyster;
+    }
+  }
+
+  &__topbar {
+    width: 100%;
+    max-width: 100%;
+
+    @media (min-width: $tablet) {
+      max-width: calc(100% - toRem(350));
+    }
+  }
+
+  &__container {
+    @include container();
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__count-title {
+    flex: 1 1 50%;
+    font-weight: 600;
+    text-align: center;
+
+		span {
+			padding-right: toRem(5);
+		}
+
+    @media (min-width: $tablet) {
+      text-align: left;
+    }
+  }
+
+  &__search {
+    flex: 1 1 50%;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border-left: toRem(1) solid $color-oyster;
+    @include adaptiveValue(padding-block, 30, 15);
+
+    @media (min-width: $tablet) {
+      justify-content: end;
+      border-left: none;
+    }
+  }
+
+  &__search-input {
+    font-weight: 600;
+    max-width: toRem(120);
+
+    &::placeholder {
+      font-weight: 600;
+      color: $color-opal;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    scroll-behavior: smooth;
+
+    @media (min-width: $tablet) {
+      position: relative;
+      flex-direction: row;
+      align-items: start;
+      justify-content: space-between;
+    }
+  }
+
+  &__filters {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    // position: sticky;
+		position: fixed;
+    z-index: 1;
+    background-color: $color-claudy;
+    @include adaptiveValueMF(top, 52, 64);
+    transition: top 0.28s;
+
+    [data-scrolled='true']._hidden + * .shop & {
+      top: 0;
+      transition: top 0.28s;
+    }
+
+    @media (min-width: $tablet) {
+      max-width: toRem(350);
+      min-width: toRem(350);
+      flex-direction: column;
+    }
+  }
+
+  &__filter-group {
+    flex: 1 1 50%;
+    justify-content: center;
+    position: relative;
+
+    &:not(:last-child) {
+      border-right: toRem(1) solid $color-oyster;
+
+      @media (min-width: $tablet) {
+        border-right: none;
+      }
+    }
+  }
+
+  &__filter-lable {
+    color: $color-stormy;
+    font-weight: 600;
+    border-top: toRem(1) solid $color-oyster;
+    @include adaptiveValue(padding-block, 30, 15);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+
+    @media (min-width: $tablet) {
+      border-bottom: toRem(1) solid $color-oyster;
+      text-align: left;
+      padding-left: toRem(36);
+      cursor: default;
+    }
+  }
+
+  &__filters-list {
+    right: 0;
+    left: 0;
+    top: 100%;
+    position: absolute;
+    z-index: 5;
+    background-color: $color-claudy;
+    border: toRem(1) solid $color-oyster;
+    max-height: 0;
+    overflow: hidden;
+
+    &._open {
+      max-height: none;
+    }
+
+    @media (min-width: $tablet) {
+      position: relative;
+      max-height: none;
+      overflow: auto;
+      padding-block: toRem(15);
+      border: none;
+    }
+  }
+
+  &__filters-item {
+    text-align: center;
+
+    @media (min-width: $tablet) {
+      text-align: left;
+    }
+
+    input {
+      display: none;
+    }
+
+    label {
+      color: $color-opal;
+      cursor: pointer;
+
+      @media (any-hover: hover) {
+        &:hover {
+          color: $color-stormy;
+          transition: color 0.3s;
+        }
+      }
+    }
+
+    input:checked + label {
+      color: $color-stormy;
+      font-weight: 600;
+    }
+  }
+
+  &__products {
+    flex: 1 1 auto;
+		@include adaptiveValue("padding-inline", 15, 0);
+  }
+
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (min-width: $tablet) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+		@media (min-width: $pc) {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+    gap: toRem(20);
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: toRem(15);
+    border-left: toRem(1) solid $color-oyster;
+    padding-block: toRem(60) toRem(30);
+  }
+
+  &__pagination-button {
+    border: 1px solid $color-oyster;
+
+    &_active {
+      background-color: $color-opal !important;
+      color: $color-claudy !important;
+    }
+  }
+}

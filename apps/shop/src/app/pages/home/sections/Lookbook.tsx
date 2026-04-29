@@ -1,8 +1,33 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import { CatalogProductVariant } from "@org/shared-types";
 
 import styles from "./lookbook.module.scss";
 
 export default function Lookbook() {
+	const [products, setProducts] = useState<CatalogProductVariant[]>([]);
+	const [index, setIndex] = useState(0);
+
+	useEffect(() => {
+		fetch(`/api/products?ids=1,2,3`)
+			.then((r) => r.json())
+			.then(setProducts)
+			.catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		if (!products.length) return;
+
+		const interval = setInterval(() => {
+			setIndex((prev) => (prev + 1) % products.length);
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [products]);
+
+	const product = products[index];
+
 	return (
 		<div className={styles.lookbook}>
 			<div className={styles.lookbook__container}>
@@ -12,31 +37,30 @@ export default function Lookbook() {
 				</div>
 				<div className={styles.lookbook__item}>
 					<div className={styles["lookbook__text-wrap"]}>
-						<span className="small">Артикул</span>
-						<span className="small">Опис</span>
+						<span className="small">{product?.title}</span>
 					</div>
 					<div className={styles["lookbook__picture-wrap"]}>
 						<picture>
-							<source srcSet="/assets/images/lookbook/lookbook.avif" type="image/avif" />
-							<source srcSet="/assets/images/lookbook/lookbook.webp" type="image/webp" />
-							<img loading="lazy" className={styles.lookbook__picture} width="542" height="422" src="/assets/images/lookbook/lookbook.png" alt="Настінний килимок" />
+							<source srcSet={`${product?.image}.avif`} type="image/avif" />
+							<source srcSet={`${product?.image}.webp`} type="image/webp" />
+							<img loading="lazy" className={styles.lookbook__picture} width="542" height="422" src={`${product?.image}`} alt={product?.title} />
 						</picture>
 						<div className={styles.lookbook__buttons}>
-							<Link to="./404.html" className={`${styles.lookbook__button} _button _button_article no-inline upper`}>Дивитися Лукбук</Link>
-							<Link to="./shop.html" className={`${styles.lookbook__button} _button _button_article no-inline upper`}>Всі товари</Link>
+							<Link to='/products/1' className={`${styles.lookbook__button} _button _button_article no-inline upper`}>Дивитися Лукбук</Link>
+							<Link to="/shop" className={`${styles.lookbook__button} _button _button_article no-inline upper`}>Всі товари</Link>
 						</div>
 					</div>
 					<div className={styles["lookbook__text-wrap"]}>
-						<span className="small">Матеріали:</span>
-						<span className="small">Кераміка, скло, залізо, дерево</span>
+						<span className="small">Матеріал:</span>
+						<span className="small">{product?.material}</span>
 					</div>
 					<div className={styles["lookbook__text-wrap"]}>
-						<span className="small">Вироблено в:</span>
-						<span className="small">Канада, Італія, США</span>
+						<span className="small">Ціна:</span>
+						<span className="small">{product?.price}</span>
 					</div>
 					<div className={styles["lookbook__text-wrap"]}>
-						<span className="small">Категорії:</span>
-						<span className="small">Декор, лампи, меблі</span>
+						<span className="small">Колір:</span>
+						<span className="small">{product?.color}</span>
 					</div>
 				</div>
 				<h3 className={`${styles["lookbook__side-title"]} side-title h h_s`}>Лукбук</h3>

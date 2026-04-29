@@ -1,87 +1,88 @@
 import { prisma } from '../db/prisma';
 
-export async function createProduct(title: string, description: string, material: string, article: string, category_id: number, variants: any[]) {
+export async function createProduct(title: string, description: string, article: string, category_id: number, variants: any[]) {
   const product = await prisma.products.create({
     data: {
       title,
       description,
-      material,
       article,
-      category_id
+      category_id,
+      product_variants: {
+        create: variants.map((v) => ({
+          size: v.size,
+          color: v.color,
+          sku: v.sku,
+          price: v.price,
+          material: v.material,
+          weight: v.weight,
+          quantity: v.quantity,
+          product_images: {
+            create: v.product_images.map((file: { image_url: string, position: number }) => ({
+              image_url: `https://pub-${process.env.R2_PUBLIC_KEY}.r2.dev/${file.image_url}`,
+              position: file.position
+            }))
+          }
+        }))
+      }
     }
   });
 
-  for (const v of variants) {
-    const variant = await prisma.product_variants.create({
-      data: {
-        product_id: product.id,
-        size: v.size,
-        color: v.color,
-        sku: v.sku,
-        price: v.price,
-      }
-    });
-
-    await prisma.inventory.create({
-      data: {
-        product_variant_id: variant.id,
-        quantity: v.quantity
-      }
-    });
-
-    if (v.images && v.images.length) {
-      await prisma.product_images.createMany({
-        data: v.images.map((img: string, i: number) => ({
-          variant_id: variant.id,
-          image_url: img,
-          position: i
-        }))
-      });
-    }
-
-    return product;
-  }
+  return product;
 }
 
+function mapVariant(variants: any[]) {
+  return variants.map((v) => ({
+    id: v.id,
+    product_id: v.product_id,
 
-export async function getProducts() {
-  const products = await prisma.products.findMany({
-    where: {
-      is_active: true
-    },
+    title: v.products.title,
+    description: v.products.description,
+    article: v.products.article,
+    category: v.products.categories?.name,
+
+    size: v.size,
+    color: v.color,
+    sku: v.sku,
+    price: Number(v.price),
+    material: v.material,
+    weight: v.weight,
+    quantity: v.quantity,
+
+    image: v.product_images[0]?.image_url,
+  }));
+}
+
+export async function getProducts(ids: number[]) {
+  const variants = await prisma.product_variants.findMany({
+    where: { id: { in: ids } },
     include: {
-      categories: true,
-      product_variants: {
+      products: {
         include: {
-          product_images: true
-        }
-      }
+          categories: true,
+        },
+      },
+      product_images: {
+        orderBy: { position: "asc" },
+      },
     },
-    orderBy: {
-      id: "asc"
-    }
   });
 
-  return products.map((p) => {
-    const prices = p.product_variants
-      .map(v => v.price)
+  return mapVariant(variants);
+}
 
-    const avgPrice =
-      prices.length > 0
-        ? prices.reduce((a, b) => a + Number(b), 0) / prices.length
-        : null;
-
-    const images = p.product_variants
-      .flatMap(v => v.product_images)
-      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-
-    return {
-      id: p.id,
-      title: p.title,
-      material: p.material,
-      category: p.categories?.name ?? null,
-      price: avgPrice,
-      preview_image: images[0]?.image_url ?? null
-    };
+export async function getCatalogVariants() {
+  const variants = await prisma.product_variants.findMany({
+    include: {
+      products: {
+        include: {
+          categories: true,
+        },
+      },
+      product_images: {
+        orderBy: { position: "asc" },
+      },
+    },
   });
+
+  return mapVariant(variants);
 }

@@ -12,9 +12,9 @@ CREATE TYPE "user_role" AS ENUM ('user', 'admin');
 
 -- CreateTable
 CREATE TABLE "cart_items" (
-    "id" BIGSERIAL NOT NULL,
-    "cart_id" BIGINT NOT NULL,
-    "product_variant_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "cart_id" INT NOT NULL,
+    "product_variant_id" INT NOT NULL,
     "quantity" INTEGER NOT NULL,
 
     CONSTRAINT "cart_items_pkey" PRIMARY KEY ("id")
@@ -22,8 +22,8 @@ CREATE TABLE "cart_items" (
 
 -- CreateTable
 CREATE TABLE "carts" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT,
+    "id" SERIAL NOT NULL,
+    "user_id" INT,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -44,17 +44,17 @@ CREATE TABLE "articles" (
 
 -- CreateTable
 CREATE TABLE "categories" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" VARCHAR(150) NOT NULL,
-    "parent_id" BIGINT,
+    "parent_id" INT,
 
     CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "deliveries" (
-    "id" BIGSERIAL NOT NULL,
-    "order_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "order_id" INT NOT NULL,
     "provider" VARCHAR(100) NOT NULL,
     "tracking_number" VARCHAR(255),
     "status" "delivery_status" NOT NULL DEFAULT 'очікує',
@@ -66,8 +66,8 @@ CREATE TABLE "deliveries" (
 
 -- CreateTable
 CREATE TABLE "inventory" (
-    "id" BIGSERIAL NOT NULL,
-    "product_variant_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "product_variant_id" INT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "reserved_quantity" INTEGER NOT NULL DEFAULT 0,
 
@@ -76,9 +76,9 @@ CREATE TABLE "inventory" (
 
 -- CreateTable
 CREATE TABLE "order_items" (
-    "id" BIGSERIAL NOT NULL,
-    "order_id" BIGINT NOT NULL,
-    "product_variant_id" BIGINT,
+    "id" SERIAL NOT NULL,
+    "order_id" INT NOT NULL,
+    "product_variant_id" INT,
     "title_snapshot" VARCHAR(255) NOT NULL,
     "price_snapshot" DECIMAL(12,2) NOT NULL,
     "quantity" INTEGER NOT NULL,
@@ -88,9 +88,9 @@ CREATE TABLE "order_items" (
 
 -- CreateTable
 CREATE TABLE "orders" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "address_id" BIGINT,
+    "id" SERIAL NOT NULL,
+    "user_id" INT NOT NULL,
+    "address_id" INT,
     "status" "order_status" NOT NULL DEFAULT 'очікує підтвердження',
     "total_amount" DECIMAL(12,2) NOT NULL,
     "currency" VARCHAR(10) NOT NULL DEFAULT 'ГРН',
@@ -102,8 +102,8 @@ CREATE TABLE "orders" (
 
 -- CreateTable
 CREATE TABLE "payments" (
-    "id" BIGSERIAL NOT NULL,
-    "order_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "order_id" INT NOT NULL,
     "provider" VARCHAR(100) NOT NULL,
     "status" "payment_status" NOT NULL DEFAULT 'очікує',
     "amount" DECIMAL(12,2) NOT NULL,
@@ -116,8 +116,8 @@ CREATE TABLE "payments" (
 
 -- CreateTable
 CREATE TABLE "product_images" (
-    "id" BIGSERIAL NOT NULL,
-    "variant_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "variant_id" INT NOT NULL,
     "image_url" TEXT NOT NULL,
     "position" INTEGER DEFAULT 0,
 
@@ -126,27 +126,27 @@ CREATE TABLE "product_images" (
 
 -- CreateTable
 CREATE TABLE "product_variants" (
-    "id" BIGSERIAL NOT NULL,
-    "product_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "product_id" INT NOT NULL,
     "size" VARCHAR(100),
     "color" VARCHAR(100),
     "sku" VARCHAR(100) NOT NULL,
     "price" DECIMAL(12,2),
     "quantity" INTEGER DEFAULT 0,
+    "material" VARCHAR(150),
+    "weight" DECIMAL(10,2),
 
     CONSTRAINT "product_variants_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "products" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "description" TEXT,
-    "material" VARCHAR(150),
     "article" VARCHAR(100) NOT NULL,
-    "weight" DECIMAL(10,2),
     "is_active" BOOLEAN NOT NULL DEFAULT true,
-    "category_id" BIGINT,
+    "category_id" INT,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -155,8 +155,8 @@ CREATE TABLE "products" (
 
 -- CreateTable
 CREATE TABLE "user_addresses" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "user_id" INT NOT NULL,
     "region" VARCHAR(100) NOT NULL,
     "city" VARCHAR(100) NOT NULL,
     "street" VARCHAR(150) NOT NULL,
@@ -170,10 +170,11 @@ CREATE TABLE "user_addresses" (
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "first_name" VARCHAR(100) NOT NULL,
     "last_name" VARCHAR(100) NOT NULL,
     "middle_name" VARCHAR(100),
+    "phone" VARCHAR(20),
     "email" VARCHAR(255) NOT NULL,
     "password_hash" TEXT NOT NULL,
     "role" "user_role" NOT NULL DEFAULT 'user',

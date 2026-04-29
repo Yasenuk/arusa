@@ -133,7 +133,7 @@ SELECT
   p.id,
   p.title,
   AVG(pv.price) AS price,
-  p.material,
+  pv.material,
   c.name AS category,
   (
     SELECT image_url
@@ -149,7 +149,7 @@ WHERE p.is_active = true
 GROUP BY
   p.id,
   p.title,
-  p.material,
+  pv.material,
   c.name,
   pv.id;
 

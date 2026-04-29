@@ -1,0 +1,91 @@
+@use "@org/ui/styles/index" as *;
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: toRem(15);
+  margin-block: toRem(20);
+
+  &__picture {
+    &-image {
+      @include adaptiveValue(width, 150, 100);
+      @include adaptiveValue(height, 150, 100);
+      object-fit: contain;
+      object-position: center;
+      border: toRem(1.5) solid $color-oyster;
+      border-radius: toRem(10);
+    }
+  }
+
+  &__content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: toRem(10);
+    position: relative;
+    color: $color-opal;
+  }
+
+  &__delete {
+    aspect-ratio: 1 / 1;
+    @include adaptiveValue(width, 30, 35);
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: toRem(1.5) solid $color-oyster;
+    border-radius: 50%;
+    overflow: hidden;
+    top: toRem(10);
+    right: toRem(10);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 60%;
+      height: toRem(1);
+      background-color: $color-opal;
+    }
+
+    &::after {
+      transform: rotate(45deg);
+    }
+
+    &::before {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &__title {
+    padding-right: toRem(50);
+  }
+
+  &__size {
+  }
+
+  &__price {
+  }
+
+  &__count-control {
+    position: absolute;
+    @include adaptiveValue(bottom, 10, -10);
+    right: toRem(10);
+    border: toRem(1) solid $color-oyster;
+    border-radius: toRem(15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: toRem(5);
+  }
+
+  &__button {
+    padding-block: toRem(5);
+    @include adaptiveValue(padding-inline, 15, 7);
+  }
+
+  &__count {
+  }
+}

@@ -12,10 +12,10 @@ export function createRefreshToken(user: { id: string; role: string }) {
   return jwt.sign(user, REFRESH_SECRET, { expiresIn: "7d" });
 }
 
-export function verifyAccessToken(token: string) {
+export function verifyAccessToken(token: string): AuthUser {
   return jwt.verify(token, ACCESS_SECRET) as AuthUser;
 }
 
-export function verifyRefreshToken(token: string) {
-  return jwt.verify(token, REFRESH_SECRET);
+export function verifyRefreshToken(token: string): AuthUser {
+  return jwt.verify(token, REFRESH_SECRET) as AuthUser;
 }

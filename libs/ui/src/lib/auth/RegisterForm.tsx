@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNotification } from "@org/ui";
+import { useAuth, useNotification } from "@org/ui";
 import { emailPattern, passwordPattern, validateEmail, validatePassword, validatePasswordConfirm } from "@org/utils/index";
 
 import styles from "../../styles/common/form.module.scss";
@@ -9,6 +9,7 @@ export default function RegisterForm({ goLogin, onSuccess }: {
   onSuccess: () => void;
 }) {
   const { notify } = useNotification();
+  const { login } = useAuth();
 
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
@@ -32,7 +33,7 @@ export default function RegisterForm({ goLogin, onSuccess }: {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!first_name.trim() || !last_name.trim() || !middle_name.trim()) {
+    if (!first_name.trim() || !last_name.trim()) {
       return;
     }
 
@@ -60,6 +61,12 @@ export default function RegisterForm({ goLogin, onSuccess }: {
         
         throw new Error("Помилка входу");
       }
+
+      const data = await res.json();
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      login(data.accessToken);
 
       notify("Реєстрація успішна!", "success");
 
@@ -95,7 +102,6 @@ export default function RegisterForm({ goLogin, onSuccess }: {
       <input className={`${styles["auth-form__input"]} _button _button_no-center _button_border small`}
         name="middle_name"
         placeholder="По батькові"
-        required
         value={middle_name}
         onChange={(e) => setMiddleName(e.target.value)} />
 

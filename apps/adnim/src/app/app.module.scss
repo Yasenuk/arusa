@@ -1,1 +1,58 @@
-/* Your styles goes here. */
+@use "@org/ui/styles/index" as *;
+
+.admin {
+	&__section {
+		padding: toRem(16);
+	}
+
+	&__container {
+		@include container();
+	}
+
+	&__title {
+		margin-bottom: toRem(20);
+	}
+
+	&__form {
+		display: flex;
+		gap: toRem(8);
+		margin-bottom: toRem(10);
+		flex-wrap: wrap;
+	}
+
+	&__form_group {
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: safe;
+		row-gap: toRem(8);
+	}
+
+	&__lable {
+
+	}
+
+	&__input {
+		height: 100%;
+		padding: toRem(8);
+
+		&_image {
+			width: min-content;
+		}
+	}
+
+	&__textarea {
+		min-width: toRem(300);
+		resize: none;
+
+		&::placeholder {
+
+		}
+	}
+
+	&__buttons {
+		display: flex;
+		align-items: center;
+		gap: toRem(8);
+	}
+}

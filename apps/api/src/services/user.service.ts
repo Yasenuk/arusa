@@ -15,3 +15,9 @@ export async function createUser(first_name: string, last_name: string, middle_n
 export async function getUsers() {
 	return await prisma.users.findMany();
 }
+
+export async function getUserById(id: number) {
+	return await prisma.users.findUnique({
+		where: { id }
+	});
+}

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { prisma } from '../db/prisma';
-import { createAccessToken, createRefreshToken } from "../services/auth.service";
-import { createUser } from "../services/user.service";
+import { prisma } from '../../db/prisma';
+import { createAccessToken, createRefreshToken } from "../../services/auth.service";
+import { createUser } from "../../services/user.service";
+import { createCart } from "../../services/cart.service";
 
 const router = Router();
 
@@ -30,11 +31,16 @@ router.post("/auth/register", async (req, res) => {
 
   const password_hash = await bcrypt.hash(password, 10);
 
-  const user = await createUser(first_name, last_name, middle_name, email, password_hash);
+  const result = await prisma.$transaction(async (prisma) => {
+    const user = await createUser(first_name, last_name, middle_name, email, password_hash);
+    await createCart(Number(user.id));
+
+    return user;
+  });
 
   const payload = {
-    id: user.id.toString(),
-    role: user.role
+    id: result.id.toString(),
+    role: result.role
   };
 
   const accessToken = createAccessToken(payload);
