@@ -27,7 +27,7 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/**/*.d.ts"
-  ],
+, "../../apps/shop/src/app/layout/header.spec.tsx"  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"

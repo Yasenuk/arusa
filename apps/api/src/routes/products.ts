@@ -51,10 +51,12 @@ router.get("/products", async (req, res) => {
       .filter(Boolean);
 
     if (!ids.length) {
-      return res.status(400).json({ error: "ids required" });
+      return res.status(400).json({ error: "Не вказано ID продуктів" });
     }
 
-    const products = await getProducts(ids);
+    const isAll = String(req.query.all) === "true";
+
+    const products = await getProducts(ids, isAll);
 
     res.json(products);
   } catch (err) {

@@ -3,7 +3,6 @@ export * from './lib/menues/cart';
 export * from './lib/menues/burger-menu';
 export * from './lib/modals/popup';
 export * from './lib/modals/notification';
-export * from './lib/header';
-export * from './lib/footer';
 export * from './lib/tabs';
 export * from './lib/auth/AuthProvider';
+export * from './lib/auth/AuthPopup';

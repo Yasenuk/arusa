@@ -44,7 +44,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/lib/menues/burger-menu.tsx"
-  ],
+, "../../apps/shop/src/app/layout/footer.tsx", "../../apps/shop/src/app/layout/header.spec.tsx", "../../apps/shop/src/app/layout/header.tsx"  ],
   "references": [
     {
       "path": "../shared-types/tsconfig.lib.json"

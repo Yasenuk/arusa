@@ -8,6 +8,7 @@ import AboutUs from "./pages/about/AboutUs";
 import Blog from "./pages/blog/Blog";
 import Contact from "./pages/contact/Contact";
 import Profile from "./pages/user/Profile";
+import Product from "./pages/product/Product";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const router = createBrowserRouter([
         element: <Profile />,
         handle: { title: "Arusa - Профіль", isDark: true }
       },
+      {
+        path: "/products/:id",
+        element: <Product />,
+        handle: { title: "Arusa - Сторінка продукту", isDark: true }
+      }
     ]
   }
 ]);

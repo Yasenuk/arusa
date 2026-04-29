@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import styles from '../styles/common/footer.module.scss';
+import styles from '../../styles/footer.module.scss';
 
 export function Footer() {
   const links = {

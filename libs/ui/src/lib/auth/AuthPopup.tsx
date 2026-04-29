@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+
 import { Popup, useAuth } from "@org/ui";
 
 import styles from "../../styles/common/form.module.scss";
@@ -7,7 +8,7 @@ import styles from "../../styles/common/form.module.scss";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 
-export default function AuthPopup() {
+export function AuthPopup() {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
 
@@ -52,3 +53,5 @@ export default function AuthPopup() {
     </>
   );
 }
+
+export default AuthPopup;

@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import styles from "../styles/common/header.module.scss";
-import BurgerMenu from "./menues/burger-menu";
-import Cart from "./menues/cart";
-import AuthPopup from "./auth/AuthPopup";
-import { useAuth } from "./auth/AuthProvider";
+import styles from '../../styles/header.module.scss';
+import { BurgerMenu, Cart, useAuth, AuthPopup } from "@org/ui";
 
 export function Header({ isDark = false }: { isDark?: boolean }) {
   const [isHidden, setIsHidden] = useState(false);

@@ -1,6 +1,8 @@
-import { Footer, Header } from "@org/ui";
 import { useEffect } from "react";
 import { Outlet, useMatches } from "react-router-dom";
+
+import Header from "./header";
+import Footer from "./footer";
 
 type Handle = {
   title?: string;

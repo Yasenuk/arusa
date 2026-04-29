@@ -52,8 +52,10 @@ function mapVariant(variants: any[]) {
   }));
 }
 
-export async function getProducts(ids?: number[]) {
-  const where = ids ? { id: { in: ids } } : {};
+export async function getProducts(ids?: number[], all?: boolean) {
+  const where = ids ? {
+    [!all ? 'id' : 'product_id']: { in: ids }
+  } : {};
 
   const variants = await prisma.product_variants.findMany({
     where,
