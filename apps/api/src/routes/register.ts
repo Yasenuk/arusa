@@ -1,56 +1,27 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
-import { prisma } from '../db/prisma';
-import { createAccessToken, createRefreshToken } from "../services/auth.service";
-import { createUser } from "../services/user.service";
-import { createCart } from "../services/cart.service";
+import { registerUser } from "../services/auth.service";
 
 const router = Router();
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000
+};
+
 router.post("/auth/register", async (req, res) => {
-  const {
-    first_name,
-    last_name,
-    middle_name,
-    email,
-    password,
-    password_confirm
-  } = req.body;
+  try {
+    const { first_name, last_name, middle_name, email, password, password_confirm } = req.body;
+    const { accessToken, refreshToken, user } = await registerUser(first_name, last_name, middle_name, email, password, password_confirm);
 
-  if (password !== password_confirm) {
-    return res.status(400).json({ error: "Паролі не співпадають" });
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
+    res.json({ accessToken, user });
+  } catch (err: any) {
+    const status = err?.status || 500;
+    const message = err?.message || "Помилка при реєстрації";
+    res.status(status).json({ error: message });
   }
-
-  const exists = await prisma.users.findUnique({
-    where: { email }
-  });
-
-  if (exists) {
-    return res.status(400).json({ error: "Email вже використовується" });
-  }
-
-  const password_hash = await bcrypt.hash(password, 10);
-
-  const result = await prisma.$transaction(async (prisma) => {
-    const user = await createUser(first_name, last_name, middle_name, email, password_hash);
-    await createCart(Number(user.id));
-
-    return user;
-  });
-
-  const payload = {
-    id: result.id.toString(),
-    role: result.role
-  };
-
-  const accessToken = createAccessToken(payload);
-  const refreshToken = createRefreshToken(payload);
-
-  res.json({
-    accessToken,
-    refreshToken,
-    user: payload
-  });
 });
 
 export default router;

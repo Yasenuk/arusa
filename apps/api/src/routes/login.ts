@@ -1,40 +1,30 @@
 import { Router } from "express";
-import { prisma } from '../db/prisma';
-import bcrypt from "bcrypt";
-import { createAccessToken, createRefreshToken } from "../services/auth.service";
+import { loginUser } from "../services/auth.service";
 
 const router = Router();
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,          // недоступний з JS
+  secure: process.env.NODE_ENV === "production", // тільки HTTPS на prod
+  sameSite: "strict" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 днів в мс
+};
+
 router.post("/auth/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    const { accessToken, refreshToken, user } = await loginUser(email, password);
 
-  const user = await prisma.users.findUnique({
-    where: { email }
-  });
+    // refreshToken — тільки в httpOnly cookie, JS його не бачить
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-  if (!user) {
-    return res.status(400).json({ error: "Невірні облікові дані" });
+    // accessToken — в тілі відповіді, фронт зберігає в пам'яті
+    res.json({ accessToken, user });
+  } catch (err: any) {
+    const status = err?.status || 500;
+    const message = err?.message || "Помилка при вході";
+    res.status(status).json({ error: message });
   }
-
-  const valid = await bcrypt.compare(password, user.password_hash);
-
-  if (!valid) {
-    return res.status(400).json({ error: "Невірні облікові дані" });
-  }
-
-  const payload = {
-    id: user.id.toString(),
-    role: user.role
-  };
-
-  const accessToken = createAccessToken(payload);
-  const refreshToken = createRefreshToken(payload);
-
-  res.json({
-    accessToken,
-    refreshToken,
-    user: payload
-  });
 });
 
 export default router;

@@ -1,5 +1,6 @@
 import express from "express";
 import * as path from 'path';
+import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -20,7 +21,7 @@ dotenv.config();
 const app = express();
 
 app.use(morgan("combined"));
-
+app.use(cookieParser());
 app.use(express.json());
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));

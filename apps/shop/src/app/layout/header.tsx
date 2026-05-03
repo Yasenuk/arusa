@@ -43,24 +43,15 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
   const lastScroll = useRef<number>(0);
 
   useEffect(() => {
-    const saved = Number(localStorage.getItem("header_scroll")) || 0;
-    lastScroll.current = saved;
-
     const handleScroll = () => {
       const current = window.pageYOffset;
-
       setIsHidden(current > lastScroll.current && current > 100);
       setIsScrolled(current > 200);
-
       lastScroll.current = current;
-      localStorage.setItem("header_scroll", String(current));
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (

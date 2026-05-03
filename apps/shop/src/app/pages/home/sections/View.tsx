@@ -7,12 +7,15 @@ export default function View({ ids }: { ids?: number[] }) {
 	const [products, setProducts] = useState<CatalogProductVariant[]>([]);
 
 	useEffect(() => {
-		if (!ids) return;
-		fetch(`/api/products?ids=${ids?.join(",")}`)
-			.then(r => r.json())
+		if (!ids?.length) return;
+		fetch(`/api/products?ids=${ids.join(",")}`)
+			.then(r => {
+				if (!r.ok) throw new Error(`HTTP ${r.status}`);
+				return r.json();
+			})
 			.then(setProducts)
 			.catch(console.error);
-	}, []);
+	}, [ids?.join(",")]);
 
 	return (
 		<div className={styles.view}>

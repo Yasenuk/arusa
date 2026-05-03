@@ -1,27 +1,31 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { AuthContextType } from "@org/shared-types";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("accessToken"));
+  const accessTokenRef = useRef<string | null>(null);
+  const [isAuth, setIsAuth] = useState(false);
 
   const login = (token: string) => {
-    localStorage.setItem("accessToken", token);
+    accessTokenRef.current = token;
     setIsAuth(true);
   };
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
+    accessTokenRef.current = null;
     setIsAuth(false);
+    fetch("/api/auth/logout", { method: "POST" }).catch(console.error);
   };
 
+  const getToken = () => accessTokenRef.current;
+
   return (
-    <AuthContext.Provider value={{ isAuth, login, logout }}>
+    <AuthContext.Provider value={{ isAuth, login, logout, getToken }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);

@@ -1,7 +1,17 @@
-export async function fetchWithAuth(url: string, options: RequestInit = {}) {
-	let token = localStorage.getItem("accessToken");
+// Модульний стор для accessToken — доступний з будь-якого місця без React
+// Ніколи не передається в localStorage
+let _accessToken: string | null = null;
 
-	if (!token) return;
+export const tokenStore = {
+  get: () => _accessToken,
+  set: (token: string) => { _accessToken = token; },
+  clear: () => { _accessToken = null; }
+};
+
+export async function fetchWithAuth(url: string, options: RequestInit = {}) {
+	const token = tokenStore.get();
+
+	if (!token) throw new Error("Unauthorized");
 
 	let res = await fetch(url, {
 		...options,
@@ -16,27 +26,21 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 		const errorData = await res.json();
 
 		if (errorData.error === "Token expired") {
-			const refreshToken = localStorage.getItem("refreshToken");
-
-			if (!refreshToken) {
-				localStorage.clear();
-				return;
-			}
-
+			// refreshToken — в httpOnly cookie, браузер надсилає автоматично
 			const refreshRes = await fetch("/api/auth/refresh", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ refreshToken })
+				credentials: "include" // необхідно для передачі cookie
 			});
 
 			if (!refreshRes.ok) {
-				localStorage.clear();
-				return;
+				tokenStore.clear();
+				throw new Error("Session expired");
 			}
 
 			const data = await refreshRes.json();
-			localStorage.setItem("accessToken", data.accessToken);
+			tokenStore.set(data.accessToken);
 
+			// Повторюємо оригінальний запит з новим токеном
 			res = await fetch(url, {
 				...options,
 				headers: {
@@ -56,9 +60,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 export async function loadData(url: string) {
 	try {
 		const res = await fetchWithAuth(url);
-
 		if (!res) return;
-
 		return await res.json();
 	} catch (err) {
 		console.error(err);

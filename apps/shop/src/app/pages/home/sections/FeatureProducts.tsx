@@ -23,10 +23,13 @@ export default function FeatureProducts({
 	useEffect(() => {
 		if (!children?.length) return;
 		fetch(`/api/products?ids=${children.join(",")}`)
-			.then((r) => r.json())
+			.then((r) => {
+				if (!r.ok) throw new Error(`HTTP ${r.status}`);
+				return r.json();
+			})
 			.then(setProducts)
 			.catch(console.error);
-	}, []);
+	}, [children.join(",")]);
 
 	return (
 		<div className={`${styles['feature-products']} ${_isDark ? styles['_dark'] : '_light'}`}>

@@ -7,8 +7,12 @@ export const useCartStore = create<CartStore>((set) => ({
 	cart: null,
 
 	fetchCart: async () => {
-		const data = await loadData("/api/cart");
-		set({ cart: data });
+		try {
+			const data = await loadData("/api/cart");
+			set({ cart: data });
+		} catch (err: any) {
+			if (err?.message !== 'Unauthorized') console.error(err);
+		}
 	},
 
 	addItem: async (variantId) => {

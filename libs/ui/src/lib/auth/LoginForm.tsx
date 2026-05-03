@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAuth, useNotification } from "@org/ui";
-import { emailPattern, passwordPattern, validateEmail, validatePassword } from "@org/utils/index";
+import { emailPattern, passwordPattern, validateEmail, validatePassword, tokenStore } from "@org/utils/index";
 
 import styles from "../../styles/common/form.module.scss";
 
@@ -21,28 +21,24 @@ export default function LoginForm({ goRegister, onSuccess }: {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // щоб браузер прийняв httpOnly cookie
         body: JSON.stringify({ email, password })
       });
 
       if (!res.ok) {
-        const data = await res.text();
-        const errorData = JSON.parse(data);
-        
+        const errorData = await res.json();
         notify(errorData["error"], "error");
-        
-        throw new Error("Помилка входу");
+        return;
       }
 
-      notify("Вхід успішний!", "success");
-
       const data = await res.json();
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
 
+      // accessToken — в пам'ять через tokenStore, а не в localStorage
+      tokenStore.set(data.accessToken);
       login(data.accessToken);
+
+      notify("Вхід успішний!", "success");
       onSuccess();
 
       setEmail("");

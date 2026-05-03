@@ -1,16 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import styles from "./Shop.module.scss";
 
 import ProductCard from "../../common/ProductCard";
 import { CatalogProductVariant } from "@org/shared-types";
 
-export default function Shop() {
-  const [products, setProducts] = useState<CatalogProductVariant[]>([]);
-  const [searchInput, setSearchInput] = useState("");
+interface ProductsResponse {
+  data: CatalogProductVariant[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
 
-  const [currentPage, setCurrentPage] = useState(localStorage.getItem("shop-current-page") ? Number(localStorage.getItem("shop-current-page")) : 1);
-  const itemsPerPage = 12;
+export default function Shop() {
+  const [response, setResponse] = useState<ProductsResponse>({
+    data: [],
+    total: 0,
+    page: 1,
+    totalPages: 1,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [filters, setFilters] = useState({
     category: "all",
@@ -21,76 +32,51 @@ export default function Shop() {
     availability: "all",
   });
 
-  useEffect(() => {
+  // Запит з урахуванням фільтрів та поточної сторінки
+  const fetchProducts = useCallback(async (page: number) => {
+    setIsLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", "12");
 
-    if (filters.category !== "all") params.append("category", filters.category);
-    if (filters.sort) params.append("sort", filters.sort);
-    if (filters.search) params.append("search", filters.search);
-    if (filters.color) params.append("color", filters.color);
-    if (filters.material) params.append("material", filters.material);
-    if (filters.availability !== "all")
-      params.append("availability", filters.availability);
+    if (filters.category !== "all") params.set("category", filters.category);
+    if (filters.sort) params.set("sort", filters.sort);
+    if (filters.search) params.set("search", filters.search);
+    if (filters.color) params.set("color", filters.color);
+    if (filters.material) params.set("material", filters.material);
+    if (filters.availability !== "all") params.set("availability", filters.availability);
 
-    fetch(`/api/products/all?${params.toString()}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, [
-    filters.category,
-    filters.sort,
-    filters.color,
-    filters.material,
-    filters.availability,
-    filters.search,
-  ]);
+    try {
+      const res = await fetch(`/api/products?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: ProductsResponse = await res.json();
+      setResponse(data);
+    } catch (err) {
+      console.error("Помилка завантаження продуктів:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filters]);
 
+  // Дебаунс пошуку
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setFilters((f) => ({
-        ...f,
-        search: searchInput,
-      }));
+      setFilters((f) => ({ ...f, search: searchInput }));
     }, 300);
-
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
+  // При зміні фільтрів — повертаємося на 1 сторінку
   useEffect(() => {
     setCurrentPage(1);
+    fetchProducts(1);
   }, [filters]);
-
-  function renderProducts() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = currentPage * itemsPerPage;
-
-    return products.slice(start, end).map((product) => (
-      <ProductCard key={product.id} product={product} />
-    ));
-  }
-
-  function renderPagination() {
-    const totalPages = Math.ceil(products.length / itemsPerPage);
-
-    return Array.from({ length: totalPages }, (_, i) => {
-      const page = i + 1;
-
-      return (
-        <button
-          key={page}
-          onClick={() => handlePageChange(page)}
-          className={`${styles["shop__pagination-button"]} ${currentPage === page ? styles["shop__pagination-button_active"] : ""
-            } _button _button_main _button_border regular upper`}
-        >
-          {page}
-        </button>
-      );
-    });
-  }
 
   function handlePageChange(page: number) {
     setCurrentPage(page);
-    localStorage.setItem("shop-current-page", page.toString());
+    fetchProducts(page);
   }
 
   return (
@@ -100,7 +86,7 @@ export default function Shop() {
         <div className={styles.shop__topbar}>
           <div className={styles.shop__container}>
             <span className={styles["shop__count-title"]}>
-              <span>{products.length}</span>
+              <span>{response.total}</span>
               Товарів
             </span>
             <div className={styles.shop__search}>
@@ -121,56 +107,35 @@ export default function Shop() {
       </div>
       <div className={styles.shop__content}>
         <aside className={styles.shop__filters}>
-          {/* <div className="shop__filter-group" data-dropdown>
-              <h2 className="shop__filter-lable regular upper" data-dropdown-button>Фільтри</h2>
-              <ul className="shop__filters-list" data-dropdown-body>
-                <li className="shop__filters-item _button regular upper">
-                  <input checked type="radio" name="products-category" id="products-category-all" data-filter-category="" />
-                  <label htmlFor="products-category-all">Всі</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-category" id="products-category-decors" data-filter-category="decors" />
-                  <label htmlFor="products-category-decors">Декор</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-category" id="products-category-chairs" data-filter-category="chairs" />
-                  <label htmlFor="products-category-chairs">Стільці</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-category" id="products-category-lamps" data-filter-category="lamps" />
-                  <label htmlFor="products-category-lamps">Лампи</label>
-                </li>
-              </ul>
-            </div>
-            <div className="shop__filter-group" data-dropdown>
-              <h2 className="shop__filter-lable regular upper" data-dropdown-button>Сортувати</h2>
-              <ul className="shop__filters-list" data-dropdown-body>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-sort" id="products-sort-price-low-high" data-filter-sort="price-low-high" />
-                  <label htmlFor="products-sort-price-low-high">За ціною: від низької до високої</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-sort" id="products-sort-price-high-low" data-filter-sort="price-high-low" />
-                  <label htmlFor="products-sort-price-high-low">За ціною: від високої до низької</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-sort" id="products-sort-a-z" data-filter-sort="a-z" />
-                  <label htmlFor="products-sort-a-z">А-я</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-sort" id="products-sort-z-a" data-filter-sort="z-a" />
-                  <label htmlFor="products-sort-z-a">Я-а</label>
-                </li>
-                <li className="shop__filters-item _button regular upper">
-                  <input type="radio" name="products-sort" id="products-sort-best-selling" data-filter-sort="best-selling" />
-                  <label htmlFor="products-sort-best-selling">Хіт продажів</label>
-                </li>
-              </ul>
-            </div> */}
+          {/* Фільтри */}
         </aside>
         <div className={styles.shop__products}>
-          <div className={styles.shop__items}>{renderProducts()}</div>
-          <div className={styles.shop__pagination}>{renderPagination()}</div>
+          <div className={styles.shop__items}>
+            {isLoading ? (
+              <p>Завантаження...</p>
+            ) : (
+              response.data.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
+          </div>
+          <div className={styles.shop__pagination}>
+            {Array.from({ length: response.totalPages }, (_, i) => {
+              const page = i + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  disabled={isLoading}
+                  className={`${styles["shop__pagination-button"]} ${
+                    currentPage === page ? styles["shop__pagination-button_active"] : ""
+                  } _button _button_main _button_border regular upper`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
