@@ -1,1 +1,111 @@
-@use "@org/ui/styles/index" as *;
+@use '@org/ui/styles/index' as *;
+
+.product {
+  &__container {
+    padding-top: toRem(80);
+    @include container(15);
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: toRem(20);
+    padding-block: toRem(20);
+  }
+
+  &__image {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__picture {
+    max-width: toRem(450);
+    max-height: toRem(450);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__info {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    gap: toRem(20);
+  }
+
+  &__title {
+  }
+
+  &__description {
+  }
+
+  &__price {
+  }
+
+  &__articles {
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    gap: toRem(10);
+  }
+
+  &__buy {
+  }
+
+  &__add {
+  }
+
+  &__favorite {
+  }
+
+  &__variants {
+    display: flex;
+    align-items: center;
+    gap: toRem(10);
+  }
+
+  &__item {
+    max-width: toRem(80);
+    max-height: toRem(80);
+
+    &_active {
+      border-radius: toRem(5);
+      outline: 2px solid $color-oyster;
+    }
+  }
+
+  &__item-picture {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(10);
+		margin-block: toRem(20);
+		padding-block: toRem(15);
+
+		border-top: toRem(1.5) solid $color-oyster;
+
+		&_list {
+			display: flex;
+			flex-direction: column;
+			row-gap: toRem(12);
+		}
+  }
+
+  &__related {
+		border-top: toRem(1.5) solid $color-oyster;
+    width: 100%;
+  }
+}

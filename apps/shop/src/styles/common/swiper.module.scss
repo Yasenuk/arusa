@@ -1,0 +1,46 @@
+@use '@org/ui/styles/index' as *;
+
+:global(.swiper) {
+  height: 100%;
+}
+
+:global(.swiper-wrapper) {
+  align-items: stretch;
+}
+
+:global(.swiper-slide) {
+  display: flex;
+  height: auto;
+}
+
+:global(.swiper-pagination-c) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-block: toRem(20) !important;
+  @include adaptiveValue(column-gap, 20, 5);
+}
+
+:global(.swiper-pagination-bullet) {
+	[class*='_light'] & {
+    background-color: $color-opal;
+  }
+
+  [class*='_dark'] & {
+    background-color: $color-oyster;
+  }
+  border-radius: 50%;
+  @include adaptiveValue(min-width, 18, 12);
+  @include adaptiveValue(min-height, 18, 12);
+  cursor: pointer;
+}
+
+:global(.swiper-pagination-bullet-active) {
+  [class*='_light'] & {
+    background-color: $color-opal;
+  }
+
+  [class*='_dark'] & {
+    background-color: $color-oyster;
+  }
+}
