@@ -10,7 +10,7 @@
     "types": ["node"],
     "lib": ["DOM"]
   },
-  "include": ["src/**/*.ts", "src/dom/form.ts", "src/dom/notify.ts"],
+  "include": ["src/**/*.ts"],
   "references": [
     {
       "path": "../shared-types/tsconfig.lib.json"
