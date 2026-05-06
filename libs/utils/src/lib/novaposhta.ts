@@ -3,7 +3,7 @@ export async function npRequest(modelName: string, calledMethod: string, methodP
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      apiKey: process.env.NP_API_KEY,
+      apiKey: process.env.NOVA_POST_API_KEY,
       modelName,
       calledMethod,
       methodProperties
