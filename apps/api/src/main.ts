@@ -16,6 +16,8 @@ import shopArticles from "./routes/articles";
 import shopCart from "./routes/cart";
 import users from "./routes/users";
 
+import npRequest from "./routes/novaposhta";
+
 dotenv.config();
 
 const app = express();
@@ -37,6 +39,8 @@ app.use("/api", adminProducts);
 
 app.use("/api", shopArticles);
 app.use("/api", shopCart);
+
+app.use("/api", npRequest)
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
