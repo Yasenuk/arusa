@@ -106,12 +106,12 @@ export default function Product() {
 						</span>
 						<div className={styles.product__buttons}>
 							<button
-								onClick={() => product && addItem(product?.product_id)}
+								onClick={() => product && addItem(product?.id)}
 								className={`${styles.product__buy} _button _button_main _button_border _button_fill regular upper`}>
 								Купити
 							</button>
 							<button
-								onClick={() => product && addItem(product?.product_id)}
+								onClick={() => product && addItem(product?.id)}
 								className={`${styles.product__add} _button _button_main _button_border _button_fill regular upper`}>
 								Додати до кошика
 							</button>

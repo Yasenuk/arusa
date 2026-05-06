@@ -39,7 +39,6 @@ export default function Shop() {
     search: "",
   });
 
-  // Завантажуємо категорії один раз при монтуванні
   useEffect(() => {
     fetch("/api/categories")
       .then((r) => {
@@ -76,7 +75,6 @@ export default function Shop() {
     }
   }, [filters]);
 
-  // Дебаунс пошуку
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFilters((f) => ({ ...f, search: searchInput }));
@@ -84,7 +82,6 @@ export default function Shop() {
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
-  // При зміні фільтрів — повертаємось на 1 сторінку
   useEffect(() => {
     setCurrentPage(1);
     fetchProducts(1);
