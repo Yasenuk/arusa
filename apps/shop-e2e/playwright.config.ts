@@ -24,7 +24,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npx nx run Arusa:preview',
+    command: 'npx nx run shop:preview',
     url: 'http://localhost:5000',
     reuseExistingServer: true,
     cwd: workspaceRoot,
