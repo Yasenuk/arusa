@@ -2,7 +2,8 @@ export * from './lib/cards/cart-product-card';
 export * from './lib/cards/ProductCard';
 export * from './lib/cards/Article';
 
-export * from './lib/dropdowns/Dropdown';
+export * from './lib/dropdowns/dropdown';
+export * from './lib/dropdowns/cascade-dropdown';
 
 export * from './lib/menues/cart';
 export * from './lib/menues/burger-menu';

@@ -2,10 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 
 import styles from "./Shop.module.scss";
 
-import { Dropdown, ProductCard } from "@org/ui";
+import { CascadeDropdown, Dropdown, ProductCard } from "@org/ui";
 
-import { CatalogProductVariant } from "@org/shared-types";
-import { Category } from "@org/shared-types";
+import { CatalogProductVariant, Category } from "@org/shared-types";
+import { buildCategoryTree } from "@org/utils/index";
 
 interface ProductsResponse {
   data: CatalogProductVariant[];
@@ -50,10 +50,7 @@ export default function Shop() {
       .catch(console.error);
   }, []);
 
-  const categoryOptions = [
-    { value: "all", label: "Всі категорії" },
-    ...categories.map((c) => ({ value: c.name, label: c.name })),
-  ];
+  const categoryTree = buildCategoryTree(categories);
 
   const fetchProducts = useCallback(async (page: number) => {
     setIsLoading(true);
@@ -110,9 +107,9 @@ export default function Shop() {
         <div className={styles.shop__topbar}>
           <div className={styles.shop__filters}>
             <div className={styles["shop__filter-group"]}>
-              <Dropdown
+              <CascadeDropdown
                 label="Категорія"
-                options={categoryOptions}
+                tree={categoryTree}
                 value={filters.category}
                 onChange={handleFilterChange("category")}
               />

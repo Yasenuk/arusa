@@ -19,7 +19,6 @@ export function Dropdown({ label, options, value, onChange }: DropdownProps) {
 
   const selected = options.find((o) => o.value === value);
 
-  // Закриваємо при кліку поза дропдауном
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
