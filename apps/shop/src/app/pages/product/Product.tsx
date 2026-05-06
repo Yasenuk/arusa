@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import styles from "./product.module.scss";
 
@@ -8,7 +8,11 @@ import { CatalogProductVariant } from "@org/shared-types";
 export default function Product() {
 	const { id } = useParams();
 
+	const [searchParams] = useSearchParams();
+	const variantId = searchParams.get("variant");
+
 	const [products, setProducts] = useState<CatalogProductVariant[] | null>(null);
+	const [product, setProduct] = useState<CatalogProductVariant | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +35,17 @@ export default function Product() {
 			.finally(() => setIsLoading(false));
 	}, [id]);
 
+	useEffect(() => {
+		if (!products || products.length === 0) return;
+
+		if (variantId) {
+			const found = products.find(v => String(v.id) === variantId);
+			setProduct(found || null);
+		} else {
+			setProduct(products[0]);
+		}
+	}, [products, variantId]);
+
 	if (isLoading) return <div className={styles.product}><p>Завантаження...</p></div>;
 	if (error) return <div className={styles.product}><p>{error}</p></div>;
 	if (!products?.length) return <div className={styles.product}><p>Продукт не знайдено</p></div>;
@@ -38,20 +53,34 @@ export default function Product() {
 	return (<>
 		<div className={styles.product}>
 			<div className={styles.container}>
+
+				<div>
+					<picture>
+						<source srcSet={`${product?.image}.avif`} type="image/avif" />
+						<source srcSet={`${product?.image}.webp`} type="image/webp" />
+						<img className={styles.product__picture} loading="lazy" src={`${product?.image}.png`} alt={product?.title} width={320} height={320} />
+					</picture>
+					<h1>{product?.title}</h1>
+					<p>{product?.description}</p>
+					<span className={styles.product__price}>
+						{(Number(product?.price) / 1000).toFixed(3)} ₴
+					</span>
+					<span className={styles.product__color}>
+						{product?.color}
+					</span>
+				</div>
 				{products.map((product, index) => (
 					<div key={index} className={styles.product__item}>
-						<picture>
-							<source srcSet={`${product?.image}.avif`} type="image/avif" />
-							<source srcSet={`${product?.image}.webp`} type="image/webp" />
-							<img className={styles.product__picture} loading="lazy" src={`${product?.image}.png`} alt={product?.title} width={320} height={320} />
-						</picture>
-						<div>
-							<h1>{product?.title}</h1>
-							<p>{product?.description}</p>
-							<p>{product?.price}</p>
-						</div>
+						<Link to={`/products/${product.product_id}?variant=${product.id}`}>
+							<picture>
+								<source srcSet={`${product?.image}.avif`} type="image/avif" />
+								<source srcSet={`${product?.image}.webp`} type="image/webp" />
+								<img className={styles.product__picture} loading="lazy" src={`${product?.image}.png`} alt={product?.title} width={320} height={320} />
+							</picture>
+						</Link>
 					</div>
 				))}
+				<p>{variantId || "Виберіть варіант"}</p>
 			</div>
 		</div>
 	</>);

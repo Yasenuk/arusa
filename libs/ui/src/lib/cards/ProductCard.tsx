@@ -12,8 +12,8 @@ export function ProductCard({ product, variantId }: { product?: CatalogProductVa
   if (!product) return null;
 
   return (
-    <div className={styles["product-card"]}>
-      <Link to={`/products/${product.id}`}>
+    <div className={styles["product-card"]} data-variant={product?.id}>
+      <Link to={`/products/${product.product_id}?variant=${variantId || product.id}`}>
         <picture>
           <source srcSet={`${product.image}.avif`} type="image/avif" />
           <source srcSet={`${product.image}.webp`} type="image/webp" />

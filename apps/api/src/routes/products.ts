@@ -30,11 +30,8 @@ router.post("/admin/products", async (req, res) => {
   }
 });
 
-// GET /api/products — всі продукти з фільтрами та серверною пагінацією
-// GET /api/products?ids=1,2,3&all=true — конкретні варіанти за IDs
 router.get("/products", async (req, res) => {
   try {
-    // Якщо передано ids — повертаємо конкретні варіанти (сторінка продукту)
     if (req.query.ids) {
       const ids = String(req.query.ids)
         .split(",")
@@ -50,7 +47,6 @@ router.get("/products", async (req, res) => {
       return res.json(products);
     }
 
-    // Інакше — каталог з фільтрами та пагінацією
     const filters: ProductFilters = {
       category: req.query.category as string | undefined,
       sort: req.query.sort as ProductFilters['sort'],

@@ -71,7 +71,6 @@ function mapVariant(variants: any[]) {
   }));
 }
 
-// Отримання конкретних варіантів за IDs (для сторінки продукту)
 export async function getProductsByIds(ids: number[], allVariants = false) {
   const where = {
     [allVariants ? 'product_id' : 'id']: { in: ids }
@@ -88,10 +87,7 @@ export async function getProductsByIds(ids: number[], allVariants = false) {
   return mapVariant(variants);
 }
 
-// Рекурсивно збирає всі ID дочірніх категорій включно з батьківською
-// Дивани (id:1) → [1, 2(Кутові), 3(Прямі), 4(Модульні), ...]
 async function collectCategoryIds(categoryName: string): Promise<number[]> {
-  // Знаходимо кореневу категорію за іменем
   const root = await prisma.categories.findFirst({
     where: { name: { equals: categoryName, mode: 'insensitive' } },
   });
@@ -100,7 +96,6 @@ async function collectCategoryIds(categoryName: string): Promise<number[]> {
 
   const ids: number[] = [];
 
-  // BFS обхід дерева категорій
   const queue = [root.id];
   while (queue.length > 0) {
     const currentId = queue.shift()!;
@@ -117,7 +112,6 @@ async function collectCategoryIds(categoryName: string): Promise<number[]> {
   return ids;
 }
 
-// Отримання всіх продуктів з фільтрами та серверною пагінацією
 export async function getProducts(filters: ProductFilters = {}): Promise<ProductsResult> {
   const {
     category,
@@ -130,7 +124,6 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
     limit = 12,
   } = filters;
 
-  // Будуємо WHERE для product_variants
   const variantWhere: any = {};
 
   if (color) variantWhere.color = { contains: color, mode: 'insensitive' };
@@ -138,11 +131,9 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
   if (availability === 'in_stock') variantWhere.quantity = { gt: 0 };
   if (availability === 'out_of_stock') variantWhere.quantity = 0;
 
-  // WHERE для вкладеного products
   const productWhere: any = { is_active: true };
   if (search) productWhere.title = { contains: search, mode: 'insensitive' };
   if (category) {
-    // Збираємо всі ID категорії та її нащадків
     const categoryIds = await collectCategoryIds(category);
     if (categoryIds.length > 0) {
       productWhere.category_id = { in: categoryIds };
@@ -151,14 +142,12 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
 
   variantWhere.products = productWhere;
 
-  // Сортування
   const orderBy: any =
     sort === 'price_asc' ? { price: 'asc' } :
     sort === 'price_desc' ? { price: 'desc' } :
     sort === 'z_a' ? { products: { title: 'desc' } } :
-    { products: { title: 'asc' } }; // a_z за замовчуванням
+    { products: { title: 'asc' } };
 
-  // Рахуємо загальну кількість для пагінації
   const total = await prisma.product_variants.count({ where: variantWhere });
 
   const skip = (page - 1) * limit;

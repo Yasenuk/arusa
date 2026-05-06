@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextType } from "@org/shared-types";
-import { tokenStore } from "@org/utils";
+import { tokenStore } from "@org/utils/index";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
