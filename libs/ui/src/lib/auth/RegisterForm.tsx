@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth, useNotification } from "@org/ui";
-import { emailPattern, passwordPattern, validateEmail, validatePassword, validatePasswordConfirm } from "@org/utils/index";
+import { emailPattern, passwordPattern, tokenStore, validateEmail, validatePassword, validatePasswordConfirm } from "@org/utils/index";
 
 import styles from "../../styles/common/form.module.scss";
 
@@ -43,6 +43,7 @@ export default function RegisterForm({ goLogin, onSuccess }: {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify({
           first_name,
           last_name,
@@ -63,9 +64,8 @@ export default function RegisterForm({ goLogin, onSuccess }: {
       }
 
       const data = await res.json();
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
 
+      tokenStore.set(data.accessToken);
       login(data.accessToken);
 
       notify("Реєстрація успішна!", "success");

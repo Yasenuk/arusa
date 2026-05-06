@@ -1,6 +1,9 @@
-import styles from "./view.module.scss";
-import ProductCard from "../../../common/ProductCard";
 import { useEffect, useState } from "react";
+
+import styles from "./view.module.scss";
+
+import { ProductCard } from "@org/ui";
+
 import { CatalogProductVariant } from "@org/shared-types";
 
 export default function View({ ids }: { ids?: number[] }) {

@@ -15,7 +15,6 @@ type Props = {
 export function Cart({ isOpen, setIsOpen }: Props) {
   const get_cart = useCartStore(s => s.cart);
   const fetchCart = useCartStore(s => s.fetchCart);
-  const { notify } = useNotification();
 
   useEffect(() => {
     fetchCart();

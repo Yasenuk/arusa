@@ -4,10 +4,10 @@ import { loginUser } from "../services/auth.service";
 const router = Router();
 
 const COOKIE_OPTIONS = {
-  httpOnly: true,          // недоступний з JS
-  secure: process.env.NODE_ENV === "production", // тільки HTTPS на prod
+  httpOnly: true,       
+  secure: process.env.NODE_ENV === "production",
   sameSite: "strict" as const,
-  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 днів в мс
+  maxAge: 7 * 24 * 60 * 60 * 1000
 };
 
 router.post("/auth/login", async (req, res) => {
@@ -15,10 +15,8 @@ router.post("/auth/login", async (req, res) => {
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await loginUser(email, password);
 
-    // refreshToken — тільки в httpOnly cookie, JS його не бачить
     res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-    // accessToken — в тілі відповіді, фронт зберігає в пам'яті
     res.json({ accessToken, user });
   } catch (err: any) {
     const status = err?.status || 500;

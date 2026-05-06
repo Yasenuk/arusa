@@ -4,7 +4,6 @@ import { Router } from "express";
 const router = Router();
 
 router.post("/auth/refresh", (req, res) => {
-  // Читаємо refreshToken з httpOnly cookie, не з body
   const refreshToken = req.cookies?.refreshToken;
 
   if (!refreshToken) {

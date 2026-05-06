@@ -1,0 +1,72 @@
+@use "@org/ui/styles/index" as *;
+
+.dropdown {
+  position: relative;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: toRem(8);
+    padding-block: toRem(20);
+    color: $color-stormy;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__arrow {
+    font-size: toRem(10);
+    transition: transform 0.25s;
+    display: inline-block;
+
+    .dropdown_open & {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    z-index: 10;
+
+    background-color: $color-claudy;
+    border: toRem(1) solid $color-oyster;
+
+    // Закритий стан
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.25s ease, opacity 0.2s ease;
+
+    .dropdown_open & {
+      max-height: toRem(300);
+      overflow-y: auto;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: toRem(10) toRem(20);
+    color: $color-opal;
+    transition: color 0.2s, background-color 0.2s;
+    white-space: nowrap;
+
+    @media (any-hover: hover) {
+      &:hover {
+        color: $color-stormy;
+        background-color: $color-linen;
+      }
+    }
+
+    &_active {
+      color: $color-stormy;
+      font-weight: 600;
+    }
+  }
+}

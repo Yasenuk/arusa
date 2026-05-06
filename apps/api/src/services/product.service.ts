@@ -88,6 +88,35 @@ export async function getProductsByIds(ids: number[], allVariants = false) {
   return mapVariant(variants);
 }
 
+// Рекурсивно збирає всі ID дочірніх категорій включно з батьківською
+// Дивани (id:1) → [1, 2(Кутові), 3(Прямі), 4(Модульні), ...]
+async function collectCategoryIds(categoryName: string): Promise<number[]> {
+  // Знаходимо кореневу категорію за іменем
+  const root = await prisma.categories.findFirst({
+    where: { name: { equals: categoryName, mode: 'insensitive' } },
+  });
+
+  if (!root) return [];
+
+  const ids: number[] = [];
+
+  // BFS обхід дерева категорій
+  const queue = [root.id];
+  while (queue.length > 0) {
+    const currentId = queue.shift()!;
+    ids.push(currentId);
+
+    const children = await prisma.categories.findMany({
+      where: { parent_id: currentId },
+      select: { id: true },
+    });
+
+    children.forEach((c) => queue.push(c.id));
+  }
+
+  return ids;
+}
+
 // Отримання всіх продуктів з фільтрами та серверною пагінацією
 export async function getProducts(filters: ProductFilters = {}): Promise<ProductsResult> {
   const {
@@ -113,7 +142,11 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
   const productWhere: any = { is_active: true };
   if (search) productWhere.title = { contains: search, mode: 'insensitive' };
   if (category) {
-    productWhere.categories = { name: { equals: category, mode: 'insensitive' } };
+    // Збираємо всі ID категорії та її нащадків
+    const categoryIds = await collectCategoryIds(category);
+    if (categoryIds.length > 0) {
+      productWhere.category_id = { in: categoryIds };
+    }
   }
 
   variantWhere.products = productWhere;

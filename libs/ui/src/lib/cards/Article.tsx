@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import styles from "../../styles/common/article.module.scss";
+import styles from "../../styles/components/article.module.scss";
 import { useEffect, useState } from "react";
 
 type ArticleProps = {
@@ -10,7 +10,7 @@ type ArticleProps = {
 	description: string;
 };
 
-export default function Article({ id }: { id: number }) {
+export function Article({ id }: { id: number }) {
 	const [article, setArticle] = useState<ArticleProps | null>(null);
 
 	useEffect(() => {
@@ -44,3 +44,5 @@ export default function Article({ id }: { id: number }) {
 		</div>
 	);
 }
+
+export default Article;

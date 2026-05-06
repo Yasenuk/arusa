@@ -8,9 +8,9 @@ import "swiper/css/pagination";
 
 import styles from "./feature-products.module.scss";
 
-import ProductCard from "../../../common/ProductCard";
 import { useEffect, useState } from "react";
 import { CatalogProductVariant } from "@org/shared-types";
+import { ProductCard } from "@org/ui";
 
 export default function FeatureProducts({
 	_isDark = false,

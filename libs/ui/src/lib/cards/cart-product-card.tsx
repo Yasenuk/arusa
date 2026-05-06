@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import styles from './cart-product-card.module.scss';
+import styles from '../../styles/components/cart-product-card.module.scss';
 
 import { CartItem } from '@org/shared-types';
 import { useCartStore } from '@org/utils/index';

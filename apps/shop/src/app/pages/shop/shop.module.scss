@@ -22,97 +22,43 @@
     width: 100%;
     max-width: 100%;
 
-    @media (min-width: $tablet) {
-      max-width: calc(100% - toRem(350));
-    }
-  }
-
-  &__container {
-    @include container();
-
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    flex-direction: column-reverse;
 
-  &__count-title {
-    flex: 1 1 50%;
-    font-weight: 600;
-    text-align: center;
-
-		span {
-			padding-right: toRem(5);
-		}
-
-    @media (min-width: $tablet) {
-      text-align: left;
-    }
-  }
-
-  &__search {
-    flex: 1 1 50%;
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    border-left: toRem(1) solid $color-oyster;
-    @include adaptiveValue(padding-block, 30, 15);
-
-    @media (min-width: $tablet) {
-      justify-content: end;
-      border-left: none;
-    }
-  }
-
-  &__search-input {
-    font-weight: 600;
-    max-width: toRem(120);
-
-    &::placeholder {
-      font-weight: 600;
-      color: $color-opal;
-    }
-  }
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    scroll-behavior: smooth;
-
-    @media (min-width: $tablet) {
-      position: relative;
+    @media (min-width:$tablet){
       flex-direction: row;
-      align-items: start;
-      justify-content: space-between;
     }
   }
 
   &__filters {
-    max-width: 100%;
+    // width: 100%;
+    // flex: 1 1 toRem(400);
+    // max-width: 100%;
+    padding-inline: toRem(15);
+    min-width: auto;
+    
+    @media (min-width:$tablet){
+      min-width: toRem(400);
+      // max-width: toRem(400);
+    }
+
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    // position: sticky;
-		position: fixed;
-    z-index: 1;
+
     background-color: $color-claudy;
-    @include adaptiveValueMF(top, 52, 64);
     transition: top 0.28s;
 
     [data-scrolled='true']._hidden + * .shop & {
       top: 0;
       transition: top 0.28s;
     }
-
-    @media (min-width: $tablet) {
-      max-width: toRem(350);
-      min-width: toRem(350);
-      flex-direction: column;
-    }
   }
 
   &__filter-group {
     flex: 1 1 50%;
+    max-width: 50%;
+    display: flex;
     justify-content: center;
     position: relative;
 
@@ -195,9 +141,60 @@
     }
   }
 
+  &__container {
+    width: 100%;
+    // flex: 1 1 auto;
+
+    padding-inline: toRem(15);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__count-title {
+    flex: 1 1 50%;
+    font-weight: 600;
+    text-align: center;
+
+		span {
+			padding-right: toRem(5);
+		}
+
+    @media (min-width: $tablet) {
+      text-align: left;
+    }
+  }
+
+  &__search {
+    flex: 1 1 50%;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border-left: toRem(1) solid $color-oyster;
+    @include adaptiveValue(padding-block, 30, 15);
+
+    @media (min-width: $tablet) {
+      justify-content: end;
+      border-left: none;
+    }
+  }
+
+  &__search-input {
+    font-weight: 600;
+    max-width: toRem(120);
+
+    &::placeholder {
+      font-weight: 600;
+      color: $color-opal;
+    }
+  }
+
   &__products {
     flex: 1 1 auto;
 		@include adaptiveValue("padding-inline", 15, 0);
+    padding-top: toRem(20);
   }
 
   &__items {

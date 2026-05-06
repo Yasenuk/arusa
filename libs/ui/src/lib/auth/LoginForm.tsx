@@ -22,7 +22,7 @@ export default function LoginForm({ goRegister, onSuccess }: {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // щоб браузер прийняв httpOnly cookie
+        credentials: "include",
         body: JSON.stringify({ email, password })
       });
 
@@ -34,7 +34,6 @@ export default function LoginForm({ goRegister, onSuccess }: {
 
       const data = await res.json();
 
-      // accessToken — в пам'ять через tokenStore, а не в localStorage
       tokenStore.set(data.accessToken);
       login(data.accessToken);
 

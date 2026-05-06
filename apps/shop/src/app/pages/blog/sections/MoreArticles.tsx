@@ -1,5 +1,5 @@
 import { Tabs } from "@org/ui";
-import Article from "../../../common/Article";
+import Article from "../../../../../../../libs/ui/src/lib/cards/Article";
 import styles from "./more-articles.module.scss";
 
 export default function MoreArticles() {

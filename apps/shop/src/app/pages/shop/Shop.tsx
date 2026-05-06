@@ -2,8 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 
 import styles from "./Shop.module.scss";
 
-import ProductCard from "../../common/ProductCard";
+import { Dropdown, ProductCard } from "@org/ui";
+
 import { CatalogProductVariant } from "@org/shared-types";
+import { Category } from "@org/shared-types";
 
 interface ProductsResponse {
   data: CatalogProductVariant[];
@@ -12,6 +14,13 @@ interface ProductsResponse {
   totalPages: number;
 }
 
+const SORT_OPTIONS = [
+  { value: "a_z",        label: "А — Я" },
+  { value: "z_a",        label: "Я — А" },
+  { value: "price_asc",  label: "Ціна: за зростанням" },
+  { value: "price_desc", label: "Ціна: за спаданням" },
+];
+
 export default function Shop() {
   const [response, setResponse] = useState<ProductsResponse>({
     data: [],
@@ -19,6 +28,7 @@ export default function Shop() {
     page: 1,
     totalPages: 1,
   });
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,12 +37,24 @@ export default function Shop() {
     category: "all",
     sort: "a_z",
     search: "",
-    color: "",
-    material: "",
-    availability: "all",
   });
 
-  // Запит з урахуванням фільтрів та поточної сторінки
+  // Завантажуємо категорії один раз при монтуванні
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(setCategories)
+      .catch(console.error);
+  }, []);
+
+  const categoryOptions = [
+    { value: "all", label: "Всі категорії" },
+    ...categories.map((c) => ({ value: c.name, label: c.name })),
+  ];
+
   const fetchProducts = useCallback(async (page: number) => {
     setIsLoading(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -44,9 +66,6 @@ export default function Shop() {
     if (filters.category !== "all") params.set("category", filters.category);
     if (filters.sort) params.set("sort", filters.sort);
     if (filters.search) params.set("search", filters.search);
-    if (filters.color) params.set("color", filters.color);
-    if (filters.material) params.set("material", filters.material);
-    if (filters.availability !== "all") params.set("availability", filters.availability);
 
     try {
       const res = await fetch(`/api/products?${params.toString()}`);
@@ -68,7 +87,7 @@ export default function Shop() {
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
-  // При зміні фільтрів — повертаємося на 1 сторінку
+  // При зміні фільтрів — повертаємось на 1 сторінку
   useEffect(() => {
     setCurrentPage(1);
     fetchProducts(1);
@@ -79,18 +98,42 @@ export default function Shop() {
     fetchProducts(page);
   }
 
+  function handleFilterChange(key: keyof typeof filters) {
+    return (value: string) => setFilters((f) => ({ ...f, [key]: value }));
+  }
+
   return (
     <div className={styles.shop}>
       <h1 className={`${styles.shop__title} h h_xxl upper`}>Всі товари</h1>
+
       <div className={styles["shop__topbar-wrap"]}>
         <div className={styles.shop__topbar}>
+          <div className={styles.shop__filters}>
+            <div className={styles["shop__filter-group"]}>
+              <Dropdown
+                label="Категорія"
+                options={categoryOptions}
+                value={filters.category}
+                onChange={handleFilterChange("category")}
+              />
+            </div>
+            <div className={styles["shop__filter-group"]}>
+              <Dropdown
+                label="Сортування"
+                options={SORT_OPTIONS}
+                value={filters.sort}
+                onChange={handleFilterChange("sort")}
+              />
+            </div>
+          </div>
           <div className={styles.shop__container}>
             <span className={styles["shop__count-title"]}>
               <span>{response.total}</span>
               Товарів
             </span>
             <div className={styles.shop__search}>
-              <input type="search"
+              <input
+                type="search"
                 name="products-search"
                 id="products-search"
                 placeholder="Знайти товар"
@@ -105,37 +148,34 @@ export default function Shop() {
           </div>
         </div>
       </div>
-      <div className={styles.shop__content}>
-        <aside className={styles.shop__filters}>
-          {/* Фільтри */}
-        </aside>
-        <div className={styles.shop__products}>
-          <div className={styles.shop__items}>
-            {isLoading ? (
-              <p>Завантаження...</p>
-            ) : (
-              response.data.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
-          <div className={styles.shop__pagination}>
-            {Array.from({ length: response.totalPages }, (_, i) => {
-              const page = i + 1;
-              return (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  disabled={isLoading}
-                  className={`${styles["shop__pagination-button"]} ${
-                    currentPage === page ? styles["shop__pagination-button_active"] : ""
-                  } _button _button_main _button_border regular upper`}
-                >
-                  {page}
-                </button>
-              );
-            })}
-          </div>
+
+      <div className={styles.shop__products}>
+        <div className={styles.shop__items}>
+          {isLoading ? (
+            <p>Завантаження...</p>
+          ) : (
+            response.data.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          )}
+        </div>
+
+        <div className={styles.shop__pagination}>
+          {Array.from({ length: response.totalPages }, (_, i) => {
+            const page = i + 1;
+            return (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                disabled={isLoading}
+                className={`${styles["shop__pagination-button"]} ${
+                  currentPage === page ? styles["shop__pagination-button_active"] : ""
+                } _button _button_main _button_border regular upper`}
+              >
+                {page}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

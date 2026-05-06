@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { CatalogProductVariant } from "@org/shared-types";
 import { useCartStore } from "@org/utils/index";
 
-import styles from "../../styles/common/product-card.module.scss";
+import styles from "../../styles/components/product-card.module.scss";
 
-export default function ProductCard({ product, variantId }: { product?: CatalogProductVariant; variantId?: number }) {
+export function ProductCard({ product, variantId }: { product?: CatalogProductVariant; variantId?: number }) {
   const { addItem } = useCartStore();
 
   if (!product) return null;
@@ -47,3 +47,5 @@ export default function ProductCard({ product, variantId }: { product?: CatalogP
     </div>
   );
 }
+
+export default ProductCard;
