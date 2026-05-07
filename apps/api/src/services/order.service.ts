@@ -1,5 +1,4 @@
 import { prisma } from "../db/prisma";
-import { getCart } from "./cart.service";
 
 export async function createOrder(user_id: number, address_id?: number) {
 	return await prisma.$transaction(async (tx) => {
@@ -51,7 +50,7 @@ export async function createOrder(user_id: number, address_id?: number) {
 					create: cart.cart_items.map((item) => ({
 						product_variants: item.product_variant_id,
 						price_snapshot: item.product_variants.price ?? 0,
-						title_snapshot: `Variant ${item.product_variant_id}`,
+						title_snapshot: item.product_variants.products.title,
 						quantity: item.quantity
 					}))
 				}
@@ -75,5 +74,14 @@ export async function createOrder(user_id: number, address_id?: number) {
 		});
 
 		return order;
+	});
+}
+
+export async function getOrders(user_id: number) {
+	return await prisma.orders.findMany({
+		where: { user_id },
+		include: {
+			order_items: true
+		}
 	});
 }
