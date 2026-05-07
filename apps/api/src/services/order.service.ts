@@ -94,6 +94,24 @@ export async function getOrders(user_id: number) {
 	return orders.map(normalizeOrder);
 }
 
+export async function getOrderById(user_id: number, order_id: number) {
+	const order = await prisma.orders.findFirst({
+		where: { id: order_id, user_id },
+		include: {
+			order_items: true,
+			user_addresses: true,
+			deliveries: {
+				orderBy: { id: "desc" },
+				take: 1
+			}
+		}
+	});
+
+	if (!order) throw new Error("Замовлення не знайдено");
+
+	return normalizeOrder(order);
+}
+
 function normalizeOrder(order: OrderWithRelations) {
   return {
     id: order.id,
