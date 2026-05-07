@@ -6,5 +6,6 @@ export async function npRequest(modelName: string, calledMethod: string, methodP
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error);
+  
   return data;
 }

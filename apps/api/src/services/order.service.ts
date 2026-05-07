@@ -39,7 +39,7 @@ export async function createOrder(user_id: number, address_id?: number) {
 			return sum + Number(item.product_variants.price) * item.quantity
 		}, 0);
 
-		const order = tx.orders.create({
+		const order = await tx.orders.create({
 			data: {
 				user_id,
 				address_id: address_id ?? null,
@@ -48,7 +48,7 @@ export async function createOrder(user_id: number, address_id?: number) {
 				currency: "грн",
 				order_items: {
 					create: cart.cart_items.map((item) => ({
-						product_variants: item.product_variant_id,
+						product_variant_id: item.product_variant_id,
 						price_snapshot: item.product_variants.price ?? 0,
 						title_snapshot: item.product_variants.products.title,
 						quantity: item.quantity
@@ -64,7 +64,7 @@ export async function createOrder(user_id: number, address_id?: number) {
 			await tx.inventory.updateMany({
 				where: { product_variant_id: item.product_variant_id },
 				data: {
-					reserved_quantity: item.quantity
+					reserved_quantity: { increment: item.quantity }
 				}
 			})
 		}

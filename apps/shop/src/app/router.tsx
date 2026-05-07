@@ -9,6 +9,7 @@ import Blog from "./pages/blog/Blog";
 import Contact from "./pages/contact/Contact";
 import Profile from "./pages/user/Profile";
 import Product from "./pages/product/Product";
+import Checkout from "./pages/checkout/Checkout";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
         path: "/products/:id",
         element: <Product />,
         handle: { title: "Arusa - Сторінка продукту", isDark: true }
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
+        handle: { title: "Arusa - Оформлення замовлення", isDark: true }
       }
     ]
   }

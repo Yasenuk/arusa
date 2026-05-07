@@ -1,18 +1,14 @@
 import { prisma } from '../db/prisma';
-
-import { UserAddress } from '@org/shared-types';
+import { CreateAddressDto } from '@org/shared-types';
 
 export async function getAddresses(user_id: number) {
   return prisma.user_addresses.findMany({
     where: { user_id },
-    orderBy: [
-      { is_default: 'desc' },
-      { id: 'desc' }
-    ]
+    orderBy: [{ is_default: 'desc' }, { id: 'desc' }]
   });
 }
 
-export async function createAddress(user_id: number, data: UserAddress) {
+export async function createAddress(user_id: number, data: CreateAddressDto) {
   if (data.is_default) {
     await prisma.user_addresses.updateMany({
       where: { user_id },
@@ -25,10 +21,10 @@ export async function createAddress(user_id: number, data: UserAddress) {
   return prisma.user_addresses.create({
     data: {
       user_id,
-      region: data.region,
+      region: data.region ?? '',         
       city: data.city,
-      street: data.street ?? '',
-      house: data.house ?? '',
+      street: data.street ?? '',         
+      house: data.house ?? '',           
       apartment: data.apartment,
       postal_code: data.postal_code,
       np_city_ref: data.np_city_ref,
@@ -72,7 +68,6 @@ export async function deleteAddress(user_id: number, address_id: number) {
       where: { user_id },
       orderBy: { id: 'desc' }
     });
-
     if (next) {
       await prisma.user_addresses.update({
         where: { id: next.id },

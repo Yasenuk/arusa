@@ -1,0 +1,8 @@
+@use '@org/ui/styles/index' as *;
+
+.checkout {
+	&__container {
+		@include container(15);
+		padding-top: toRem(80);
+	}
+}

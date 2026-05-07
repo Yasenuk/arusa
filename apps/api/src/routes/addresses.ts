@@ -12,9 +12,14 @@ router.get('/addresses', authMiddleware, async (req, res) => {
 });
 
 router.post('/addresses', authMiddleware, async (req, res) => {
-  const user_id = Number(req.user!.id);
-  const address = await createAddress(user_id, req.body);
-  res.json(address);
+  try {
+    const user_id = Number(req.user!.id);
+    const address = await createAddress(user_id, req.body);
+    res.json(address);
+  } catch (err: any) {
+    console.error('createAddress error:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.patch('/addresses/:id/default', authMiddleware, async (req, res) => {
