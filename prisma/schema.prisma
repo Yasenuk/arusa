@@ -147,17 +147,21 @@ model products {
 }
 
 model user_addresses {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  region      String   @db.VarChar(100)
-  city        String   @db.VarChar(100)
-  street      String   @db.VarChar(150)
-  house       String   @db.VarChar(50)
-  apartment   String?  @db.VarChar(50)
-  postal_code String?  @db.VarChar(20)
-  is_default  Boolean? @default(false)
-  orders      orders[]
-  users       users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                       Int      @id @default(autoincrement())
+  user_id                  Int
+  region                   String   @db.VarChar(100)
+  city                     String   @db.VarChar(100)
+  street                   String   @db.VarChar(150)
+  house                    String   @db.VarChar(50)
+  apartment                String?  @db.VarChar(50)
+  postal_code              String?  @db.VarChar(20)
+  is_default               Boolean? @default(false)
+  np_city_ref              String?  @db.VarChar(36)
+  np_warehouse_ref         String?  @db.VarChar(36)
+  np_warehouse_description String?  @db.VarChar(255)
+  delivery_type            String?  @default("warehouse") @db.VarChar(20)
+  orders                   orders[]
+  users                    users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model users {
