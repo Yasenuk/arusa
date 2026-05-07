@@ -78,12 +78,20 @@ export async function createOrder(user_id: number, address_id?: number) {
 }
 
 export async function getOrders(user_id: number) {
-	return await prisma.orders.findMany({
+	const orders = await prisma.orders.findMany({
 		where: { user_id },
+		orderBy: { created_at: "desc" },
 		include: {
-			order_items: true
+			order_items: true,
+			user_addresses: true,
+			deliveries: {
+				orderBy: { id: "desc" },
+				take: 1
+			}
 		}
 	});
+
+	return orders.map(normalizeOrder);
 }
 
 function normalizeOrder(order: OrderWithRelations) {
