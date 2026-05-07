@@ -86,6 +86,26 @@ export async function getOrders(user_id: number) {
 	});
 }
 
+function normalizeOrder(order: OrderWithRelations) {
+  return {
+    id: order.id,
+    status: order.status,
+    total_amount: Number(order.total_amount),
+    currency: order.currency,
+    created_at: order.created_at,
+    updated_at: order.updated_at,
+    address: order.user_addresses ?? null,
+    delivery: order.deliveries[0] ?? null,
+    items: order.order_items.map((item) => ({
+      id: item.id,
+      product_variant_id: item.product_variant_id,
+      title_snapshot: item.title_snapshot,
+      price_snapshot: Number(item.price_snapshot),
+      quantity: item.quantity
+    }))
+  };
+}
+
 type OrderWithRelations = Awaited<
 	ReturnType<typeof prisma.orders.findFirst<{
     include: {
