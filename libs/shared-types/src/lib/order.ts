@@ -1,4 +1,4 @@
-import { UserAddress } from '@org/shared-types';
+import { UserAddress } from './address.js';
 
 export type OrderStore = {
   orders: Order[];
@@ -8,19 +8,22 @@ export type OrderStore = {
 
 export type OrderItem = {
   id?: number;
+  product_variant_id: number;
   title_snapshot: string;
   price_snapshot: number;
   quantity: number;
 };
 
 export type Order = {
-  id?: number;
+  id: number;
   status: OrderStatus;
   total_amount: number;
   currency: string;
   created_at: string;
-  order_items: OrderItem[];
-  user_addresses?: UserAddress;
+  updated_at: string;
+  address: UserAddress | null;
+  delivery: unknown | null;
+  items: OrderItem[];
 };
 
 export type OrderStatus =

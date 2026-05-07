@@ -13,3 +13,5 @@ export type UserAddress = {
   np_warehouse_description?: string;
   delivery_type?: 'warehouse' | 'address';
 };
+
+export type CreateAddressDto = Omit<UserAddress, 'id'>;
