@@ -6,3 +6,4 @@ type AuthContextType = {
 };
 
 export type { AuthContextType };
+
