@@ -85,3 +85,13 @@ export async function getOrders(user_id: number) {
 		}
 	});
 }
+
+type OrderWithRelations = Awaited<
+	ReturnType<typeof prisma.orders.findFirst<{
+    include: {
+      order_items: true;
+      user_addresses: true;
+      deliveries: true;
+    }
+  }>>
+> & {};
