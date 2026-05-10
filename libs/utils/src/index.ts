@@ -5,6 +5,7 @@ export * from './lib/cart.js';
 export * from './lib/order.js';
 export * from './lib/address.js';
 export * from './lib/novaposhta.js'
+export * from './lib/payment.js'
 
 export * from './dom/device.js';
 export * from './dom/page-load.js';
