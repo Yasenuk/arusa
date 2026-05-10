@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+
 import { useAddressStore } from '@org/utils/index';
 import { npRequest } from '@org/utils/index';
+
 import styles from '../checkout.module.scss';
+
+import { Dropdown } from '@org/ui';
 
 type Props = {
 	selectedId: number | undefined;
@@ -93,7 +97,12 @@ export default function AddressStep({ selectedId, onSelect, onNext }: Props) {
 				{cities && cities.length > 0 && !selectedCity && (
 					<ul className={styles.step__dropdown}>
 						{cities.map(c => (
-							<li key={c.Ref} onClick={() => { setSelectedCity(c); setCityQuery(c.Description); setCities([]); }}>
+							<li key={c.Ref} onClick={() => {
+								setSelectedCity(c);
+								setCityQuery(c.Description);
+								setCities([]);
+								setSelectedWarehouse(null);
+							}}>
 								{c.Description}
 							</li>
 						))}
@@ -101,21 +110,15 @@ export default function AddressStep({ selectedId, onSelect, onNext }: Props) {
 				)}
 
 				{selectedCity && (
-					<select
-						className={styles.step__select}
-						onChange={e => {
-							const w = warehouses.find(w => w.Ref === e.target.value) ?? null;
+					<Dropdown
+						label="Оберіть відділення"
+						options={warehouses.map(w => ({ value: w.Ref, label: w.Description }))}
+						value={selectedWarehouse?.Ref ?? ''}
+						onChange={ref => {
+							const w = warehouses.find(w => w.Ref === ref) ?? null;
 							setSelectedWarehouse(w);
 						}}
-						defaultValue=""
-					>
-						<option value="" disabled>Оберіть відділення</option>
-						{warehouses.map(w => (
-							<option key={w.Ref} value={w.Ref}>
-								{w.Description}
-							</option>
-						))}
-					</select>
+					/>
 				)}
 
 				{selectedWarehouse && (
