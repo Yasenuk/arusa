@@ -1,3 +1,5 @@
+export * from './lib/forms/AddressForm';
+
 export * from './lib/cards/cart-product-card';
 export * from './lib/cards/ProductCard';
 export * from './lib/cards/Article';
