@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { useNotification } from "../modals/notification";
 
 import { useCartStore } from "@org/utils/index";
 
 import styles from "../../styles/components/cart.module.scss";
-import CartProductCard from "../cards/cart-product-card";
+import CartProductCard from "../cards/CartProductCard";
 
 type Props = {
   isOpen: boolean;
