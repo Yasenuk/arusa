@@ -16,7 +16,7 @@
   }
 
   &__sidebar {
-    flex: 1 1 toRem(280);
+    flex: 1 1 toRem(180);
     padding-top: toRem(30);
   }
 
@@ -42,7 +42,7 @@
 
   &__main {
     border-left: toRem(1) solid $color-oyster;
-    flex: 1 1 calc(100% - toRem(300));
+    flex: 1 1 calc(100% - toRem(200));
     padding-left: toRem(15);
   }
 

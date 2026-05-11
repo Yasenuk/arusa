@@ -1,0 +1,30 @@
+@use '@org/ui/styles/index' as *;
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: toRem(10);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: toRem(20);
+	}
+
+	&__input {
+		max-width: toRem(600);
+	}
+
+	&__list {
+		border: toRem(1.5) solid $color-oyster;
+		margin-top: toRem(5);
+		border-radius: toRem(5);
+		padding-inline: toRem(20);
+	}
+
+	&__item {
+		cursor: pointer;
+		max-width: fit-content;
+	}
+}

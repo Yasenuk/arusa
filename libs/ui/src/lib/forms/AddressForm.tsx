@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import styles from '../../styles/components/address-form.module.scss';
+
 import { useAddressStore } from '@org/utils/index';
 import { npRequest } from '@org/utils/index';
 
@@ -64,17 +66,26 @@ export function AddressForm({ onSaved, inputClassName, buttonLabel = 'Збере
   };
 
   return (
-    <div>
-      <input
-        className={inputClassName}
-        placeholder="Місто"
-        value={cityQuery}
-        onChange={e => { setCityQuery(e.target.value); setSelectedCity(null); }}
-      />
+    <div className={styles.form}>
+      <div className={styles.form__header}>
+        <input
+          className={`${inputClassName || styles.form__input} _button _button_border _button_article _button_no-center regular`}
+          placeholder="Місто"
+          value={cityQuery}
+          onChange={e => { setCityQuery(e.target.value); setSelectedCity(null); }}
+        />
+        <button
+          className="_button _button_main _button_border small upper"
+          onClick={() => onSaved && onSaved(-1)}
+          disabled={saving}
+        >
+          Скасувати
+        </button>
+      </div>
       {cities.length > 0 && !selectedCity && (
-        <ul>
+        <ul className={styles.form__list}>
           {cities.map(c => (
-            <li key={c.Ref} onClick={() => { setSelectedCity(c); setCityQuery(c.Description); setCities([]); }}>
+            <li className={`${styles.form__item} regular _button _button_article _button_no-center no-inline`} key={c.Ref} onClick={() => { setSelectedCity(c); setCityQuery(c.Description); setCities([]); }}>
               {c.Description}
             </li>
           ))}
