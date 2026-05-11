@@ -27,7 +27,7 @@ export default function Addresses() {
       ))}
 
       {showForm
-        ? <AddressForm onSaved={() => setShowForm(false)} />
+        ? <AddressForm onSaved={() => setShowForm(false)} canselButton={true} />
         : <button className="_button _button_border small upper" onClick={() => setShowForm(true)}>
             + Додати адресу
           </button>

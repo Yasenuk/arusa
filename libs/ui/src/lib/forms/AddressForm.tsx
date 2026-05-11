@@ -14,9 +14,10 @@ type Props = {
   onSaved?: (id: number) => void;
   inputClassName?: string;
   buttonLabel?: string;
+  canselButton?: boolean;
 };
 
-export function AddressForm({ onSaved, inputClassName, buttonLabel = 'Зберегти адресу' }: Props) {
+export function AddressForm({ onSaved, inputClassName, buttonLabel = 'Зберегти адресу', canselButton = false }: Props) {
   const { createAddress } = useAddressStore();
 
   const [cityQuery, setCityQuery] = useState('');
@@ -52,10 +53,10 @@ export function AddressForm({ onSaved, inputClassName, buttonLabel = 'Збере
         np_warehouse_ref: selectedWarehouse.Ref,
         np_warehouse_description: selectedWarehouse.Description,
         delivery_type: 'warehouse',
-			});
-			
-			onSaved?.(address.id);
-			
+      });
+
+      onSaved?.(address.id);
+
       setCityQuery('');
       setSelectedCity(null);
       setSelectedWarehouse(null);
@@ -74,13 +75,15 @@ export function AddressForm({ onSaved, inputClassName, buttonLabel = 'Збере
           value={cityQuery}
           onChange={e => { setCityQuery(e.target.value); setSelectedCity(null); }}
         />
-        <button
-          className="_button _button_main _button_border small upper"
-          onClick={() => onSaved && onSaved(-1)}
-          disabled={saving}
-        >
-          Скасувати
-        </button>
+        {canselButton && (
+          <button
+            className="_button _button_main _button_border small upper"
+            onClick={() => onSaved && onSaved(-1)}
+            disabled={saving}
+          >
+            Скасувати
+          </button>
+        )}
       </div>
       {cities.length > 0 && !selectedCity && (
         <ul className={styles.form__list}>
