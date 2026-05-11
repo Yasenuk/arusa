@@ -3,6 +3,7 @@ export * from './lib/forms/AddressForm';
 export * from './lib/cards/CartProductCard';
 export * from './lib/cards/ProductCard';
 export * from './lib/cards/Article';
+export * from './lib/cards/OrderCard';
 
 export * from './lib/dropdowns/dropdown';
 export * from './lib/dropdowns/cascade-dropdown';
