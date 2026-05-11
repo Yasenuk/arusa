@@ -1,1 +1,58 @@
 @use '@org/ui/styles/index' as *;
+
+.order {
+	padding: toRem(20) toRem(15);
+	border: toRem(1) solid $color-oyster;
+	border-radius: toRem(5);
+
+	display: flex;
+	flex-direction: column;
+	row-gap: toRem(10);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: toRem(15);
+	}
+
+	&__status {
+		padding: toRem(5) toRem(8);
+		border-radius: toRem(5);
+		border: toRem(2) solid $color-oyster;
+	}
+
+	&__date {
+
+	}
+
+	&__items {
+		padding-block: toRem(10);
+		border-top: toRem(1.5) dashed $color-opal;
+		border-bottom: toRem(1.5) dashed $color-opal;
+	}
+
+	&__item {
+		font-style: italic;
+
+		&:not(:last-child) {
+			margin-bottom: toRem(10);
+		}
+	}
+
+	&__amount {
+		font-weight: 600;
+		padding-bottom: toRem(10);
+		border-bottom: toRem(1.5) dashed $color-opal;
+	}
+
+	&__address {
+
+		margin-block: toRem(15);
+	}
+
+	&__button {
+		max-width: toRem(330);
+		margin: 0 auto;
+	}
+}

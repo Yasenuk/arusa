@@ -49,6 +49,9 @@
   &__section {
     border-bottom: toRem(1) solid $color-oyster;
     padding-block: toRem(30);
+    display: flex;
+    flex-direction: column;
+    row-gap: toRem(10);
   }
 
   &__title {
