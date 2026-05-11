@@ -87,4 +87,16 @@
 
   &__button {
   }
+
+  &__address {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: toRem(10);
+
+    &_name {
+      flex: 1 1 auto;
+    }
+  }
 }

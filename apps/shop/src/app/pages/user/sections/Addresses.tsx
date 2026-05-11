@@ -17,12 +17,12 @@ export default function Addresses() {
 
       {addresses.map(a => (
         <div key={a.id} className={styles.profile__address}>
-          <span>{a.city} — {a.np_warehouse_description ?? `${a.street} ${a.house}`}</span>
+          <span className={styles.profile__address_name}>{a.city} — {a.np_warehouse_description ?? `${a.street} ${a.house}`}</span>
           {!a.is_default && (
-            <button className="_button small" onClick={() => setDefault(a.id)}>За замовчуванням</button>
+            <button className="_button _button_article small no-inline" onClick={() => setDefault(a.id)}>За замовчуванням</button>
           )}
-          {a.is_default && <span>✓ Основна</span>}
-          <button className="_button small" onClick={() => deleteAddress(a.id)}>Видалити</button>
+          {a.is_default && <span className='small'>[Основна]</span>}
+          <button className="_button _button_border _button_main small" onClick={() => deleteAddress(a.id)}>Видалити</button>
         </div>
       ))}
 
