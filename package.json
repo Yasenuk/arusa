@@ -7,6 +7,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
+    "@ngrok/ngrok": "^1.7.0",
     "@nx/devkit": "22.5.1",
     "@nx/express": "^22.5.1",
     "@nx/js": "^22.5.1",
@@ -39,6 +40,7 @@
     "@vitest/coverage-v8": "^4.0.0",
     "@vitest/ui": "^4.0.0",
     "ajv": "^8.0.0",
+    "concurrently": "^9.2.1",
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "magicast": "^0.5.2",

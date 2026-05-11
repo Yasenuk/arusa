@@ -34,13 +34,19 @@ router.post('/payments/liqpay', authMiddleware, async (req, res) => {
     amount: Number(order.total_amount),
     currency: 'UAH',
     description: `Замовлення #${order.id}`,
-    order_id: String(order.id),
+    order_id: `${String(order.id)}_${Date.now()}`,
     result_url: `${process.env.CLIENT_URL}/profile?paid=${order.id}`,
     server_url: `${process.env.API_URL}/api/payments/liqpay/callback`,
   };
 
   const data = Buffer.from(JSON.stringify(params)).toString('base64');
   const signature = sign(data);
+
+  console.log('PUBLIC_KEY:', JSON.stringify(LIQPAY_PUBLIC_KEY));
+  console.log('PRIVATE_KEY:', JSON.stringify(LIQPAY_PRIVATE_KEY));
+  console.log('params:', JSON.stringify(params, null, 2));
+  console.log('data:', data);
+  console.log('signature:', signature);
 
   await prisma.orders.update({
     where: { id: order.id },

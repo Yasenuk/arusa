@@ -21,6 +21,8 @@ import npRequest from "./routes/novaposhta";
 import shopOrders from "./routes/orders";
 import shopAddresses from "./routes/addresses";
 
+import payment from "./routes/payments";
+
 dotenv.config();
 
 const app = express();
@@ -47,6 +49,7 @@ app.use("/api", shopOrders);
 app.use("/api", shopAddresses);
 
 app.use("/api", npRequest);
+app.use("/api", payment);
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
