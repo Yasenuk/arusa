@@ -49,11 +49,6 @@ const router = createBrowserRouter([
         path: "/products/:id",
         element: <Product />,
         handle: { title: "Arusa - Сторінка продукту", isDark: true }
-      },
-      {
-        path: "/checkout",
-        element: <Checkout />,
-        handle: { title: "Arusa - Оформлення замовлення", isDark: true }
       }
     ]
   }

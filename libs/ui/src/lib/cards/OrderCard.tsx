@@ -18,10 +18,12 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 export function OrderCard({ order }: { order: Order }) {
 	return (
 		<div key={order.id} className={styles.order}>
-			<div className={styles.order__header}>
-				<h3 className={`${styles.order__status} regular`}>{STATUS_LABELS[order.status]}</h3>
-				<p className={`${styles.order__date} regular`}>{new Date(order.created_at).toLocaleDateString('uk-UA')}</p>
-			</div>
+			{(order.status && order.created_at) && (
+				<div className={styles.order__header}>
+					<h3 className={`${styles.order__status} regular`}>{STATUS_LABELS[order.status]}</h3>
+					<p className={`${styles.order__date} regular`}>{new Date(order.created_at).toLocaleDateString('uk-UA')}</p>
+				</div>
+			)}
 
 			<ul className={styles.order__items}>
 				{order.items.map(item => (
@@ -41,7 +43,7 @@ export function OrderCard({ order }: { order: Order }) {
 				</p>
 			)}
 
-			{(order.status === 'PENDING_CONFIRMATION' || order.status === 'PENDING_PAYMENT') && (
+			{(order?.status === 'PENDING_CONFIRMATION' || order?.status === 'PENDING_PAYMENT') && (
 				<button
 					className={`${styles.order__button} _button _button_border _button_main _button_fill small upper`}
 					onClick={() => initiateLiqPay(order.id)}

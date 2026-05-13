@@ -1,5 +1,5 @@
 import { useAddressStore } from '@org/utils/index';
-import styles from '../checkout.module.scss';
+import styles from '../../../../styles/common/checkout.module.scss';
 
 type Props = {
   addressId: number | undefined;
@@ -14,8 +14,8 @@ export default function ConfirmStep({ addressId, onBack, onConfirm, loading, err
   const address = addresses.find(a => a.id === addressId);
 
   return (
-    <div className={styles.step}>
-      <h2 className={`${styles.step__title} large upper`}>Підтвердження</h2>
+    <div className={styles.checkout__step}>
+      <h2 className={`${styles.checkout__title} large upper center`}>Підтвердження</h2>
 
       <div className={styles.step__confirm_address}>
         <h3 className={styles.step__subtitle}>Доставка:</h3>
@@ -28,7 +28,7 @@ export default function ConfirmStep({ addressId, onBack, onConfirm, loading, err
 
       {error && <p className={styles.step__error}>{error}</p>}
 
-      <div className={styles.step__buttons}>
+      <div className={styles.checkout__step_buttons}>
         <button
           className={`_button _button_main _button_border small upper`}
           onClick={onBack}
@@ -37,7 +37,7 @@ export default function ConfirmStep({ addressId, onBack, onConfirm, loading, err
           Назад
         </button>
         <button
-          className={`_button _button_main _button_fill small upper`}
+          className={`_button _button_main _button_border small upper`}
           onClick={onConfirm}
           disabled={loading}
         >

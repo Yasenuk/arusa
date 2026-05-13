@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useCartStore } from "@org/utils/index";
 
 import styles from "../../styles/components/cart.module.scss";
+
 import CartProductCard from "../cards/CartProductCard";
+import Checkout from "../forms/checkout/Checkout";
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +15,8 @@ type Props = {
 export function Cart({ isOpen, setIsOpen }: Props) {
   const get_cart = useCartStore(s => s.cart);
   const fetchCart = useCartStore(s => s.fetchCart);
+
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     fetchCart();
@@ -52,11 +55,16 @@ export function Cart({ isOpen, setIsOpen }: Props) {
             </div>
             <div className={styles.cart__buttons}>
               <button className={`${styles.cart__button} _button _button_main _button_border small upper`} onClick={closeCart}>Продовжити покупки</button>
-              <Link to="/checkout" className={`${styles.cart__button} _button _button_main _button_border small upper`}>Перейти до замовлення</Link>
+              <button
+                onClick={() => setCheckoutOpen(true)}
+                className={`${styles.cart__button} _button _button_main _button_border small upper`}>
+                Перейти до замовлення
+              </button>
             </div>
           </footer>
         </div>
       </div>
+      <Checkout isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 }

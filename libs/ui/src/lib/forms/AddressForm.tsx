@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import styles from '../../styles/components/address-form.module.scss';
+import styles from '../../styles/common/address-form.module.scss';
 
 import { useAddressStore } from '@org/utils/index';
 import { npRequest } from '@org/utils/index';
