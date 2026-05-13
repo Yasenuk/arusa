@@ -1,6 +1,6 @@
 export type PaymentStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELED';
 
-export type Payment = {
+export type _Payment = {
   id: number;
   order_id: number;
   provider: string;
