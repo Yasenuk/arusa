@@ -23,13 +23,19 @@ export default function Profile() {
 		fetchUser();
 	}, []);
 
+	function slideUp() {
+		window.scrollTo({
+			top: 0
+		});
+	}
+
 	return (<div className={styles.profile}>
 		<div className={styles.profile__container}>
 			<aside className={styles.profile__sidebar}>
 				<ul className={styles.profile__menu}>
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => setActiveSection("personal")}
+							onClick={() => { setActiveSection("personal"); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "personal" ? styles.active : ""
 								} _button _button_fill _button_article _button_no-center regular no-inline`}
 						>
@@ -39,7 +45,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => setActiveSection("orders")}
+							onClick={() => { setActiveSection("orders"); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "orders" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -49,7 +55,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => setActiveSection("addresses")}
+							onClick={() => { setActiveSection("addresses"); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "addresses" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -59,7 +65,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => setActiveSection("payment")}
+							onClick={() => { setActiveSection("payment"); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "payment" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -69,10 +75,10 @@ export default function Profile() {
 				</ul>
 			</aside>
 			<section className={styles.profile__main}>
-				<Personal user={user} />
-				<Orders />
-				<Addresses />
-				<Payment />
+				{activeSection === 'personal' && <Personal user={user} />}
+				{activeSection === 'orders' && <Orders />}
+				{activeSection === 'addresses' && <Addresses />}
+				{activeSection === 'payment' && <Payment />}
 			</section>
 		</div>
 	</div>);
