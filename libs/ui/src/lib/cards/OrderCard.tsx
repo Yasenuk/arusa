@@ -1,7 +1,7 @@
 import { Order, OrderStatus } from "@org/shared-types";
-import { initiateLiqPay } from "@org/utils/index";
 
 import styles from "../../styles/components/order-card.module.scss";
+import { initiateLiqPay } from "@org/utils/index";
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
 	PENDING_CONFIRMATION: 'Очікує підтвердження',
