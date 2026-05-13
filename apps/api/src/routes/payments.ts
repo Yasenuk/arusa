@@ -65,6 +65,8 @@ router.post('/payments/liqpay/callback', async (req, res) => {
 
   const payload = JSON.parse(Buffer.from(data, 'base64').toString('utf-8'));
 
+  const orderId = Number(String(payload.order_id).split('_')[0]);
+
   const statusMap: Record<string, OrderStatus> = {
     success: 'PAID',
     failure: 'PAYMENT_FAILED',
@@ -72,14 +74,48 @@ router.post('/payments/liqpay/callback', async (req, res) => {
   };
 
   const newStatus = statusMap[payload.status];
+
   if (newStatus) {
-    await prisma.orders.updateMany({
-      where: { id: Number(payload.order_id) },
+    await prisma.orders.update({
+      where: { id: orderId, status: { not: 'PAID' } },
       data: { status: newStatus }
+    });
+
+    await prisma.payments.create({
+      data: {
+        order_id: orderId,
+        provider: 'liqpay',
+        status: payload.status === 'success' ? 'SUCCESS' : 'FAILED',
+        amount: payload.amount,
+        currency: payload.currency ?? 'UAH',
+        transaction_id: String(payload.payment_id ?? ''),
+      }
     });
   }
 
   res.status(200).send('OK');
+});
+
+router.get('/payments', authMiddleware, async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Не авторизовано' });
+
+  const payments = await prisma.payments.findMany({
+    where: { orders: { user_id: Number(req.user.id) } },
+    include: { orders: { select: { id: true, total_amount: true, status: true } } },
+    orderBy: { created_at: 'desc' },
+  });
+
+  res.json(payments.map(p => ({
+    id: p.id,
+    order_id: p.order_id,
+    provider: p.provider,
+    status: p.status,
+    amount: Number(p.amount),
+    currency: p.currency,
+    transaction_id: p.transaction_id,
+    created_at: p.created_at,
+    order: { id: p.orders.id, total_amount: Number(p.orders.total_amount), status: p.orders.status },
+  })));
 });
 
 export default router;
