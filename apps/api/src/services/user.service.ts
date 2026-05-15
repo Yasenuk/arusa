@@ -21,13 +21,3 @@ export async function getUserById(id: number) {
 		where: { id }
 	});
 }
-
-export async function updateUserData(id: number, data: { first_name: string, last_name: string, middle_name: string, phone: string }) {
-  const { first_name, last_name, middle_name, phone } = data;
-
-	return await prisma.users.update({
-		where: { id },
-		data: { first_name, last_name, middle_name, phone },
-		select: { id: true, first_name: true, last_name: true, middle_name: true, phone: true, email: true }
-	});
-}

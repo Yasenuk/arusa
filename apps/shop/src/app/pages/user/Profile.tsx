@@ -11,6 +11,7 @@ import Addresses from './sections/Addresses';
 import Payment from './sections/Payment';
 
 export default function Profile() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [user, setUser] = useState<User | null>(null);
 	const [activeSection, setActiveSection] = useState("personal");
 
@@ -29,13 +30,20 @@ export default function Profile() {
 		});
 	}
 
+	const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
 	return (<div className={styles.profile}>
 		<div className={styles.profile__container}>
-			<aside className={styles.profile__sidebar}>
-				<ul className={styles.profile__menu}>
+			<button className={`${styles.profile__burger} ${isMenuOpen ? '_open' : ''}`} onClick={toggleMenu} aria-label="Меню">
+        <span /><span /><span />
+      </button>
+			<aside className={`${styles.profile__sidebar} ${isMenuOpen ? '_open' : ''}`}>
+				<ul className={`${styles.profile__menu}`}>
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => { setActiveSection("personal"); slideUp() }}
+							onClick={() => { setActiveSection("personal"); setIsMenuOpen(false); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "personal" ? styles.active : ""
 								} _button _button_fill _button_article _button_no-center regular no-inline`}
 						>
@@ -45,7 +53,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => { setActiveSection("orders"); slideUp() }}
+							onClick={() => { setActiveSection("orders"); setIsMenuOpen(false); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "orders" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -55,7 +63,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => { setActiveSection("addresses"); slideUp() }}
+							onClick={() => { setActiveSection("addresses"); setIsMenuOpen(false); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "addresses" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -65,7 +73,7 @@ export default function Profile() {
 
 					<li className={styles.profile__menu_item}>
 						<button
-							onClick={() => { setActiveSection("payment"); slideUp() }}
+							onClick={() => { setActiveSection("payment"); setIsMenuOpen(false); slideUp() }}
 							className={`${styles.profile__menu_button} ${activeSection === "payment" ? styles.active : ""
 								} _button _button_no-center _button_fill _button_article regular no-inline`}
 						>
@@ -74,8 +82,9 @@ export default function Profile() {
 					</li>
 				</ul>
 			</aside>
+			<div className={styles.profile__overlay} onClick={() => setIsMenuOpen(false)} />
 			<section className={styles.profile__main}>
-				{activeSection === 'personal' && <Personal user={user} />}
+				{activeSection === 'personal' && <Personal user={user} onUpdate={setUser} />}
 				{activeSection === 'orders' && <Orders />}
 				{activeSection === 'addresses' && <Addresses />}
 				{activeSection === 'payment' && <Payment />}

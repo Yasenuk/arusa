@@ -9,7 +9,6 @@ import Blog from "./pages/blog/Blog";
 import Contact from "./pages/contact/Contact";
 import Profile from "./pages/user/Profile";
 import Product from "./pages/product/Product";
-import Checkout from "./pages/checkout/Checkout";
 
 const router = createBrowserRouter([
   {

@@ -2,22 +2,26 @@
 
 .active {
   font-weight: 600;
+  background-color: rgba($color-oyster, 0.4);
 }
 
 .profile {
   &__container {
     @include container();
     @include adaptiveValue(padding-top, 70, 82);
-    padding-bottom: toRem(5);
+    padding-bottom: toRem(50);
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: toRem(20);
+    gap: toRem(40);
+    align-items: flex-start;
   }
 
   &__sidebar {
-    flex: 1 1 toRem(180);
+    flex: 0 0 toRem(200);
     padding-top: toRem(30);
+
+    @media (max-width: $tablet) {
+      flex: 0 0 auto;
+    }
   }
 
   &__menu {
@@ -26,24 +30,107 @@
     transition: top 0.3s;
     display: flex;
     flex-direction: column;
-    row-gap: toRem(10);
+    row-gap: toRem(5);
 
-    [class*='_hidden'] + * & {
-      top: toRem(20);
-      transition: top 0.3s;
+    @media (max-width: $tablet) {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      height: 100dvh;
+      width: toRem(240);
+      padding: toRem(80) toRem(20) toRem(20);
+      background-color: $color-white;
+      border-right: toRem(1) solid $color-oyster;
+      z-index: 1;
+      transition: left 0.3s ease;
+      row-gap: toRem(10);
+
+      .profile__sidebar[class*='_open'] & {
+        left: 0;
+        transition: left 0.3s ease;
+      }
     }
 
     &_item {
+      width: 100%;
     }
 
     &_button {
+      width: 100%;
+      text-align: left;
+      padding: toRem(10) toRem(12);
+      border-radius: toRem(4);
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba($color-oyster, 0.4);
+      }
+    }
+  }
+
+  &__overlay {
+    display: none;
+
+    @media (max-width: $tablet) {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+
+      .profile__sidebar[class*='_open'] ~ & {
+        opacity: 1;
+        pointer-events: all;
+      }
+    }
+  }
+
+  &__burger {
+    display: none;
+
+    @media (max-width: $tablet) {
+      display: flex;
+      flex-direction: column;
+      gap: toRem(5);
+      padding: toRem(10);
+      cursor: pointer;
+      position: fixed;
+      @include adaptiveValue(top, 90, 102);
+      left: toRem(10);
+      transition: left 0.3s ease;
+      z-index: 2;
+      background: $color-white;
+      border: toRem(1) solid $color-oyster;
+      border-radius: toRem(4);
+
+      &[class*='_open'] {
+        left: toRem(240);
+        transition: left 0.3s ease;
+      }
+
+      span {
+        display: block;
+        width: toRem(20);
+        height: toRem(1.5);
+        background-color: $color-stormy;
+        transition: 0.3s;
+      }
     }
   }
 
   &__main {
+    flex: 1 1 0;
+    min-width: 0;
     border-left: toRem(1) solid $color-oyster;
-    flex: 1 1 calc(100% - toRem(200));
-    padding-left: toRem(15);
+    padding-left: toRem(30);
+
+    @media (max-width: $tablet) {
+      border-left: none;
+      padding-left: 0;
+    }
   }
 
   &__section {
