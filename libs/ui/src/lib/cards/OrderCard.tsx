@@ -1,7 +1,7 @@
 import { Order, OrderStatus } from "@org/shared-types";
 
 import styles from "../../styles/components/order-card.module.scss";
-import { initiateLiqPay } from "@org/utils/index";
+import { initiateStripe } from "@org/utils/index";
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
 	PENDING_CONFIRMATION: 'Очікує підтвердження',
@@ -46,7 +46,7 @@ export function OrderCard({ order }: { order: Order }) {
 			{(order?.status === 'PENDING_CONFIRMATION' || order?.status === 'PENDING_PAYMENT') && (
 				<button
 					className={`${styles.order__button} _button _button_border _button_main _button_fill small upper`}
-					onClick={() => initiateLiqPay(order.id)}
+					onClick={() => initiateStripe(order.id)}
 				>
 					Оплатити
 				</button>

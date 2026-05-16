@@ -29,6 +29,8 @@ const app = express();
 
 app.use(morgan("combined"));
 app.use(cookieParser());
+
+app.use('/api/payments/stripe/callback', express.raw({ type: 'application/json' }));
 app.use(express.json());
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
