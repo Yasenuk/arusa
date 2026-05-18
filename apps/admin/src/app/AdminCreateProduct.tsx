@@ -7,6 +7,8 @@ import styles from "./app.module.scss";
 
 export default function AdminCreateProduct() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [previews, setPreviews] = useState<Record<number, string>>({});
+
   const { notify } = useNotification();
 
   useEffect(() => {
@@ -64,20 +66,19 @@ export default function AdminCreateProduct() {
     });
   }
 
-  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>, index: number) {
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>, variantIndex: number) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const previewUrl = URL.createObjectURL(file);
+    setPreviews(prev => ({ ...prev, [variantIndex]: previewUrl }));
+
     setProduct(prev => {
       const product_variants = [...prev.product_variants];
-
-      product_variants[index].product_images = [
-        {
-          image_url: file.name.split(".")[0],
-          position: 0
-        } as ProductImage
-      ];
-
+      product_variants[variantIndex] = {
+        ...product_variants[variantIndex],
+        product_images: [{ image_url: file.name, position: 0 }],
+      };
       return { ...prev, product_variants };
     });
   }
@@ -165,102 +166,119 @@ export default function AdminCreateProduct() {
         <h3 className={`${styles.admin__title} regular`}>Варіанти</h3>
 
         {product.product_variants.map((variant, index) => (
-          <form className={styles.admin__form} onSubmit={e => e.preventDefault()}>
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-size">Розмір { index }</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-size"
-                placeholder="Розмір"
-                value={variant.size}
-                onChange={e => updateVariant(index, "size", e.target.value)}
-              />
-            </div>
+          <div key={index} className={styles.admin__variant}>
+            <div className={styles.admin__variant_preview}>
+              {previews[index]
+                ? <img className={styles.admin__variant_image} src={previews[index]} alt={`Варіант ${index + 1}`} />
+                : <div className={styles.admin__variant_placeholder}>Немає зображення</div>
+              }
 
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-color">Колір</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-color"
-                placeholder="Колір"
-                value={variant.color}
-                onChange={e => updateVariant(index, "color", e.target.value)}
-              />
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-sku">Ідентифікатор продукту</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-sku"
-                placeholder="SKU"
-                value={variant.sku}
-                onChange={e => updateVariant(index, "sku", e.target.value)}
-              />
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-price">Ціна</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-price"
-                placeholder="Ціна"
-                value={variant.price}
-                onChange={e => updateVariant(index, "price", Number(e.target.value))}
-              />
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-quantity">Кількість</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-quantity"
-                placeholder="Кількість"
-                value={variant.quantity}
-                onChange={e => updateVariant(index, "quantity", Number(e.target.value))}
-              />
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-weight">Вага</label>
-              <input
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-weight"
-                placeholder="Вага"
-                value={variant.weight}
-                onChange={e => updateVariant(index, "weight", Number(e.target.value))}
-              />
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-material">Матеріал</label>
-              <select
-                className={`${styles.admin__input} small _button_border`}
-                id="variant-material"
-                value={variant.material}
-                onChange={e => updateVariant(index, "material", e.target.value)}
-              >
-                <option value="">Виберіть матеріал</option>
-
-                {categories.filter((c, i) => c.parent_id == 40).map((c) => (
-                  <option key={c.id} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.admin__form_group}>
-              <label className={`${styles.admin__label} reular`} htmlFor="variant-image">Зображення</label>
               <input
                 className={`${styles.admin__input} ${styles.admin__input_image} small _button_border`}
-                id="variant-image"
+                id={`variant-image-${index}`}
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e, index)}
               />
             </div>
-          </form>
+
+            <form className={styles.admin__form} onSubmit={e => e.preventDefault()}>
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-size">Розмір {index}</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-size"
+                  placeholder="Розмір"
+                  value={variant.size}
+                  onChange={e => updateVariant(index, "size", e.target.value)}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-color">Колір</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-color"
+                  placeholder="Колір"
+                  value={variant.color}
+                  onChange={e => updateVariant(index, "color", e.target.value)}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-sku">Ідентифікатор продукту</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-sku"
+                  placeholder="SKU"
+                  value={variant.sku}
+                  onChange={e => updateVariant(index, "sku", e.target.value)}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-price">Ціна</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-price"
+                  placeholder="Ціна"
+                  value={variant.price}
+                  onChange={e => updateVariant(index, "price", Number(e.target.value))}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-quantity">Кількість</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-quantity"
+                  placeholder="Кількість"
+                  value={variant.quantity}
+                  onChange={e => updateVariant(index, "quantity", Number(e.target.value))}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-weight">Вага</label>
+                <input
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-weight"
+                  placeholder="Вага"
+                  value={variant.weight}
+                  onChange={e => updateVariant(index, "weight", Number(e.target.value))}
+                />
+              </div>
+
+              <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-material">Матеріал</label>
+                <select
+                  className={`${styles.admin__input} small _button_border`}
+                  id="variant-material"
+                  value={variant.material}
+                  onChange={e => updateVariant(index, "material", e.target.value)}
+                >
+                  <option value="">Виберіть матеріал</option>
+
+                  {categories.filter((c, i) => c.parent_id == 40).map((c) => (
+                    <option key={c.id} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* <div className={styles.admin__form_group}>
+                <label className={`${styles.admin__label} reular`} htmlFor="variant-image">Зображення</label>
+                <input
+                  className={`${styles.admin__input} ${styles.admin__input_image} small _button_border`}
+                  id="variant-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, index)}
+                />
+              </div> */}
+            </form>
+          </div>
         ))}
 
         <div className={styles.admin__buttons}>

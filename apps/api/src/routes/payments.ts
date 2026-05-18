@@ -1,9 +1,14 @@
 import express from 'express';
 import { Router } from 'express';
+
+import PDFDocument from 'pdfkit';
+import path from 'path';
+
 import { prisma } from '../db/prisma';
-import { authMiddleware } from '../middlewares/auth';
 
 import Stripe, { type Checkout } from 'stripe';
+
+import { authMiddleware } from '../middlewares/auth';
 import { getPayments } from '../services/payment.service';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -93,6 +98,67 @@ router.get('/payments', authMiddleware, async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Помилка створення замовлення' });
   }
+});
+
+router.get('/payments/:id/receipt', authMiddleware, async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Не авторизовано' });
+
+  const payment = await prisma.payments.findFirst({
+    where: {
+      id: Number(req.params.id),
+      orders: { user_id: Number(req.user.id) }
+    },
+    include: {
+      orders: {
+        include: {
+          order_items: true,
+          users: { select: { first_name: true, last_name: true, email: true } }
+        }
+      }
+    }
+  });
+
+  if (!payment) return res.status(404).json({ error: 'Не знайдено' });
+
+  const doc = new PDFDocument({ margin: 50 });
+
+  // doc.registerFont('Manrope-Regular', path.join(__dirname, '/assets/fonts/Manrope-Regular/Manrope-Regular.woff2'));
+  // doc.font('Manrope-Regular');
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="receipt-${payment.id}.pdf"`);
+  doc.pipe(res);
+
+  doc.fontSize(20).text('Квитанція про оплату', { align: 'center' });
+  doc.moveDown();
+
+  doc.fontSize(12);
+  doc.text(`Квитанція №: ${payment.id}`);
+  doc.text(`Дата: ${new Date(payment.created_at).toLocaleDateString('uk-UA')}`);
+  doc.text(`Замовлення №: ${payment.order_id}`);
+  doc.text(`Статус: ${payment.status === 'SUCCESS' ? 'Оплачено' : 'Не оплачено'}`);
+  doc.text(`Провайдер: ${payment.provider}`);
+  if (payment.transaction_id) doc.text(`ID транзакції: ${payment.transaction_id}`);
+  doc.moveDown();
+
+  const user = payment.orders.users;
+  doc.text(`Покупець: ${user.last_name ?? ''} ${user.first_name ?? ''}`.trim() || user.email);
+  doc.text(`Email: ${user.email}`);
+  doc.moveDown();
+
+  doc.text('Товари:', { underline: true });
+  doc.moveDown(0.5);
+
+  payment.orders.order_items.forEach(item => {
+    doc.text(
+      `${item.title_snapshot}  x${item.quantity}  —  ${Number(item.price_snapshot) * item.quantity} ${payment.currency}`
+    );
+  });
+
+  doc.moveDown();
+  doc.fontSize(14).text(`Разом: ${payment.amount} ${payment.currency}`, { align: 'right' });
+
+  doc.end();
 });
 
 export default router;

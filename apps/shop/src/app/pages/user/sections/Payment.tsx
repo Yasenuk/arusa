@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { loadData } from '@org/utils/index';
+import { fetchWithAuth, loadData } from '@org/utils/index';
 
 import styles from '../profile.module.scss';
 import { _Payment } from '@org/shared-types';
@@ -13,6 +13,17 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function Payment() {
   const [payments, setPayments] = useState<_Payment[]>([]);
+
+  const downloadReceipt = async (paymentId: number) => {
+    const res = await fetchWithAuth(`/api/payments/${paymentId}/receipt`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `receipt-${paymentId}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     loadData('/api/payments').then(setPayments);
@@ -30,7 +41,17 @@ export default function Payment() {
           <span>{STATUS_LABELS[p.status]}</span>
           <span>{p.amount} {p.currency}</span>
           <span>{new Date(p.created_at).toLocaleDateString('uk-UA')}</span>
+          
           {p.transaction_id && <span className="small">ID: {p.transaction_id}</span>}
+
+          {p.status === 'SUCCESS' && (
+            <button
+              className="_button _button_border small upper"
+              onClick={() => downloadReceipt(p.id)}
+            >
+              Завантажити квитанцію
+            </button>
+          )}
         </div>
       ))}
     </section>

@@ -10,12 +10,6 @@
       "path": "./apps/shop"
     },
     {
-      "path": "./apps/adnim-e2e"
-    },
-    {
-      "path": "./apps/adnim"
-    },
-    {
       "path": "./apps/api-e2e"
     },
     {
@@ -29,6 +23,12 @@
     },
     {
       "path": "./libs/utils"
+    },
+    {
+      "path": "./apps/admin-e2e"
+    },
+    {
+      "path": "./apps/admin"
     }
   ]
 }

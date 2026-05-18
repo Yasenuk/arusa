@@ -1,0 +1,109 @@
+@use '@org/ui/styles/index' as *;
+
+.admin {
+  &__section {
+    padding: toRem(16);
+  }
+
+  &__container {
+    @include container();
+  }
+
+  &__title {
+    margin-bottom: toRem(20);
+  }
+
+  &__form {
+    display: flex;
+    gap: toRem(8);
+    margin-bottom: toRem(10);
+    flex-wrap: wrap;
+  }
+
+  &__form_group {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe;
+    row-gap: toRem(8);
+  }
+
+  &__lable {
+  }
+
+  &__input {
+    height: 100%;
+    padding: toRem(8);
+
+    &_image {
+      width: min-content;
+    }
+  }
+
+  &__textarea {
+    min-width: toRem(300);
+    resize: none;
+
+    &::placeholder {
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    gap: toRem(8);
+  }
+
+  &__variant {
+    display: flex;
+    gap: toRem(16);
+    align-items: flex-start;
+    padding: toRem(12);
+    border: toRem(1) solid $color-oyster;
+    border-radius: toRem(4);
+    margin-bottom: toRem(10);
+  }
+
+  &__variant_fields {
+    flex: 1 1 0;
+    display: flex;
+    gap: toRem(8);
+    flex-wrap: wrap;
+  }
+
+  &__variant_preview {
+    flex: 0 0 toRem(120);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: toRem(8);
+  }
+
+  &__variant_image {
+    width: toRem(120);
+    height: toRem(120);
+    object-fit: cover;
+    border-radius: toRem(4);
+    border: toRem(1) solid $color-oyster;
+  }
+
+  &__variant_placeholder {
+    width: toRem(120);
+    height: toRem(120);
+    border: toRem(1) dashed $color-oyster;
+    border-radius: toRem(4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-oyster;
+    font-size: toRem(12);
+    text-align: center;
+    padding: toRem(8);
+  }
+
+  &__cascade {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(6);
+  }
+}

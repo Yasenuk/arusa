@@ -1,0 +1,73 @@
+@use "@org/ui/styles/index" as *;
+
+.layout {
+  display: flex;
+  min-height: 100dvh;
+
+  &__main {
+    flex: 1 1 0;
+    padding: toRem(32);
+    background-color: #f7f7f5;
+    overflow-y: auto;
+  }
+}
+
+.sidebar {
+  flex: 0 0 toRem(220);
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-right: toRem(1) solid #e8e3dc;
+  padding: toRem(24) toRem(16);
+  min-height: 100dvh;
+  position: sticky;
+  top: 0;
+
+  &__logo {
+    font-size: toRem(18);
+    font-weight: 600;
+    margin-bottom: toRem(32);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(4);
+    flex: 1;
+  }
+
+  &__link {
+    padding: toRem(10) toRem(12);
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    color: #5a5a5a;
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #f0ebe3;
+      color: #1a1a1a;
+    }
+
+    &_active {
+      background-color: #f0ebe3;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+  }
+
+  &__logout {
+    margin-top: auto;
+    padding: toRem(10) toRem(12);
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    color: #888;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover { color: #c0392b; }
+  }
+}

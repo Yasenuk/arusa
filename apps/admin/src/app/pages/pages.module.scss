@@ -1,0 +1,351 @@
+@use "@org/ui/styles/index" as *;
+
+.login {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f5;
+
+  &__card {
+    background: #fff;
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(8);
+    padding: toRem(40);
+    width: toRem(360);
+    display: flex;
+    flex-direction: column;
+    gap: toRem(16);
+  }
+
+  &__title {
+    font-size: toRem(20);
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__input {
+    padding: toRem(10) toRem(12);
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    outline: none;
+
+    &:focus { border-color: #a89880; }
+  }
+
+  &__button {
+    padding: toRem(12);
+    background-color: #1a1a1a;
+    color: #fff;
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover { background-color: #333; }
+  }
+
+  &__error {
+    color: #c0392b;
+    font-size: toRem(13);
+    text-align: center;
+  }
+}
+
+.page {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: toRem(24);
+  }
+
+  &__title {
+    font-size: toRem(22);
+    font-weight: 600;
+  }
+
+  &__button {
+    padding: toRem(10) toRem(20);
+    background-color: #1a1a1a;
+    color: #fff;
+    border-radius: toRem(4);
+    font-size: toRem(13);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+
+    &:hover { background-color: #333; }
+
+    &_secondary {
+      background-color: transparent;
+      color: #1a1a1a;
+      border: toRem(1) solid #e8e3dc;
+
+      &:hover { background-color: #f0ebe3; }
+    }
+  }
+
+  &__empty {
+    color: #888;
+    font-size: toRem(14);
+    padding: toRem(40) 0;
+    text-align: center;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: toRem(6);
+    color: #888;
+    font-size: toRem(13);
+    text-decoration: none;
+    margin-bottom: toRem(16);
+
+    &:hover { color: #1a1a1a; }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: toRem(14);
+  background: #fff;
+  border-radius: toRem(8);
+  overflow: hidden;
+  border: toRem(1) solid #e8e3dc;
+
+  th {
+    text-align: left;
+    padding: toRem(10) toRem(16);
+    border-bottom: toRem(2) solid #e8e3dc;
+    color: #888;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: toRem(11);
+    letter-spacing: 0.05em;
+    background: #faf8f5;
+  }
+
+  td {
+    padding: toRem(12) toRem(16);
+    border-bottom: toRem(1) solid #f0ebe3;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background-color: #faf8f5; }
+
+  &__actions {
+    display: flex;
+    gap: toRem(8);
+  }
+
+  &__btn {
+    padding: toRem(6) toRem(12);
+    border-radius: toRem(4);
+    font-size: toRem(12);
+    cursor: pointer;
+    border: toRem(1) solid #e8e3dc;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    color: #1a1a1a;
+    background: #fff;
+
+    &:hover { background-color: #f0ebe3; }
+
+    &_danger {
+      color: #c0392b;
+      border-color: #f5c6cb;
+
+      &:hover { background-color: #fde8e8; }
+    }
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: toRem(3) toRem(8);
+  border-radius: toRem(12);
+  font-size: toRem(11);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.form {
+  background: #fff;
+  border: toRem(1) solid #e8e3dc;
+  border-radius: toRem(8);
+  padding: toRem(32);
+  display: flex;
+  flex-direction: column;
+  gap: toRem(20);
+  max-width: toRem(700);
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(6);
+  }
+
+  &__label {
+    font-size: toRem(13);
+    color: #555;
+    font-weight: 500;
+  }
+
+  &__input {
+    padding: toRem(10) toRem(12);
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    outline: none;
+    width: 100%;
+
+    &:focus { border-color: #a89880; }
+  }
+
+  &__textarea {
+    min-height: toRem(160);
+    resize: vertical;
+  }
+
+  &__select {
+    padding: toRem(10) toRem(12);
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(4);
+    font-size: toRem(14);
+    outline: none;
+    width: 100%;
+    background: #fff;
+
+    &:focus { border-color: #a89880; }
+  }
+
+  &__actions {
+    display: flex;
+    gap: toRem(12);
+    margin-top: toRem(8);
+  }
+
+  &__error {
+    color: #c0392b;
+    font-size: toRem(13);
+  }
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: toRem(24);
+
+  &__card {
+    background: #fff;
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(8);
+    padding: toRem(24);
+  }
+
+  &__title {
+    font-size: toRem(16);
+    font-weight: 600;
+    margin-bottom: toRem(16);
+  }
+
+  &__row {
+    display: flex;
+    gap: toRem(8);
+    padding: toRem(8) 0;
+    border-bottom: toRem(1) solid #f0ebe3;
+    font-size: toRem(14);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__key {
+    color: #888;
+    min-width: toRem(160);
+  }
+
+  &__value {
+    color: #1a1a1a;
+    flex: 1;
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(toRem(200), 1fr));
+  gap: toRem(16);
+  margin-bottom: toRem(32);
+
+  &__card {
+    background: #fff;
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(8);
+    padding: toRem(20) toRem(24);
+  }
+
+  &__label {
+    font-size: toRem(12);
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: toRem(8);
+  }
+
+  &__value {
+    font-size: toRem(28);
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  &__sub {
+    font-size: toRem(12);
+    color: #888;
+    margin-top: toRem(4);
+  }
+
+  &__growth {
+    font-size: toRem(12);
+    margin-top: toRem(4);
+
+    &_positive { color: #27ae60; }
+    &_negative { color: #c0392b; }
+  }
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: toRem(16);
+  margin-bottom: toRem(32);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__card {
+    background: #fff;
+    border: toRem(1) solid #e8e3dc;
+    border-radius: toRem(8);
+    padding: toRem(24);
+  }
+
+  &__title {
+    font-size: toRem(14);
+    font-weight: 600;
+    margin-bottom: toRem(16);
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
