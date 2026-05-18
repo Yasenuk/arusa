@@ -3,8 +3,10 @@ import { createProduct, getProducts, getProductsByIds, ProductFilters } from "..
 
 const router = Router();
 
-// POST /api/admin/products — створення продукту
-router.post("/admin/products", async (req, res) => {
+import { adminMiddleware } from '../middlewares/admin';
+import { authMiddleware } from '../middlewares/auth';
+
+router.post("/admin/products", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { title, description, article, category_id, product_variants } = req.body;
 

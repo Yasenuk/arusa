@@ -20,8 +20,8 @@
   border-right: toRem(1) solid #e8e3dc;
   padding: toRem(24) toRem(16);
   min-height: 100dvh;
-  position: sticky;
-  top: 0;
+  position: relative;
+  
 
   &__logo {
     font-size: toRem(18);
@@ -29,13 +29,18 @@
     margin-bottom: toRem(32);
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    position: sticky;
+    top: toRem(30);
   }
 
   &__nav {
     display: flex;
     flex-direction: column;
     gap: toRem(4);
-    flex: 1;
+    // flex: 1;
+
+    position: sticky;
+    top: toRem(65);
   }
 
   &__link {
@@ -59,6 +64,8 @@
   }
 
   &__logout {
+    position: sticky;
+    bottom: toRem(25);
     margin-top: auto;
     padding: toRem(10) toRem(12);
     border-radius: toRem(4);

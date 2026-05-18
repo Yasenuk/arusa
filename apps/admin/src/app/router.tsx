@@ -14,6 +14,7 @@ import OrderDetail from './pages/orders/OrderDetail';
 import UsersList from './pages/users/UsersList';
 import PaymentsList from './pages/payments/PaymentsList';
 import Login from './pages/Login';
+import InventoryList from './pages/inventory/InventoryList';
 
 export default function AdminRouter() {
   return (
@@ -34,6 +35,7 @@ export default function AdminRouter() {
         <Route path="orders/:id" element={<OrderDetail />} />
         <Route path="users" element={<UsersList />} />
         <Route path="payments" element={<PaymentsList />} />
+        <Route path="inventory" element={<InventoryList />} />
       </Route>
     </Routes>
   );

@@ -52,7 +52,13 @@ export default function ProductsList() {
               <tr key={p.id}>
                 <td>
                   {p.image
-                    ? <img src={p.image} alt={p.title} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 4 }} />
+                    ? (
+                      <picture>
+                        <source srcSet={`${p.image}.avif`} type='image/avif' />
+                        <source srcSet={`${p.image}.webp`} type='image/webp' />
+                        <img src={`${p.image}.png`} alt={p.title} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 4 }} />
+                      </picture>
+                    )
                     : '—'
                   }
                 </td>

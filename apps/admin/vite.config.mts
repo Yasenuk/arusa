@@ -7,6 +7,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/apps/adnim',
   server: {
     port: 5030,
+    open: true,
     host: 'localhost',
     proxy: {
       '/api': {

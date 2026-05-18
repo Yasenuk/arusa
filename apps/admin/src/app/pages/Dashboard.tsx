@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ValueType, NameType } from "recharts/types/component/DefaultTooltipContent";
 
 import { adminFetch } from '../api';
 import styles from './pages.module.scss';
@@ -16,13 +15,17 @@ type Stats = {
 };
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
     adminFetch('/api/admin/stats')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('Unauthorized');
+        return r.json();
+      })
       .then(setStats)
+      .catch(() => setStats(null))
       .finally(() => setLoading(false));
   }, []);
 

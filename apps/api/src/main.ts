@@ -23,6 +23,8 @@ import shopAddresses from "./routes/addresses";
 
 import payment from "./routes/payments";
 
+import adminRoutes from "./routes/admin";
+
 dotenv.config();
 
 const app = express();
@@ -52,6 +54,8 @@ app.use("/api", shopAddresses);
 
 app.use("/api", npRequest);
 app.use("/api", payment);
+
+app.use("/api", adminRoutes);
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {

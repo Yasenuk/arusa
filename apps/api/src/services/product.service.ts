@@ -40,6 +40,9 @@ export async function createProduct(title: string, description: string, article:
               image_url: `https://pub-${process.env.R2_PUBLIC_KEY}.r2.dev/${file.image_url}`,
               position: file.position
             }))
+          },
+          inventory: {
+            create: { quantity: v.quantity, reserved_quantity: 0 }
           }
         }))
       }
@@ -144,9 +147,9 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
 
   const orderBy: any =
     sort === 'price_asc' ? { price: 'asc' } :
-    sort === 'price_desc' ? { price: 'desc' } :
-    sort === 'z_a' ? { products: { title: 'desc' } } :
-    { products: { title: 'asc' } };
+      sort === 'price_desc' ? { price: 'desc' } :
+        sort === 'z_a' ? { products: { title: 'desc' } } :
+          { products: { title: 'asc' } };
 
   const total = await prisma.product_variants.count({ where: variantWhere });
 

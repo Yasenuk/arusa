@@ -9,6 +9,7 @@ const NAV = [
   { to: '/orders', label: 'Замовлення' },
   { to: '/users', label: 'Користувачі' },
   { to: '/payments', label: 'Платежі' },
+  { to: '/inventory', label: 'Інвентаризація' },
 ];
 
 export default function Sidebar() {

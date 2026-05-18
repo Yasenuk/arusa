@@ -25,10 +25,10 @@
       "path": "./libs/utils"
     },
     {
-      "path": "./apps/admin-e2e"
+      "path": "./apps/admin"
     },
     {
-      "path": "./apps/admin"
+      "path": "./apps/adnim-e2e"
     }
   ]
 }
