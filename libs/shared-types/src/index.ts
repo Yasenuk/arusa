@@ -9,4 +9,5 @@ export * from './lib/order.js';
 export * from './lib/address.js';
 export * from './lib/shared-types.js';
 export * from './lib/payment.js';
+export * from './lib/article.js';
 

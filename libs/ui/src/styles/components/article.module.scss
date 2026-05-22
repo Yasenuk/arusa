@@ -1,11 +1,11 @@
 @use '@org/ui/styles/index' as *;
 
 .article {
-	flex: 0 1 calc(100% / 3);
+	// flex: 0 1 calc(100% / 3);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  // height: 100%;
+  justify-content: start;
+  height: 100%;
 
 	&__picture {
 		flex: 1 0 toRem(360);
@@ -46,7 +46,7 @@
 	&__description {
 		flex: 1 1 auto;
 		display: flex;
-		align-items: end;
+		align-items: start;
 		margin-block: toRem(24);
 	}
 

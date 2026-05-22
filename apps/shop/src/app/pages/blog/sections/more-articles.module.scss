@@ -1,11 +1,18 @@
-@use "@org/ui/styles/index" as *;
+@use '@org/ui/styles/index' as *;
 
 .more-articles {
-	&__container {
-		@include container();
-		display: flex;
-		flex-direction: column;
-		padding-bottom: toRem(24);
-		position: relative;
-	}
+  &__container {
+    @include container();
+    display: flex;
+    flex-direction: column;
+    padding-bottom: toRem(24);
+    position: relative;
+  }
+
+  &__swipper-container {
+    width: 100%;
+  }
+
+  &__slide {
+  }
 }

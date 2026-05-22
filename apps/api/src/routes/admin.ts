@@ -98,7 +98,7 @@ router.post('/admin/articles', async (req, res) => {
   try {
     const { title, description, alt, image_url } = req.body;
     if (!title) return res.status(400).json({ error: 'Назва обовʼязкова' });
-    const article = await createArticle({ title, description, alt, image_url });
+    const article = await createArticle({ title, description, alt, image_url: `https://pub-${process.env.R2_PUBLIC_KEY}.r2.dev/${image_url}` });
     res.status(201).json(article);
   } catch (err) {
     res.status(500).json({ error: 'Помилка створення' });
