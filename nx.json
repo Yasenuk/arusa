@@ -11,9 +11,6 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "sync": {
-    "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
-  },
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -90,6 +87,9 @@
     }
   },
   "targetDefaults": {
+    "build": {
+      "inputs": ["production", "^production"]
+    },
     "test": {
       "dependsOn": ["^build"]
     }

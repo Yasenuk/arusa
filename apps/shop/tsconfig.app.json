@@ -27,7 +27,7 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../../libs/ui/src/lib/cards/Article.tsx", "../../libs/ui/src/lib/cards/ProductCard.tsx"],
   "references": [
     {
       "path": "../../libs/shared-types/tsconfig.lib.json"
