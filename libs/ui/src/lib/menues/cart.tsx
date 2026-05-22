@@ -33,7 +33,7 @@ export function Cart({ isOpen, setIsOpen }: Props) {
 
   return (
     <div className={`${styles.cart} ${isOpen ? styles.cart_open : ""}`}>
-      <button type="button" className={styles['cart__main-button']} onClick={toggleCart}>
+      <button aria-label="Close cart" type="button" className={styles['cart__main-button']} onClick={toggleCart}>
         Кошик
         <span className={styles['cart__quantity']}>{get_cart?.cart?.cart_items?.length}</span>
       </button>

@@ -11,6 +11,9 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
+  "sync": {
+    "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
+  },
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -24,7 +27,8 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "exclude": ["apps/shop", "apps/admin", "apps/api"]
     },
     {
       "plugin": "@nx/vite/plugin",
