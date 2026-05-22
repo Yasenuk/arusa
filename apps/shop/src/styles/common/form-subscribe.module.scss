@@ -11,13 +11,7 @@
 		@include container();
 		height: toRem(677);
 
-		[class*="webp"] & {
-			background-image: url("/assets/images/subscribe/subscribe-picture.webp");
-		}
-
-		[class*="no-webp"] & {
-			background-image: url("/assets/images/subscribe/subscribe-picture.png");
-		}
+		@include bg-image("/assets/images/subscribe/subscribe-picture");
 
 		background-repeat: no-repeat;
 		background-position: center;

@@ -69,14 +69,8 @@
 
 	&__background {
 		height: toRem(665);
-
-		[class*="webp"] & {
-			background-image: url("/assets/images/details/background.webp");
-		}
-
-		[class*="no-webp"] & {
-			background-image: url("/assets/images/details/background.png");
-		}
+		
+		@include bg-image("/assets/images/details/background");
 
 		background-repeat: no-repeat;
 		background-position: center;

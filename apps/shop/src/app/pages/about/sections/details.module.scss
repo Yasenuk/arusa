@@ -72,13 +72,7 @@
 		@include container();
 		height: toRem(600);
 
-		[class=webp] & {
-			background-image: url("/assets/images/about/background.webp");
-		}
-
-		[class=no-webp] & {
-			background-image: url("/assets/images/about/background.png");
-		}
+		@include bg-image("/assets/images/details/background");
 
 		background-repeat: no-repeat;
 		background-position: center;

@@ -3,9 +3,7 @@
 .view {
 	@include adaptiveValueMF(height, 1080, 664);
 
-	[class*="webp"] & { background-image: url(/assets/images/view/view-picture.webp); }
-
-	[class*="no-webp"] & { background-image: url(/assets/images/view/view-picture.png); }
+	@include bg-image("/assets/images/view/view-picture");
 
 	background-repeat: no-repeat;
 	background-position: center;

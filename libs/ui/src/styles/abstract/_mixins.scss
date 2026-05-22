@@ -176,3 +176,12 @@
     max-width: toRem($width);
   }
 }
+
+@mixin bg-image($path, $ext: ("avif", "webp", "png")) {
+  $set: ();
+  @each $e in $ext {
+    $set: append($set, url("#{$path}.#{$e}") type("image/#{$e}"), comma);
+  }
+  background-image: -webkit-image-set(#{$set});
+  background-image: image-set(#{$set});
+}
