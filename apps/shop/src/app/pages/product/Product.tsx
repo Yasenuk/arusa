@@ -30,9 +30,43 @@ export default function Product() {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (product?.title) {
-			document.title = `${product.title} — Arusa`;
+		if (!product) return;
+
+		document.title = `${product.title} — Arusa`;
+
+		const metaDesc = document.querySelector('meta[name="description"]');
+		if (metaDesc && product.description) {
+			metaDesc.setAttribute("content", product.description.slice(0, 160));
 		}
+
+		const existingScript = document.getElementById("product-jsonld");
+		if (existingScript) existingScript.remove();
+
+		const script = document.createElement("script");
+		script.id = "product-jsonld";
+		script.type = "application/ld+json";
+		script.text = JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Product",
+			name: product.title,
+			description: product.description,
+			image: `${product.image}.jpg`,
+			sku: product.article,
+			offers: {
+				"@type": "Offer",
+				priceCurrency: "UAH",
+				price: (Number(product.price) / 1000).toFixed(3),
+				availability: Number(product.quantity) > 0
+					? "https://schema.org/InStock"
+					: "https://schema.org/OutOfStock",
+				url: `https://arusa.com/products/${product.product_id}?variant=${product.id}`,
+			},
+		});
+		document.head.appendChild(script);
+
+		return () => {
+			document.getElementById("product-jsonld")?.remove();
+		};
 	}, [product]);
 
 	useEffect(() => {
@@ -92,7 +126,7 @@ export default function Product() {
 						<picture>
 							<source srcSet={`${product?.image}.avif`} type="image/avif" />
 							<source srcSet={`${product?.image}.webp`} type="image/webp" />
-							<img className={styles.product__picture} loading="lazy" src={`${product?.image}.png`} alt={product?.title} width={320} height={320} />
+							<img className={styles.product__picture} loading="lazy" src={`${product?.image}.png`} alt={product?.title ?? ""} width={320} height={320} />
 						</picture>
 					</div>
 					<div className={styles.product__info}>
@@ -115,18 +149,20 @@ export default function Product() {
 								className={`${styles.product__add} _button _button_main _button_border _button_fill regular upper`}>
 								Додати до кошика
 							</button>
-							<button className={`${styles.product__favorite} _button _button_border regular upper`}>
-								<i className="icon icon-heart"></i>
+							<button
+								aria-label="Додати до улюблених"
+								className={`${styles.product__favorite} _button _button_border regular upper`}>
+								<i className="icon icon-heart" aria-hidden="true"></i>
 							</button>
 						</div>
 						<div className={styles.product__variants}>
 							{products.map((product) => (
 								<div key={product.id} className={`${styles.product__item} ${product.id === Number(variantId) ? styles["product__item_active"] : ""}`}>
-									<Link to={`/products/${product.product_id}?variant=${product.id}`}>
+									<Link to={`/products/${product.product_id}?variant=${product.id}`} aria-label={`Варіант: ${product.title}`}>
 										<picture>
 											<source srcSet={`${product?.image}.avif`} type="image/avif" />
 											<source srcSet={`${product?.image}.webp`} type="image/webp" />
-											<img className={styles["product__item-picture"]} loading="lazy" src={`${product?.image}.png`} alt={product?.title} width={320} height={320} />
+											<img className={styles["product__item-picture"]} loading="lazy" src={`${product?.image}.png`} alt="" width={320} height={320} />
 										</picture>
 									</Link>
 								</div>

@@ -22,6 +22,15 @@ export function Cart({ isOpen, setIsOpen }: Props) {
     fetchCart();
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeCart();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   const toggleCart = () => {
     setIsOpen((prev) => !prev);
   };
@@ -31,17 +40,24 @@ export function Cart({ isOpen, setIsOpen }: Props) {
     document.body.classList.remove("_locked");
   };
 
+  const itemCount = get_cart?.cart?.cart_items?.length ?? 0;
+
   return (
     <div className={`${styles.cart} ${isOpen ? styles.cart_open : ""}`}>
-      <button aria-label="Close cart" type="button" className={styles['cart__main-button']} onClick={toggleCart}>
+      <button
+        type="button"
+        aria-label={`Кошик, ${itemCount} товарів`}
+        aria-expanded={isOpen}
+        className={styles['cart__main-button']}
+        onClick={toggleCart}>
         Кошик
-        <span className={styles['cart__quantity']}>{get_cart?.cart?.cart_items?.length}</span>
+        <span className={styles['cart__quantity']} aria-hidden="true">{itemCount}</span>
       </button>
-      <div className={styles.cart__wrapper}>
+      <div className={styles.cart__wrapper} role="dialog" aria-modal="true" aria-label="Кошик з товарами">
         <div className={styles.cart__body}>
           <header className={styles.cart__header}>
             <h2 className={`${styles.cart__title} large upper`}>Зведення замовлення</h2>
-            <button className={styles.cart__close} onClick={closeCart}></button>
+            <button className={styles.cart__close} aria-label="Закрити кошик" onClick={closeCart}></button>
           </header>
           <div className={styles.cart__content}>
             {get_cart?.cart?.cart_items?.map((item, index) => (

@@ -168,3 +168,33 @@
     align-items: start;
   }
 }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: toRem(-100);
+  left: toRem(16);
+  z-index: 9999;
+  padding: toRem(8) toRem(16);
+  background-color: $color-stormy;
+  color: $color-white;
+  border-radius: toRem(4);
+  font-size: toRem(14);
+  text-decoration: none;
+  transition: top 0.2s;
+
+  &:focus {
+    top: toRem(16);
+  }
+}

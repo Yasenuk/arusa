@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "../../styles/components/burger-menu.module.scss";
@@ -37,9 +38,22 @@ export function BurgerMenu({ isOpen, setIsOpen }: Props) {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   return (
-    <nav className={`${styles.menu} ${isOpen ? "_open" : ""}`} data-burger>
-      <button className={styles["menu__close-button"]} aria-label="Close menu" onClick={toggleMenu} >
+    <nav className={`${styles.menu} ${isOpen ? "_open" : ""}`} data-burger aria-label="Головна навігація">
+      <button
+        className={styles["menu__close-button"]}
+        aria-label={isOpen ? "Закрити меню" : "Відкрити меню"}
+        aria-expanded={isOpen}
+        onClick={toggleMenu}>
         <span></span>
       </button>
 
