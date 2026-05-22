@@ -16,7 +16,7 @@ export default function Hero() {
 						<h1 className={`${styles.hero__title} h h_xl center`}>Наш блог</h1>
 						<p className={`${styles.hero__description} small center`}>Дизайнерка інтер'єрів Сара Вейл згадує, як приглядалася до Нью-Йорка. Роками пізніше, за щасливим збігом обставин, жінка, яку вона бачила в журналі — стильна фігура, якій зараз було за 30 — щойно переїхала до Чикаго.</p>
 						<p className={`${styles.hero__description} regular center`}>Дизайнерка інтер'єрів Сара Вейл згадує, як приглядалася до нью-йоркської квартири — з яскравими кольорами та індивідуальністю, такою ж виразною, як і її шикарна власниця — у випуску журналу House Beautiful за 2014 рік, і сховала її для майбутнього натхнення для дизайну. Роками пізніше, за щасливим збігом обставин, жінка, яку вона бачила в журналі — стильна фігура, якій зараз було за 30 — щойно переїхала до Чикаго.</p>
-						<Link to="./articles.html" className={`${styles.hero__button} small _button _button_article no-inline upper`}>Переглянути всі статті</Link>
+						{/* <Link to="./articles.html" className={`${styles.hero__button} small _button _button_article no-inline upper`}>Переглянути всі статті</Link> */}
 					</div>
 				</div>
 				<h2 className={`${styles['hero__side-title']} side-title h h_s`}>Блог</h2>

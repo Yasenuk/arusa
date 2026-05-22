@@ -4,7 +4,9 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
+import "../../../../styles/common/swiper.module.scss";
 import styles from "./more-articles.module.scss";
+
 import { useEffect, useState } from "react";
 import { ArticleData } from "@org/shared-types";
 import { Article } from "@org/ui";

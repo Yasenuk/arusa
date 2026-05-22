@@ -28,34 +28,30 @@ export default function Popup({
   const bodyRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(isOpen);
 
+  // Один useEffect для body lock + visibility — без дублювання classList calls
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       document.body.classList.add("_locked");
-    } else {
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-        document.body.classList.remove("_locked");
-      }, 300);
-
-      return () => clearTimeout(timeout);
+      return;
     }
+
+    const timeout = setTimeout(() => setIsVisible(false), 300);
+    // Знімаємо lock одразу при закритті, не чекаємо анімацію
+    document.body.classList.remove("_locked");
+    return () => clearTimeout(timeout);
   }, [isOpen]);
 
   useEffect(() => {
-    function handleEsc(e: KeyboardEvent) {
+    if (!isVisible) return;
+
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-    }
-
-    if (isVisible) {
-      document.addEventListener("keydown", handleEsc);
-      document.body.classList.add("_locked");
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEsc);
-      document.body.classList.remove("_locked");
     };
+
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+    // classList вже керується вище — не дублюємо тут
   }, [isVisible, onClose]);
 
   function handleOutside(e: React.MouseEvent) {

@@ -12,46 +12,37 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
 
   const { isAuth } = useAuth();
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      setIsCartOpen(false);
-      document.body.classList.add("_locked");
-    }
-  }, [isMenuOpen]);
-
-  useEffect(() => {
-    if (isCartOpen) {
-      setIsMenuOpen(false);
-      document.body.classList.add("_locked");
-    }
-  }, [isCartOpen]);
-
+  // Замість трьох окремих useEffect для _locked — один
   useEffect(() => {
     const shouldLock = isMenuOpen || isCartOpen;
-
-    if (shouldLock) {
-      document.body.classList.add("_locked");
-    } else {
-      document.body.classList.remove("_locked");
-    }
-
-    return () => {
-      document.body.classList.remove("_locked");
-    };
+    document.body.classList.toggle("_locked", shouldLock);
+    return () => { document.body.classList.remove("_locked"); };
   }, [isMenuOpen, isCartOpen]);
 
   const lastScroll = useRef<number>(0);
+  // Ref для batching — не тригеримо setState на кожен піксель
+  const rafId = useRef<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const current = window.pageYOffset;
-      setIsHidden(current > lastScroll.current && current > 100);
-      setIsScrolled(current > 200);
-      lastScroll.current = current;
+      // Скасовуємо попередній rAF щоб не стекати
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        const current = window.scrollY;
+        const hidden  = current > lastScroll.current && current > 100;
+        const scrolled = current > 200;
+        // Оновлюємо state тільки якщо значення змінилось
+        setIsHidden(prev  => prev  !== hidden  ? hidden  : prev);
+        setIsScrolled(prev => prev !== scrolled ? scrolled : prev);
+        lastScroll.current = current;
+      });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (

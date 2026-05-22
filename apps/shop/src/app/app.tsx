@@ -1,9 +1,10 @@
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 
-import { isPageLoad, isWebp } from '@org/utils/index';
+import { isPageLoad } from '@org/utils/index';
 
-isWebp();
+// isWebp() видалено — <picture> з <source type="image/avif/webp">
+// вирішує підтримку форматів нативно без JS детекції
 isPageLoad();
 
 export function App() {

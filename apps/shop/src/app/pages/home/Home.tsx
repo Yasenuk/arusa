@@ -6,7 +6,6 @@ import FeatureProducts from "./sections/FeatureProducts";
 import Hero from "./sections/Hero";
 import Lookbook from "./sections/Lookbook";
 import Native from "./sections/Native";
-import ProductCard from "../../../../../../libs/ui/src/lib/cards/ProductCard";
 import View from "./sections/View";
 
 export default function Home() {
