@@ -10,7 +10,6 @@
     <meta name="theme-color" content="#ffffff" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Arusa" />
     <meta property="og:title" content="Arusa — інтернет-магазин якісних товарів" />
@@ -19,7 +18,6 @@
     <meta property="og:image" content="https://arusa.com/assets/images/og-image.jpg" />
     <meta property="og:locale" content="uk_UA" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Arusa — інтернет-магазин якісних товарів" />
     <meta name="twitter:description" content="Arusa — інтернет-магазин якісних товарів для дому: меблі, декор, кераміка, лампи." />
@@ -27,12 +25,17 @@
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="canonical" href="https://arusa.com/" />
-    <link rel="stylesheet" href="/src/styles.scss" />
+
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Manrope-Regular/Manrope-Regular.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Literata/Literata-Regular.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Literata/Literata-Italic.woff2" crossorigin="anonymous" />
+
     <link
       rel="preload"
       as="image"
       href="/assets/images/hero/hero-picture.avif"
       type="image/avif"
+      imagesizes="100vw"
       fetchpriority="high"
     />
     <link
@@ -40,8 +43,11 @@
       as="image"
       href="/assets/images/hero/hero-picture.webp"
       type="image/webp"
+      imagesizes="100vw"
       fetchpriority="high"
     />
+
+    <link rel="stylesheet" href="/src/styles.scss" />
   </head>
   <body>
     <div id="root" class="wrapper"></div>

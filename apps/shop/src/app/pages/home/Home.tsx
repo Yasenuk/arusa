@@ -1,23 +1,39 @@
+import { lazy, Suspense } from "react";
+
 import FormSubscribe from "../../common/FormSubscribe";
 import Articles from "../../common/Articles";
-import Create from "./sections/Create";
-import Details from "./sections/Details";
-import FeatureProducts from "./sections/FeatureProducts";
 import Hero from "./sections/Hero";
-import Lookbook from "./sections/Lookbook";
+import Create from "./sections/Create";
 import Native from "./sections/Native";
-import View from "./sections/View";
+
+// Below-fold heavy sections: split into separate chunks (Swiper, product data)
+const FeatureProducts = lazy(() => import("./sections/FeatureProducts"));
+const View = lazy(() => import("./sections/View"));
+const Lookbook = lazy(() => import("./sections/Lookbook"));
+const Details = lazy(() => import("./sections/Details"));
+
+const SectionFallback = () => <div style={{ minHeight: "40vh" }} aria-hidden="true" />;
 
 export default function Home() {
 	return (<>
 		<Hero />
 		<Create />
-		<FeatureProducts children={[ 1, 56, 32, 61, 19, 22, 44, 9 ]}></FeatureProducts>
+		<Suspense fallback={<SectionFallback />}>
+			<FeatureProducts children={[ 1, 56, 32, 61, 19, 22, 44, 9 ]} />
+		</Suspense>
 		<Native />
-		<View ids={[18, 15]}/>
-		<Lookbook />
-		<FeatureProducts _isDark={true} children={[ 5, 36, 17, 52, 28, 41, 67, 14 ]}></FeatureProducts>
-		<Details />
+		<Suspense fallback={<SectionFallback />}>
+			<View ids={[18, 15]} />
+		</Suspense>
+		<Suspense fallback={<SectionFallback />}>
+			<Lookbook />
+		</Suspense>
+		<Suspense fallback={<SectionFallback />}>
+			<FeatureProducts _isDark={true} children={[ 5, 36, 17, 52, 28, 41, 67, 14 ]} />
+		</Suspense>
+		<Suspense fallback={<SectionFallback />}>
+			<Details />
+		</Suspense>
 		<Articles />
 		<FormSubscribe />
 	</>);

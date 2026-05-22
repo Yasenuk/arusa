@@ -3,6 +3,8 @@
 .native {
 	color: $color-opal;
 	position: relative;
+	content-visibility: auto;
+	contain-intrinsic-size: auto 500px;
 
 	// &._dark {
 		background-color: $color-opal;

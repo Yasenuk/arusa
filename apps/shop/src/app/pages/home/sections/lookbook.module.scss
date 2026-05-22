@@ -3,6 +3,8 @@
 .lookbook {
 	background-color: $color-opal;
 	color: $color-claudy;
+	content-visibility: auto;
+	contain-intrinsic-size: auto 600px;
 
 	&__container {
 		@include container(0);

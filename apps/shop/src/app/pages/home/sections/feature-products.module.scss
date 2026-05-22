@@ -4,6 +4,8 @@
   border-top: toRem(1) solid $color-oyster;
   border-bottom: toRem(1) solid $color-oyster;
   @include adaptiveValueMF(margin-bottom, 22, 0);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 550px;
 
   &._dark {
     border-color: $color-claudy;

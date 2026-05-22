@@ -10,7 +10,16 @@ export default function Hero() {
 				<picture>
 					<source srcSet="/assets/images/hero/hero-picture.avif" type="image/avif" />
 					<source srcSet="/assets/images/hero/hero-picture.webp" type="image/webp" />
-					<img className={styles.hero__picture} width="1439" height="733" fetchPriority="high" src="/assets/images/hero/hero-picture.png" alt="Сучасна їдальня з дерев’яним столом і плетеними світильниками" />
+					<img
+						className={styles.hero__picture}
+						width="1439"
+						height="733"
+						fetchPriority="high"
+						decoding="sync"
+						sizes="100vw"
+						src="/assets/images/hero/hero-picture.png"
+						alt="Сучасна їдальня з дерев’яним столом і плетеними світильниками"
+					/>
 				</picture>
 				<h1 className={`${styles.hero__title} h h_xxl`}>
 					Безшовні <span className="italic">меблі</span> з натуральних тканин
