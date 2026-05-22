@@ -8,7 +8,7 @@ export async function getAllArticles() {
   return prisma.articles.findMany({ orderBy: { created_at: 'desc' } });
 }
 
-export async function createArticle(data: { title: string; content: string; preview_text?: string; image_url?: string }) {
+export async function createArticle(data: { title: string; description: string; alt: string; image_url: string }) {
   return prisma.articles.create({ data });
 }
 

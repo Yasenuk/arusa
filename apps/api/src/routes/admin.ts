@@ -96,9 +96,9 @@ router.get('/admin/articles/:id', async (req, res) => {
 
 router.post('/admin/articles', async (req, res) => {
   try {
-    const { title, content, preview_text, image_url } = req.body;
+    const { title, description, alt, image_url } = req.body;
     if (!title) return res.status(400).json({ error: 'Назва обовʼязкова' });
-    const article = await createArticle({ title, content, preview_text, image_url });
+    const article = await createArticle({ title, description, alt, image_url });
     res.status(201).json(article);
   } catch (err) {
     res.status(500).json({ error: 'Помилка створення' });

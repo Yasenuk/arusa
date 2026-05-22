@@ -1,159 +1,146 @@
 import { Resend } from 'resend';
-import { OrderItem } from '@org/shared-types';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.RESEND_FROM ?? 'onboarding@resend.dev';
 
-// ─── Шаблони ──────────────────────────────────────────────────────────────────
+type OrderItem = {
+  title_snapshot: string;
+  quantity: number;
+  price_snapshot: number;
+};
 
-function baseTemplate(title: string, content: string) {
+function orderItemsHtml(items: OrderItem[], currency: string) {
+  return items.map(i => `
+    <tr>
+      <td style="padding:8px 0;border-bottom:1px solid #f0ebe3">${i.title_snapshot}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #f0ebe3;text-align:center">${i.quantity}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #f0ebe3;text-align:right">${i.price_snapshot * i.quantity} ${currency}</td>
+    </tr>
+  `).join('');
+}
+
+function baseTemplate(content: string) {
   return `
     <!DOCTYPE html>
-    <html lang="uk">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>${title}</title>
-      <style>
-        body { font-family: sans-serif; background: #f7f7f5; margin: 0; padding: 0; }
-        .wrapper { max-width: 600px; margin: 40px auto; background: #fff; border: 1px solid #e8e3dc; border-radius: 8px; overflow: hidden; }
-        .header { background: #1a1a1a; color: #fff; padding: 24px 32px; font-size: 20px; letter-spacing: 0.05em; text-transform: uppercase; }
-        .body { padding: 32px; color: #333; font-size: 15px; line-height: 1.6; }
-        .footer { padding: 16px 32px; background: #f7f7f5; color: #888; font-size: 12px; border-top: 1px solid #e8e3dc; }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        th { text-align: left; padding: 8px 12px; background: #f7f7f5; font-size: 12px; text-transform: uppercase; color: #888; }
-        td { padding: 10px 12px; border-bottom: 1px solid #f0ebe3; font-size: 14px; }
-        .total { font-size: 16px; font-weight: 600; text-align: right; margin-top: 8px; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 13px; background: #f0ebe3; color: #1a1a1a; }
-        .btn { display: inline-block; padding: 12px 24px; background: #1a1a1a; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 16px; }
-      </style>
-    </head>
-    <body>
-      <div class="wrapper">
-        <div class="header">Arusa</div>
-        <div class="body">${content}</div>
-        <div class="footer">© Arusa. Якщо у вас є питання — відповідайте на цей лист.</div>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family:sans-serif;color:#1a1a1a;background:#f7f7f5;margin:0;padding:0">
+      <div style="max-width:560px;margin:40px auto;background:#fff;border:1px solid #e8e3dc;border-radius:8px;overflow:hidden">
+        <div style="padding:24px 32px;border-bottom:1px solid #e8e3dc">
+          <h1 style="margin:0;font-size:20px;letter-spacing:0.05em;text-transform:uppercase">Arusa</h1>
+        </div>
+        <div style="padding:32px">
+          ${content}
+        </div>
+        <div style="padding:16px 32px;border-top:1px solid #e8e3dc;font-size:12px;color:#888;text-align:center">
+          © Arusa. Всі права захищені.
+        </div>
       </div>
     </body>
     </html>
   `;
 }
 
-function itemsTable(items: { title_snapshot: string; quantity: number; price_snapshot: number }[], total: number, currency: string) {
-  const rows = items.map(i => `
-    <tr>
-      <td>${i.title_snapshot}</td>
-      <td>${i.quantity}</td>
-      <td>${i.price_snapshot} ${currency}</td>
-      <td>${i.price_snapshot * i.quantity} ${currency}</td>
-    </tr>
-  `).join('');
-
-  return `
-    <table>
-      <thead><tr><th>Товар</th><th>К-сть</th><th>Ціна</th><th>Разом</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="total">Разом: ${total} ${currency}</div>
-  `;
-}
-
-// ─── Листи ────────────────────────────────────────────────────────────────────
-
-type OrderEmailData = {
-  to: string;
-  order_id: number;
+// Підтвердження замовлення
+export async function sendOrderConfirmation(to: string, order: {
+  id: number;
   total_amount: number;
   currency: string;
-  items: { title_snapshot: string; quantity: number; price_snapshot: number }[];
-};
+  items: OrderItem[];
+  address?: { city: string; np_warehouse_description?: string } | null;
+}) {
+  const addressLine = order.address
+    ? `<p style="color:#555;font-size:14px">📦 Доставка: ${order.address.city} — ${order.address.np_warehouse_description ?? ''}</p>`
+    : '';
 
-export async function sendOrderConfirmation(data: OrderEmailData) {
-  const content = `
-    <p>Дякуємо за ваше замовлення! 🎉</p>
-    <p>Ваше замовлення <strong>#${data.order_id}</strong> успішно оформлено та очікує підтвердження.</p>
-    ${itemsTable(data.items, data.total_amount, data.currency)}
-    <p>Ми повідомимо вас коли замовлення буде підтверджено.</p>
-  `;
-
-  return resend.emails.send({
+  await resend.emails.send({
     from: FROM,
-    to: data.to,
-    subject: `Замовлення #${data.order_id} оформлено — Arusa`,
-    html: baseTemplate(`Замовлення #${data.order_id}`, content),
+    to,
+    subject: `Замовлення #${order.id} прийнято`,
+    html: baseTemplate(`
+      <h2 style="margin:0 0 16px">Дякуємо за замовлення!</h2>
+      <p style="color:#555;font-size:14px">Ваше замовлення <strong>#${order.id}</strong> прийнято і передано на обробку.</p>
+      ${addressLine}
+      <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:14px">
+        <thead>
+          <tr style="color:#888;font-size:12px;text-transform:uppercase">
+            <th style="text-align:left;padding-bottom:8px">Товар</th>
+            <th style="text-align:center;padding-bottom:8px">К-сть</th>
+            <th style="text-align:right;padding-bottom:8px">Сума</th>
+          </tr>
+        </thead>
+        <tbody>${orderItemsHtml(order.items, order.currency)}</tbody>
+      </table>
+      <p style="text-align:right;font-size:16px;font-weight:700">Разом: ${order.total_amount} ${order.currency}</p>
+    `),
   });
 }
 
-export async function sendPaymentSuccess(data: OrderEmailData) {
-  const content = `
-    <p>Оплату отримано! ✅</p>
-    <p>Замовлення <strong>#${data.order_id}</strong> успішно оплачено.</p>
-    ${itemsTable(data.items, data.total_amount, data.currency)}
-    <p>Ми готуємо ваше замовлення до відправки і незабаром повідомимо вас.</p>
-  `;
-
-  return resend.emails.send({
+// Підтвердження оплати
+export async function sendPaymentConfirmation(to: string, order: {
+  id: number;
+  total_amount: number;
+  currency: string;
+}) {
+  await resend.emails.send({
     from: FROM,
-    to: data.to,
-    subject: `Оплату підтверджено — замовлення #${data.order_id}`,
-    html: baseTemplate('Оплату підтверджено', content),
+    to,
+    subject: `Оплата замовлення #${order.id} підтверджена`,
+    html: baseTemplate(`
+      <h2 style="margin:0 0 16px">Оплата підтверджена ✓</h2>
+      <p style="color:#555;font-size:14px">Ми отримали оплату за замовлення <strong>#${order.id}</strong>.</p>
+      <p style="color:#555;font-size:14px">Сума: <strong>${order.total_amount} ${order.currency}</strong></p>
+      <p style="color:#555;font-size:14px">Ваше замовлення буде відправлено найближчим часом.</p>
+    `),
   });
 }
 
-export async function sendOrderShipped(data: { to: string; order_id: number; tracking_number: string }) {
-  const trackingUrl = `https://novaposhta.ua/tracking/?cargo_number=${data.tracking_number}`;
-  const content = `
-    <p>Ваше замовлення <strong>#${data.order_id}</strong> відправлено! 📦</p>
-    <p>Номер ТТН Нової Пошти: <strong>${data.tracking_number}</strong></p>
-    <a href="${trackingUrl}" class="btn">Відстежити посилку</a>
-    <p style="margin-top: 16px; color: #888; font-size: 13px;">
-      Або перейдіть за посиланням: <a href="${trackingUrl}">${trackingUrl}</a>
-    </p>
-  `;
+// Відправлено
+export async function sendOrderShipped(to: string, order: {
+  id: number;
+  tracking_number?: string | null;
+}) {
+  const trackingLine = order.tracking_number
+    ? `<p style="color:#555;font-size:14px">
+        Номер ТТН: <a href="https://novaposhta.ua/tracking/?cargo_number=${order.tracking_number}" style="color:#a89880">${order.tracking_number}</a>
+       </p>`
+    : '';
 
-  return resend.emails.send({
+  await resend.emails.send({
     from: FROM,
-    to: data.to,
-    subject: `Замовлення #${data.order_id} відправлено`,
-    html: baseTemplate('Замовлення відправлено', content),
+    to,
+    subject: `Замовлення #${order.id} відправлено`,
+    html: baseTemplate(`
+      <h2 style="margin:0 0 16px">Ваше замовлення в дорозі 🚚</h2>
+      <p style="color:#555;font-size:14px">Замовлення <strong>#${order.id}</strong> передано в Нову Пошту.</p>
+      ${trackingLine}
+    `),
   });
 }
 
-export async function sendOrderStatusChanged(data: { to: string; order_id: number; status: string }) {
-  const STATUS_LABELS: Record<string, string> = {
-    CONFIRMED: 'Підтверджено',
-    CANCELED: 'Скасовано',
-    DELIVERED: 'Доставлено',
-  };
-
-  const label = STATUS_LABELS[data.status];
-  if (!label) return; // не відправляємо для всіх статусів
-
-  const content = `
-    <p>Статус вашого замовлення <strong>#${data.order_id}</strong> змінився.</p>
-    <p>Поточний статус: <span class="badge">${label}</span></p>
-    <a href="${process.env.CLIENT_URL}/profile" class="btn">Переглянути замовлення</a>
-  `;
-
-  return resend.emails.send({
+// Доставлено
+export async function sendOrderDelivered(to: string, order: { id: number }) {
+  await resend.emails.send({
     from: FROM,
-    to: data.to,
-    subject: `Замовлення #${data.order_id} — ${label}`,
-    html: baseTemplate('Статус замовлення', content),
+    to,
+    subject: `Замовлення #${order.id} доставлено`,
+    html: baseTemplate(`
+      <h2 style="margin:0 0 16px">Замовлення доставлено ✓</h2>
+      <p style="color:#555;font-size:14px">Ваше замовлення <strong>#${order.id}</strong> доставлено. Дякуємо що обрали Arusa!</p>
+    `),
   });
 }
 
-export async function sendWelcome(data: { to: string; first_name: string }) {
-  const content = `
-    <p>Вітаємо, <strong>${data.first_name}</strong>! 👋</p>
-    <p>Дякуємо за реєстрацію в Arusa. Ваш акаунт успішно створено.</p>
-    <a href="${process.env.CLIENT_URL}" class="btn">Перейти до магазину</a>
-  `;
-
-  return resend.emails.send({
+// Скасування
+export async function sendOrderCanceled(to: string, order: { id: number }) {
+  await resend.emails.send({
     from: FROM,
-    to: data.to,
-    subject: 'Ласкаво просимо до Arusa',
-    html: baseTemplate('Ласкаво просимо', content),
+    to,
+    subject: `Замовлення #${order.id} скасовано`,
+    html: baseTemplate(`
+      <h2 style="margin:0 0 16px">Замовлення скасовано</h2>
+      <p style="color:#555;font-size:14px">Ваше замовлення <strong>#${order.id}</strong> було скасовано.</p>
+      <p style="color:#555;font-size:14px">Якщо у вас є питання — зв'яжіться з нами.</p>
+    `),
   });
 }

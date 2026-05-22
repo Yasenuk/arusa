@@ -76,6 +76,7 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
             <img
               src="/assets/images/logo.svg"
               alt="Arusa лого"
+              fetchPriority="high"
               className={styles['header__logo-picture']}
               width={117}
               height={19}

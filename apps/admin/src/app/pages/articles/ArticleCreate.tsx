@@ -5,7 +5,7 @@ import styles from '../pages.module.scss';
 
 export default function ArticleCreate() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ title: '', content: '', preview_text: '', image_url: '' });
+  const [form, setForm] = useState({ title: '', description: '', alt: '', image_url: '' });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,7 +38,7 @@ export default function ArticleCreate() {
         </div>
         <div className={styles.form__group}>
           <label className={styles.form__label}>Короткий опис</label>
-          <input className={styles.form__input} value={form.preview_text} onChange={e => setForm({ ...form, preview_text: e.target.value })} />
+          <input className={styles.form__input} value={form.alt} onChange={e => setForm({ ...form, alt: e.target.value })} />
         </div>
         <div className={styles.form__group}>
           <label className={styles.form__label}>Зображення (назва файлу)</label>
@@ -46,7 +46,7 @@ export default function ArticleCreate() {
         </div>
         <div className={styles.form__group}>
           <label className={styles.form__label}>Текст статті</label>
-          <textarea className={`${styles.form__input} ${styles.form__textarea}`} value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} />
+          <textarea className={`${styles.form__input} ${styles.form__textarea}`} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
         </div>
         <div className={styles.form__actions}>
           <button className={styles.page__button} onClick={handleSave} disabled={saving}>
