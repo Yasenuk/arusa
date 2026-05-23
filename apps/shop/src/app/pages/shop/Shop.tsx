@@ -1,11 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import styles from "./Shop.module.scss";
 
 import { CascadeDropdown, Dropdown, ProductCard } from "@org/ui";
-
 import { CatalogProductVariant, Category } from "@org/shared-types";
 import { buildCategoryTree } from "@org/utils/index";
+
+import Pagination from "../../common/Pagination";
 
 interface ProductsResponse {
   data: CatalogProductVariant[];
@@ -31,6 +32,7 @@ export default function Shop() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [filters, setFilters] = useState({
@@ -38,6 +40,9 @@ export default function Shop() {
     sort: "a_z",
     search: "",
   });
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     fetch("/api/categories")
@@ -96,6 +101,23 @@ export default function Shop() {
     return (value: string) => setFilters((f) => ({ ...f, [key]: value }));
   }
 
+  function openSearch() {
+    clearTimeout(closeTimer.current);
+    setIsSearchOpen(true);
+    searchRef.current?.focus();
+  }
+
+  function handleSearchFocus() {
+    clearTimeout(closeTimer.current);
+    setIsSearchOpen(true);
+  }
+
+  function handleSearchBlur() {
+    closeTimer.current = setTimeout(() => {
+      if (!searchInput) setIsSearchOpen(false);
+    }, 150);
+  }
+
   return (
     <div className={styles.shop}>
       <h1 className={`${styles.shop__title} h h_xxl upper`}>Всі товари</h1>
@@ -125,19 +147,27 @@ export default function Shop() {
               <span>{response.total}</span>
               Товарів
             </span>
-            <div className={styles.shop__search}>
+            <div className={`${styles.shop__search} ${isSearchOpen ? styles["shop__search_open"] : ""}`}>
               <input
+                ref={searchRef}
                 type="search"
                 name="products-search"
                 id="products-search"
                 placeholder="Знайти товар"
-                className={`${styles["shop__search-input"]} _input _input_article`}
+                className={styles["shop__search-input"]}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
               />
-              <label htmlFor="products-search">
+              <button
+                type="button"
+                className={styles["shop__search-icon"]}
+                onClick={openSearch}
+                aria-label="Відкрити пошук"
+              >
                 <i className="icon-search regular"></i>
-              </label>
+              </button>
             </div>
           </div>
         </div>
@@ -154,23 +184,12 @@ export default function Shop() {
           )}
         </div>
 
-        <div className={styles.shop__pagination}>
-          {Array.from({ length: response.totalPages }, (_, i) => {
-            const page = i + 1;
-            return (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                disabled={isLoading}
-                className={`${styles["shop__pagination-button"]} ${
-                  currentPage === page ? styles["shop__pagination-button_active"] : ""
-                } _button _button_main _button_border regular upper`}
-              >
-                {page}
-              </button>
-            );
-          })}
-        </div>
+        <Pagination
+          current={currentPage}
+          total={response.totalPages}
+          onChange={handlePageChange}
+          disabled={isLoading}
+        />
       </div>
     </div>
   );

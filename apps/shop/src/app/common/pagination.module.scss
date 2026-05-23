@@ -1,0 +1,69 @@
+@use '@org/ui/styles/index' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: toRem(6);
+  padding-block: toRem(60) toRem(30);
+
+  &__arrow,
+  &__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: toRem(40);
+    height: toRem(40);
+    border: toRem(1) solid $color-oyster;
+    background: transparent;
+    color: $color-stormy;
+    font-size: toRem(16);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: toRem(6);
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    @media (any-hover: hover) {
+      &:not(:disabled):hover {
+        background-color: $color-oyster;
+      }
+    }
+  }
+
+  &__arrow {
+    font-size: toRem(22);
+    padding-inline: toRem(10);
+  }
+
+  &__page {
+    padding-inline: toRem(4);
+
+    &_active {
+      background-color: $color-opal;
+      color: $color-white;
+      border-color: $color-opal;
+
+      @media (any-hover: hover) {
+        &:hover {
+          background-color: $color-opal;
+        }
+      }
+    }
+  }
+
+  &__ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: toRem(32);
+    height: toRem(40);
+    color: $color-opal;
+    font-weight: 600;
+    user-select: none;
+  }
+}

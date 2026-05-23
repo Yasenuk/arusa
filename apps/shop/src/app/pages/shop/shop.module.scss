@@ -172,6 +172,7 @@
     height: 100%;
     align-items: center;
     justify-content: center;
+    gap: toRem(8);
     border-left: toRem(1) solid $color-oyster;
     @include adaptiveValue(padding-block, 30, 15);
 
@@ -183,11 +184,41 @@
 
   &__search-input {
     font-weight: 600;
-    max-width: toRem(120);
+    max-width: 0;
+    width: toRem(200);
+    overflow: hidden;
+    opacity: 0;
+    padding-inline: 0;
+    transition: max-width 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                padding-inline 0.38s cubic-bezier(0.4, 0, 0.2, 1);
 
     &::placeholder {
       font-weight: 600;
       color: $color-opal;
+    }
+  }
+
+  &__search_open &__search-input {
+    max-width: toRem(200);
+    opacity: 1;
+    padding-inline: toRem(8);
+  }
+
+  &__search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    cursor: pointer;
+    color: $color-stormy;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+
+    @media (any-hover: hover) {
+      &:hover {
+        opacity: 0.6;
+      }
     }
   }
 
@@ -212,21 +243,5 @@
     gap: toRem(20);
   }
 
-  &__pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: toRem(15);
-    border-left: toRem(1) solid $color-oyster;
-    padding-block: toRem(60) toRem(30);
-  }
-
-  &__pagination-button {
-    border: 1px solid $color-oyster;
-
-    &_active {
-      background-color: $color-opal !important;
-      color: $color-claudy !important;
-    }
-  }
 }
+
