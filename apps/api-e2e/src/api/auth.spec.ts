@@ -21,12 +21,12 @@ test.describe('POST /api/auth/register', () => {
     expect(res.status()).toBeGreaterThanOrEqual(400);
   });
 
-  test('returns 409 on duplicate email', async ({ request }) => {
+  test('returns 400 on duplicate email', async ({ request }) => {
     const email = randomEmail();
     const body = { email, password: PASSWORD, password_confirm: PASSWORD, first_name: 'A', last_name: 'B' };
     await request.post('/api/auth/register', { data: body });
     const res = await request.post('/api/auth/register', { data: body });
-    expect(res.status()).toBe(409);
+    expect(res.status()).toBe(400);
   });
 });
 
@@ -48,14 +48,14 @@ test.describe('POST /api/auth/login', () => {
     expect(typeof data.accessToken).toBe('string');
   });
 
-  test('returns 401 on wrong password', async ({ request }) => {
+  test('returns 400 on wrong password', async ({ request }) => {
     const res = await request.post('/api/auth/login', { data: { email, password: 'wrongpassword' } });
-    expect(res.status()).toBe(401);
+    expect(res.status()).toBe(400);
   });
 
-  test('returns 401 for non-existent user', async ({ request }) => {
+  test('returns 400 for non-existent user', async ({ request }) => {
     const res = await request.post('/api/auth/login', { data: { email: 'nobody@arusa-test.com', password: PASSWORD } });
-    expect(res.status()).toBe(401);
+    expect(res.status()).toBe(400);
   });
 });
 

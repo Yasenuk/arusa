@@ -10,11 +10,11 @@ export default defineConfig({
     baseURL,
   },
   webServer: {
-    command: 'npx nx run api:serve',
+    command: 'node --env-file=.env apps/api/dist/main.js',
     url: `${baseURL}/api/categories`,
     reuseExistingServer: true,
     cwd: workspaceRoot,
-    timeout: 60000,
+    timeout: 30000,
   },
   // Run tests serially to avoid test user conflicts
   workers: 1,

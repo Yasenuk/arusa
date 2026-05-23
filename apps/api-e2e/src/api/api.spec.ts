@@ -2,26 +2,28 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Public endpoints', () => {
   test.describe('GET /api/products', () => {
-    test('returns paginated result with products array', async ({ request }) => {
+    test('returns paginated result with data array', async ({ request }) => {
       const res = await request.get('/api/products');
       expect(res.status()).toBe(200);
-      const data = await res.json();
-      expect(data).toHaveProperty('products');
-      expect(Array.isArray(data.products)).toBe(true);
+      const body = await res.json();
+      expect(body).toHaveProperty('data');
+      expect(Array.isArray(body.data)).toBe(true);
+      expect(body).toHaveProperty('total');
+      expect(body).toHaveProperty('page');
     });
 
     test('accepts search query', async ({ request }) => {
       const res = await request.get('/api/products?search=test');
       expect(res.status()).toBe(200);
-      const data = await res.json();
-      expect(data).toHaveProperty('products');
+      const body = await res.json();
+      expect(body).toHaveProperty('data');
     });
 
     test('accepts page and limit params', async ({ request }) => {
       const res = await request.get('/api/products?page=1&limit=5');
       expect(res.status()).toBe(200);
-      const data = await res.json();
-      expect(data.products.length).toBeLessThanOrEqual(5);
+      const body = await res.json();
+      expect(body.data.length).toBeLessThanOrEqual(5);
     });
   });
 
