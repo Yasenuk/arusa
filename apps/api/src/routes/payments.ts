@@ -95,7 +95,7 @@ router.get('/payments', authMiddleware, async (req, res) => {
     if (!req.user) return res.status(401).json({ error: 'Не авторизовано' });
 
     const payments = await getPayments();
-    return res.status(201).json(payments);
+    return res.json(payments);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: 'Помилка створення замовлення' });
