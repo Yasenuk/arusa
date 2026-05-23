@@ -1,8 +1,8 @@
+import 'dotenv/config';
+
 import express from "express";
 import * as path from 'path';
 import cookieParser from "cookie-parser";
-
-import dotenv from "dotenv";
 import morgan from "morgan";
 
 import authRefresh from "./routes/auth";
@@ -25,8 +25,6 @@ import payment from "./routes/payments";
 import guestRoutes from "./routes/guest";
 
 import adminRoutes from "./routes/admin";
-
-dotenv.config();
 
 const app = express();
 
