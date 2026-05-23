@@ -10,6 +10,9 @@ const Contact = lazy(() => import("./pages/contact/Contact"));
 const Profile = lazy(() => import("./pages/user/Profile"));
 const Product = lazy(() => import("./pages/product/Product"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
+const Help = lazy(() => import("./pages/help/Help"));
+const PrivacyPolicy = lazy(() => import("./pages/privacy-policy/PrivacyPolicy"));
+const ReturnPolicy = lazy(() => import("./pages/return-policy/ReturnPolicy"));
 
 const router = createBrowserRouter([
   {
@@ -26,6 +29,9 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact />, handle: { title: "Контакти — Arusa", description: "Зв'яжіться з командою Arusa. Ми готові відповісти на ваші запитання та допомогти з вибором товарів.", isDark: true } },
       { path: "/profile", element: <Profile />, handle: { title: "Профіль — Arusa", description: "Ваш особистий кабінет в Arusa: замовлення, налаштування акаунту та персональні дані.", isDark: true } },
       { path: "/products/:id", element: <Product />, handle: { title: "Товар — Arusa", description: "Детальна інформація про товар в інтернет-магазині Arusa.", isDark: true } },
+      { path: "/help", element: <Help />, handle: { title: "Вхід та акаунт — Arusa", description: "Відповіді на запитання щодо реєстрації, входу та керування акаунтом в Arusa.", isDark: true } },
+      { path: "/privacy-policy", element: <PrivacyPolicy />, handle: { title: "Політика конфіденційності — Arusa", description: "Дізнайтеся як Arusa збирає, використовує та захищає ваші персональні дані.", isDark: true } },
+      { path: "/return-policy", element: <ReturnPolicy />, handle: { title: "Політика повернення коштів — Arusa", description: "Умови та порядок повернення товарів і коштів в інтернет-магазині Arusa.", isDark: true } },
       { path: "*", element: <NotFound />, handle: { title: "404 — Arusa", description: "", isDark: true } },
     ]
   }

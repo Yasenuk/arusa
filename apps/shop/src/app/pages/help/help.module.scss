@@ -1,0 +1,68 @@
+@use "@org/ui/styles/index" as *;
+
+.help {
+	position: relative;
+
+	&__container {
+		@include container();
+		@include adaptiveValue("padding-top", 70, 80);
+		@include adaptiveValue("padding-bottom", 60, 40);
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
+
+	&__title {
+		margin-bottom: toRem(20);
+	}
+
+	&__subtitle {
+		color: $color-stormy;
+		@include adaptiveValueMF(margin-bottom, 56, 32);
+	}
+
+	&__sections {
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(40);
+		width: 100%;
+		max-width: toRem(760);
+		@include adaptiveValue("padding-left", 45, 60);
+		position: relative;
+	}
+
+	&__section-title {
+		margin-bottom: toRem(16);
+		padding-bottom: toRem(12);
+		border-bottom: toRem(1) solid $color-oyster;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(16);
+	}
+
+	&__item {
+		display: flex;
+		flex-direction: column;
+		row-gap: toRem(6);
+	}
+
+	&__item-title {
+		font-weight: 500;
+	}
+
+	&__item-text {
+		color: $color-stormy;
+	}
+
+	&__contact {
+		margin-top: toRem(20);
+	}
+
+	&__side-title {
+		left: 0;
+		position: sticky;
+	}
+}

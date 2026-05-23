@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import styles from "./Shop.module.scss";
 
@@ -23,6 +24,10 @@ const SORT_OPTIONS = [
 ];
 
 export default function Shop() {
+  const [searchParams] = useSearchParams();
+  const urlCategory = searchParams.get("category");
+  const appliedUrlCategory = useRef<string | null>(null);
+
   const [response, setResponse] = useState<ProductsResponse>({
     data: [],
     total: 0,
@@ -44,7 +49,7 @@ export default function Shop() {
   });
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     fetch("/api/categories")
@@ -57,6 +62,22 @@ export default function Shop() {
   }, []);
 
   const categoryTree = buildCategoryTree(categories);
+
+  useEffect(() => {
+    if (!categories.length) return;
+    if (urlCategory === appliedUrlCategory.current) return;
+    appliedUrlCategory.current = urlCategory;
+
+    if (!urlCategory) {
+      setFilters((f) => ({ ...f, category: "all" }));
+      return;
+    }
+
+    const match = categories.find(
+      (c) => c.name.toLowerCase() === urlCategory.toLowerCase()
+    );
+    setFilters((f) => ({ ...f, category: match ? String(match.id) : "all" }));
+  }, [categories, urlCategory]);
 
   const fetchProducts = useCallback(async (page: number) => {
     setIsLoading(true);

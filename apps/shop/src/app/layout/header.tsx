@@ -12,7 +12,6 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
 
   const { isAuth } = useAuth();
 
-  // Замість трьох окремих useEffect для _locked — один
   useEffect(() => {
     const shouldLock = isMenuOpen || isCartOpen;
     document.body.classList.toggle("_locked", shouldLock);
@@ -20,18 +19,15 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
   }, [isMenuOpen, isCartOpen]);
 
   const lastScroll = useRef<number>(0);
-  // Ref для batching — не тригеримо setState на кожен піксель
   const rafId = useRef<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Скасовуємо попередній rAF щоб не стекати
       cancelAnimationFrame(rafId.current);
       rafId.current = requestAnimationFrame(() => {
         const current = window.scrollY;
         const hidden  = current > lastScroll.current && current > 100;
         const scrolled = current > 200;
-        // Оновлюємо state тільки якщо значення змінилось
         setIsHidden(prev  => prev  !== hidden  ? hidden  : prev);
         setIsScrolled(prev => prev !== scrolled ? scrolled : prev);
         lastScroll.current = current;
