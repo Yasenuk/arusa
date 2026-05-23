@@ -144,8 +144,12 @@ router.get('/payments/:id/receipt', authMiddleware, async (req, res) => {
   doc.moveDown();
 
   const user = payment.orders.users;
-  doc.text(`Покупець: ${user.last_name ?? ''} ${user.first_name ?? ''}`.trim() || user.email);
-  doc.text(`Email: ${user.email}`);
+  const buyerName = user
+    ? (`${user.last_name ?? ''} ${user.first_name ?? ''}`.trim() || user.email)
+    : (payment.orders as any).guest_name ?? 'Гість';
+  const buyerEmail = user?.email ?? (payment.orders as any).guest_email ?? '';
+  doc.text(`Покупець: ${buyerName}`);
+  doc.text(`Email: ${buyerEmail}`);
   doc.moveDown();
 
   doc.text('Товари:', { underline: true });

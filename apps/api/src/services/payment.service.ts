@@ -23,7 +23,7 @@ export async function getPayments(user_id?: number) {
     currency: p.currency,
     transaction_id: p.transaction_id,
     created_at: p.created_at,
-    user_email: p.orders.users.email,
+    user_email: p.orders.users?.email ?? null,
     order: { id: p.orders.id, total_amount: Number(p.orders.total_amount), status: p.orders.status },
   })));
 }
