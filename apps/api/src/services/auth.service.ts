@@ -5,12 +5,12 @@ import { prisma } from "../db/prisma";
 import { createUser } from "./user.service";
 import { createCart } from "./cart.service";
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-
-if (!ACCESS_SECRET || !REFRESH_SECRET) {
+if (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET) {
   throw new Error("JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be set in environment variables");
 }
+
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET as string;
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
 
 export function createAccessToken(user: { id: string; role: string }) {
   return jwt.sign(user, ACCESS_SECRET, { expiresIn: "15m" });
