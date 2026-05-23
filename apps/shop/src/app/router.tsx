@@ -9,6 +9,7 @@ const Blog = lazy(() => import("./pages/blog/Blog"));
 const Contact = lazy(() => import("./pages/contact/Contact"));
 const Profile = lazy(() => import("./pages/user/Profile"));
 const Product = lazy(() => import("./pages/product/Product"));
+const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 
 const router = createBrowserRouter([
   {

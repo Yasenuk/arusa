@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { createCategory, getCategories } from "../services/category.service";
+import { authMiddleware } from "../middlewares/auth";
+import { adminMiddleware } from "../middlewares/admin";
 
 const router = Router();
 
-router.post("/admin/categories", async (req, res) => {
+router.post("/admin/categories", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { name, parent_id } = req.body;
 

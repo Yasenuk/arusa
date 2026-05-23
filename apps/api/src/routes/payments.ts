@@ -82,7 +82,9 @@ router.post('/payments/stripe/callback', express.raw({ type: 'application/json' 
           transaction_id: session.payment_intent as string ?? '',
         }
       });
-    } catch { }
+    } catch (err) {
+      console.error('[stripe webhook] failed to update order/payment:', err);
+    }
   }
 
   res.json({ received: true });
