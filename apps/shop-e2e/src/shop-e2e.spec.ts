@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test('should return 200', async ({ request }) => {
-	const response = await request.get('/api');
-	expect(response.status()).toBe(200);
+// Basic smoke test kept for backwards compatibility
+test('homepage returns 200', async ({ request }) => {
+  const response = await request.get('/');
+  expect(response.status()).toBe(200);
 });

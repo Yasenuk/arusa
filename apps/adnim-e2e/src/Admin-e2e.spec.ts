@@ -1,7 +1,7 @@
-// test
 import { test, expect } from '@playwright/test';
 
-test('should return 200', async ({ request }) => {
-	const response = await request.get('/api');
-	expect(response.status()).toBe(200);
+// Basic smoke test
+test('admin app returns 200', async ({ request }) => {
+  const response = await request.get('/');
+  expect(response.status()).toBe(200);
 });
