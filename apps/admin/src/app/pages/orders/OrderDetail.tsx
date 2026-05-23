@@ -10,7 +10,12 @@ type OrderDetail = {
   total_amount: number;
   currency: string;
   created_at: string;
-  user_email: string;
+  user_email: string | null;
+  is_guest: boolean;
+  guest_name: string | null;
+  guest_phone: string | null;
+  guest_city: string | null;
+  guest_np_warehouse: string | null;
   address: { city: string; np_warehouse_description: string } | null;
   delivery: { status: string; tracking_number: string | null } | null;
   items: { title_snapshot: string; quantity: number; price_snapshot: number }[];
@@ -81,13 +86,28 @@ export default function OrderDetail() {
         {/* Інфо */}
         <div className={styles.detail__card}>
           <div className={styles.detail__title}>Інформація</div>
-          <div className={styles.detail__row}><span className={styles.detail__key}>Покупець</span><span className={styles.detail__value}>{order.user_email}</span></div>
+          {order.is_guest && (
+            <div className={styles.detail__row}><span className={styles.detail__key}>Тип</span><span className={styles.detail__value}>Гостьове замовлення</span></div>
+          )}
+          {order.guest_name && (
+            <div className={styles.detail__row}><span className={styles.detail__key}>Ім&apos;я</span><span className={styles.detail__value}>{order.guest_name}</span></div>
+          )}
+          <div className={styles.detail__row}><span className={styles.detail__key}>Email</span><span className={styles.detail__value}>{order.user_email ?? '—'}</span></div>
+          {order.guest_phone && (
+            <div className={styles.detail__row}><span className={styles.detail__key}>Телефон</span><span className={styles.detail__value}>{order.guest_phone}</span></div>
+          )}
           <div className={styles.detail__row}><span className={styles.detail__key}>Сума</span><span className={styles.detail__value}>{order.total_amount} {order.currency}</span></div>
           <div className={styles.detail__row}><span className={styles.detail__key}>Дата</span><span className={styles.detail__value}>{new Date(order.created_at).toLocaleString('uk-UA')}</span></div>
           {order.address && (
             <div className={styles.detail__row}>
               <span className={styles.detail__key}>Адреса</span>
               <span className={styles.detail__value}>{order.address.city} — {order.address.np_warehouse_description}</span>
+            </div>
+          )}
+          {order.is_guest && order.guest_city && (
+            <div className={styles.detail__row}>
+              <span className={styles.detail__key}>Адреса</span>
+              <span className={styles.detail__value}>{order.guest_city}{order.guest_np_warehouse ? ` — ${order.guest_np_warehouse}` : ''}</span>
             </div>
           )}
         </div>

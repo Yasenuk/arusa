@@ -10,7 +10,9 @@ type AdminOrder = {
   total_amount: number;
   currency: string;
   created_at: string;
-  user_email: string;
+  user_email: string | null;
+  guest_name: string | null;
+  is_guest: boolean;
 };
 
 const STATUS_OPTIONS = [
@@ -59,7 +61,7 @@ export default function OrdersList() {
             {orders.map(o => (
               <tr key={o.id}>
                 <td>#{o.id}</td>
-                <td>{o.user_email}</td>
+                <td>{o.is_guest ? `Гість${o.guest_name ? `: ${o.guest_name}` : ''}` : (o.user_email ?? '—')}</td>
                 <td><StatusBadge status={o.status} /></td>
                 <td>{o.total_amount} {o.currency}</td>
                 <td>{new Date(o.created_at).toLocaleDateString('uk-UA')}</td>

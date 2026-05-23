@@ -141,7 +141,9 @@ router.get('/admin/orders', async (req, res) => {
       total_amount: Number(o.total_amount),
       currency: o.currency,
       created_at: o.created_at,
-      user_email: o.users.email,
+      user_email: o.users?.email ?? o.guest_email ?? null,
+      guest_name: o.guest_name ?? null,
+      is_guest: o.user_id === null,
     })));
   } catch (err) {
     res.status(500).json({ error: 'Помилка' });
@@ -168,7 +170,12 @@ router.get('/admin/orders/:id', async (req, res) => {
       total_amount: Number(order.total_amount),
       currency: order.currency,
       created_at: order.created_at,
-      user_email: order.users.email,
+      user_email: order.users?.email ?? order.guest_email ?? null,
+      guest_name: order.guest_name ?? null,
+      guest_phone: order.guest_phone ?? null,
+      guest_city: order.guest_city ?? null,
+      guest_np_warehouse: order.guest_np_warehouse ?? null,
+      is_guest: order.user_id === null,
       address: order.user_addresses ?? null,
       delivery: order.deliveries[0] ?? null,
       items: order.order_items.map(i => ({
