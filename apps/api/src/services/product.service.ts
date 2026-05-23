@@ -8,6 +8,8 @@ export interface ProductFilters {
   color?: string;
   material?: string;
   availability?: 'all' | 'in_stock' | 'out_of_stock';
+  price_min?: number;
+  price_max?: number;
   page?: number;
   limit?: number;
 }
@@ -123,27 +125,41 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
     color,
     material,
     availability = 'all',
+    price_min,
+    price_max,
     page = 1,
     limit = 12,
   } = filters;
 
-  const variantWhere: any = {};
+  const conditions: any[] = [{ products: { is_active: true } }];
 
-  if (color) variantWhere.color = { contains: color, mode: 'insensitive' };
-  if (material) variantWhere.material = { contains: material, mode: 'insensitive' };
-  if (availability === 'in_stock') variantWhere.quantity = { gt: 0 };
-  if (availability === 'out_of_stock') variantWhere.quantity = 0;
-
-  const productWhere: any = { is_active: true };
-  if (search) productWhere.title = { contains: search, mode: 'insensitive' };
   if (category) {
     const categoryIds = await collectCategoryIds(category);
-    if (categoryIds.length > 0) {
-      productWhere.category_id = { in: categoryIds };
-    }
+    if (categoryIds.length > 0) conditions.push({ products: { category_id: { in: categoryIds } } });
   }
 
-  variantWhere.products = productWhere;
+  if (color) conditions.push({ color: { contains: color, mode: 'insensitive' } });
+  if (material) conditions.push({ material: { contains: material, mode: 'insensitive' } });
+  if (availability === 'in_stock') conditions.push({ quantity: { gt: 0 } });
+  if (availability === 'out_of_stock') conditions.push({ quantity: 0 });
+  if (price_min !== undefined) conditions.push({ price: { gte: price_min } });
+  if (price_max !== undefined) conditions.push({ price: { lte: price_max } });
+
+  if (search) {
+    const s = { contains: search, mode: 'insensitive' as const };
+    conditions.push({
+      OR: [
+        { products: { title: s } },
+        { products: { description: s } },
+        { products: { article: s } },
+        { sku: s },
+        { color: s },
+        { material: s },
+      ],
+    });
+  }
+
+  const variantWhere: any = { AND: conditions };
 
   const orderBy: any =
     sort === 'price_asc' ? { price: 'asc' } :
@@ -152,7 +168,6 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
           { products: { title: 'asc' } };
 
   const total = await prisma.product_variants.count({ where: variantWhere });
-
   const skip = (page - 1) * limit;
 
   const variants = await prisma.product_variants.findMany({

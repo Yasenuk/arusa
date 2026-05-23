@@ -39,6 +39,8 @@ export default function Shop() {
     category: "all",
     sort: "a_z",
     search: "",
+    price_min: "",
+    price_max: "",
   });
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -67,6 +69,8 @@ export default function Shop() {
     if (filters.category !== "all") params.set("category", filters.category);
     if (filters.sort) params.set("sort", filters.sort);
     if (filters.search) params.set("search", filters.search);
+    if (filters.price_min) params.set("price_min", filters.price_min);
+    if (filters.price_max) params.set("price_max", filters.price_max);
 
     try {
       const res = await fetch(`/api/products?${params.toString()}`);
@@ -80,6 +84,7 @@ export default function Shop() {
     }
   }, [filters]);
 
+  // Debounce text search
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFilters((f) => ({ ...f, search: searchInput }));
@@ -153,7 +158,7 @@ export default function Shop() {
                 type="search"
                 name="products-search"
                 id="products-search"
-                placeholder="Знайти товар"
+                placeholder="Назва, артикул, колір…"
                 className={styles["shop__search-input"]}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -170,6 +175,36 @@ export default function Shop() {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className={styles["shop__price-row"]}>
+          <span className={`${styles["shop__price-label"]} regular`}>Ціна:</span>
+          <input
+            type="number"
+            min={0}
+            placeholder="Від"
+            className={`${styles["shop__price-input"]} regular`}
+            value={filters.price_min}
+            onChange={(e) => setFilters((f) => ({ ...f, price_min: e.target.value }))}
+          />
+          <span className={styles["shop__price-sep"]}>—</span>
+          <input
+            type="number"
+            min={0}
+            placeholder="До"
+            className={`${styles["shop__price-input"]} regular`}
+            value={filters.price_max}
+            onChange={(e) => setFilters((f) => ({ ...f, price_max: e.target.value }))}
+          />
+          {(filters.price_min || filters.price_max) && (
+            <button
+              type="button"
+              className={`${styles["shop__price-clear"]} small`}
+              onClick={() => setFilters((f) => ({ ...f, price_min: "", price_max: "" }))}
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
 

@@ -65,6 +65,24 @@
       &:hover {
         background-color: rgba($color-oyster, 0.4);
       }
+
+      &_admin {
+        color: $color-white;
+        background-color: $color-stormy;
+        border-radius: toRem(4);
+        transition: opacity 0.2s;
+
+        &:hover {
+          background-color: $color-stormy;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    &_item_admin {
+      margin-top: toRem(16);
+      padding-top: toRem(16);
+      border-top: toRem(1) solid $color-oyster;
     }
   }
 

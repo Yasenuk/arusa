@@ -80,6 +80,19 @@ export default function Profile() {
 							Оплата
 						</button>
 					</li>
+
+					{user?.role === "admin" && (
+						<li className={`${styles.profile__menu_item} ${styles["profile__menu_item_admin"]}`}>
+							<a
+								href={import.meta.env.VITE_ADMIN_URL ?? "http://localhost:5030"}
+								target="_blank"
+								rel="noreferrer"
+								className={`${styles.profile__menu_button} ${styles["profile__menu_button_admin"]} _button _button_no-center _button_fill regular no-inline`}
+							>
+								Адмін панель ↗
+							</a>
+						</li>
+					)}
 				</ul>
 			</aside>
 			<div className={styles.profile__overlay} onClick={() => setIsMenuOpen(false)} />

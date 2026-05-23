@@ -94,7 +94,7 @@ router.get('/payments', authMiddleware, async (req, res) => {
   try {
     if (!req.user) return res.status(401).json({ error: 'Не авторизовано' });
 
-    const payments = await getPayments();
+    const payments = await getPayments(Number(req.user!.id));
     return res.json(payments);
   } catch (err: any) {
     console.error(err);

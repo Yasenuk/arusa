@@ -56,6 +56,8 @@ router.get("/products", async (req, res) => {
       color: req.query.color as string | undefined,
       material: req.query.material as string | undefined,
       availability: req.query.availability as ProductFilters['availability'],
+      price_min: req.query.price_min ? Number(req.query.price_min) : undefined,
+      price_max: req.query.price_max ? Number(req.query.price_max) : undefined,
       page: req.query.page ? Number(req.query.page) : 1,
       limit: req.query.limit ? Math.min(Number(req.query.limit), 100) : 12,
     };
