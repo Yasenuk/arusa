@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Outlet, useMatches } from "react-router-dom";
+import { Outlet, useMatches, useSearchParams } from "react-router-dom";
+import { useNotification } from "@org/ui";
 
 import Header from "./header";
 import Footer from "./footer";
@@ -12,6 +13,8 @@ type Handle = {
 
 export default function Layout() {
   const matches = useMatches();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { notify } = useNotification();
 
   const current = matches[matches.length - 1];
   const handle = current?.handle as Handle;
@@ -25,6 +28,19 @@ export default function Layout() {
       metaDesc.setAttribute("content", handle.description);
     }
   }, [handle]);
+
+  useEffect(() => {
+    const guestOrderId = searchParams.get("guest_paid");
+    const authOrderId = searchParams.get("paid");
+
+    if (guestOrderId) {
+      notify(`Замовлення #${guestOrderId} успішно оплачено! Очікуйте підтвердження на email.`, "success");
+      setSearchParams(p => { p.delete("guest_paid"); return p; }, { replace: true });
+    } else if (authOrderId) {
+      notify(`Замовлення #${authOrderId} успішно оплачено!`, "success");
+      setSearchParams(p => { p.delete("paid"); return p; }, { replace: true });
+    }
+  }, []);
 
   return (
     <>

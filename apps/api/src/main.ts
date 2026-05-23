@@ -63,12 +63,12 @@ const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && process.env.NGROK_AUTHTOKEN) {
     import('@ngrok/ngrok').then(async (ngrok) => {
       const url = await ngrok.default.connect({
         addr: port,
         authtoken: process.env.NGROK_AUTHTOKEN,
-        domain: 'carry-unburned-payback.ngrok-free.dev',
+        domain: process.env.NGROK_DOMAIN,
       });
       process.env.API_URL = url.url() ?? '';
       console.log(`ngrok tunnel: ${url.url()}`);
