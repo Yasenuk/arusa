@@ -24,9 +24,8 @@ const SORT_OPTIONS = [
 ];
 
 export default function Shop() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const urlCategory = searchParams.get("category");
-  const appliedUrlCategory = useRef<string | null>(null);
 
   const [response, setResponse] = useState<ProductsResponse>({
     data: [],
@@ -64,20 +63,14 @@ export default function Shop() {
   const categoryTree = buildCategoryTree(categories);
 
   useEffect(() => {
-    if (!categories.length) return;
-    if (urlCategory === appliedUrlCategory.current) return;
-    appliedUrlCategory.current = urlCategory;
+    if (!categories.length || !urlCategory) return;
 
-    if (!urlCategory) {
-      setFilters((f) => ({ ...f, category: "all" }));
-      return;
-    }
+    const match = categories.find((c) => c.name.toLowerCase() === urlCategory.toLowerCase());
+    const newCategory = match ? String(match.name) : "all";
 
-    const match = categories.find(
-      (c) => c.name.toLowerCase() === urlCategory.toLowerCase()
-    );
-    setFilters((f) => ({ ...f, category: match ? String(match.id) : "all" }));
-  }, [categories, urlCategory]);
+    setFilters((f) => (f.category === newCategory ? f : { ...f, category: newCategory }));
+    setSearchParams({}, { replace: true });
+  }, [urlCategory, categories]);
 
   const fetchProducts = useCallback(async (page: number) => {
     setIsLoading(true);
@@ -97,6 +90,7 @@ export default function Shop() {
       const res = await fetch(`/api/products?${params.toString()}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: ProductsResponse = await res.json();
+      
       setResponse(data);
     } catch (err) {
       console.error("Помилка завантаження продуктів:", err);
@@ -105,10 +99,9 @@ export default function Shop() {
     }
   }, [filters]);
 
-  // Debounce text search
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setFilters((f) => ({ ...f, search: searchInput }));
+      setFilters((f) => (f.search === searchInput ? f : { ...f, search: searchInput }));
     }, 300);
     return () => clearTimeout(timeout);
   }, [searchInput]);
@@ -116,7 +109,7 @@ export default function Shop() {
   useEffect(() => {
     setCurrentPage(1);
     fetchProducts(1);
-  }, [filters]);
+  }, [fetchProducts]);
 
   function handlePageChange(page: number) {
     setCurrentPage(page);

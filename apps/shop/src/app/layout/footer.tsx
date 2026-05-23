@@ -12,7 +12,7 @@ export function Footer() {
     ],
     "Магазин": [
       { name: "Каталог", href: "/shop" },
-      { name: "Вітальня", href: "/shop?category=Кутові дивани" },
+      { name: "Вітальня", href: "/shop?category=Вітальня" },
       { name: "Кухня", href: "/shop?category=Кухня" },
       { name: "Спальня", href: "/shop?category=Спальня" },
     ],
@@ -20,7 +20,7 @@ export function Footer() {
       { name: "Всі категорії", href: "/shop" },
       { name: "Кутові дивани", href: "/shop?category=Кутові дивани" },
       { name: "Комоди", href: "/shop?category=Комоди" },
-      { name: "Шафи", href: "/shop?category=Шафи" },
+      { name: "Крісла", href: "/shop?category=Крісла" },
     ],
     "Допомога": [
       { name: "Контакти", href: "/contact" },

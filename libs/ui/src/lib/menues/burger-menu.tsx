@@ -17,16 +17,16 @@ export function BurgerMenu({ isOpen, setIsOpen }: Props) {
       { name: "Контакти", href: "/contact" },
     ],
     "Магазин": [
-      { name: "Все", href: "/shop" },
-      { name: "Лукбук", href: "/lookbook" },
-      { name: "Колекція", href: "/collection" },
-      { name: "Особливості", href: "/features" },
+      { name: "Каталог", href: "/shop" },
+      { name: "Вітальня", href: "/shop?category=Вітальня" },
+      { name: "Кухня", href: "/shop?category=Кухня" },
+      { name: "Спальня", href: "/shop?category=Спальня" },
     ],
     "Категорії": [
-      { name: "Декор", href: "/category/decor" },
-      { name: "Меблі", href: "/category/furniture" },
-      { name: "Кераміка", href: "/category/ceramics" },
-      { name: "Лампи", href: "/category/lamps" },
+      { name: "Всі категорії", href: "/shop" },
+      { name: "Кутові дивани", href: "/shop?category=Кутові дивани" },
+      { name: "Комоди", href: "/shop?category=Комоди" },
+      { name: "Крісла", href: "/shop?category=Крісла" },
     ]
   };
 

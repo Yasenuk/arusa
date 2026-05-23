@@ -5,6 +5,7 @@ const router = Router();
 
 const ALLOWED_NP_METHODS: Record<string, string[]> = {
   Address: ['getCities', 'getWarehouses', 'getStreet', 'getAreas'],
+  AddressGeneral: ['getCities', 'getWarehouses', 'getStreet', 'getAreas'],
   Common: ['getCargoTypes', 'getServiceTypes'],
 };
 

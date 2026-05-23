@@ -57,7 +57,9 @@ router.post('/payments/stripe/callback', express.raw({ type: 'application/json' 
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-  } catch {
+  } catch (err: any) {
+    console.error('[stripe webhook] підпис не пройшов:', err.message);
+    console.error('[stripe webhook] перевір STRIPE_WEBHOOK_SECRET у .env — він міг застаріти після перезапуску stripe listen');
     return res.status(400).send('Невалідний підпис');
   }
 
