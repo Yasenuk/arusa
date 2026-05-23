@@ -6,21 +6,17 @@ import { useAuth } from '../auth/AuthProvider';
 
 type Props = {
   cart_item: CartItem;
-  /** For guest cart items: pass product_variant_id since CartItem.id is undefined */
   variantId?: number;
 };
 
 export function CartProductCard({ cart_item, variantId }: Props) {
   const { isAuth } = useAuth();
 
-  // Both hooks must be called unconditionally (Rules of Hooks)
   const authCart = useCartStore();
   const guestCart = useGuestCartStore();
 
   const { updateQuantity, removeItem } = isAuth ? authCart : guestCart;
 
-  // Auth cart uses cart_item.id (= product_variant_id on server)
-  // Guest cart uses the explicitly passed variantId
   const itemId = isAuth ? Number(cart_item.id) : (variantId ?? 0);
 
   return (

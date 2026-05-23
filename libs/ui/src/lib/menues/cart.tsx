@@ -22,8 +22,6 @@ export function Cart({ isOpen, setIsOpen }: Props) {
   const fetchCart = useCartStore(s => s.fetchCart);
 
   const guestItems = useGuestCartStore(s => s.items);
-  const removeGuestItem = useGuestCartStore(s => s.removeItem);
-  const updateGuestQty = useGuestCartStore(s => s.updateQuantity);
 
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 

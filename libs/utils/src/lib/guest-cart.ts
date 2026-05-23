@@ -33,7 +33,7 @@ export const useGuestCartStore = create<GuestCartStore>((set, get) => ({
     }
 
     try {
-      const res = await fetch(`/api/products?ids=${variantId}&all=true`);
+      const res = await fetch(`/api/products?ids=${variantId}`);
       const data = await res.json();
       const variant = Array.isArray(data) ? data[0] : null;
       if (!variant) return;

@@ -23,7 +23,7 @@ export function ProductCard({ product, variantId }: { product?: CatalogProductVa
 
   return (
     <div className={styles["product-card"]} data-variant={product?.id}>
-      <Link to={`/products/${product.product_id}?variant=${variantId || product.id}`}>
+      <Link to={`/products/${product.product_id}?variant=${product.id}`}>
         <picture>
           <source srcSet={`${product.image}.avif`} type="image/avif" />
           <source srcSet={`${product.image}.webp`} type="image/webp" />
