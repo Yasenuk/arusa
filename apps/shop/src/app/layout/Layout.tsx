@@ -44,7 +44,6 @@ export default function Layout() {
 
   return (
     <>
-      <a href="#main-content" className="skip-link">Перейти до основного вмісту</a>
       <Header isDark={handle?.isDark} />
       <main id="main-content">
         <Outlet />

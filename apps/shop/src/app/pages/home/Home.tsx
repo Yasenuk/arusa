@@ -6,7 +6,6 @@ import Hero from "./sections/Hero";
 import Create from "./sections/Create";
 import Native from "./sections/Native";
 
-// Below-fold heavy sections: split into separate chunks (Swiper, product data)
 const FeatureProducts = lazy(() => import("./sections/FeatureProducts"));
 const View = lazy(() => import("./sections/View"));
 const Lookbook = lazy(() => import("./sections/Lookbook"));

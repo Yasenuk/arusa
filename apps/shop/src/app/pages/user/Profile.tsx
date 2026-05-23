@@ -87,7 +87,7 @@ export default function Profile() {
 								href={import.meta.env.VITE_ADMIN_URL ?? "http://localhost:5030"}
 								target="_blank"
 								rel="noreferrer"
-								className={`${styles.profile__menu_button} ${styles["profile__menu_button_admin"]} _button _button_no-center _button_fill regular no-inline`}
+								className={`${styles.profile__menu_button} ${styles["profile__menu_button_admin"]} _button _button_main _button_border regular no-inline`}
 							>
 								Адмін панель ↗
 							</a>
