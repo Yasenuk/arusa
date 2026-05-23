@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 
 import styles from "./more-articles.module.scss";
 
-import { useEffect, useState } from "react";
 import { ArticleData } from "@org/shared-types";
 import { Article } from "@org/ui";
 
@@ -34,7 +35,7 @@ export default function MoreArticles() {
 	if (!articles?.length) return <div className={styles.product}><p>Статі не знайдено</p></div>;
 
 	return (
-		<div className={styles['more-articles']}>
+		<div className={`${styles['more-articles']} _light`}>
 			<div className={styles['more-articles__container']}>
 				<div className={styles['more-articles__swipper-container']}>
 					<Swiper
