@@ -26,6 +26,7 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact />, handle: { title: "Контакти — Arusa", description: "Зв'яжіться з командою Arusa. Ми готові відповісти на ваші запитання та допомогти з вибором товарів.", isDark: true } },
       { path: "/profile", element: <Profile />, handle: { title: "Профіль — Arusa", description: "Ваш особистий кабінет в Arusa: замовлення, налаштування акаунту та персональні дані.", isDark: true } },
       { path: "/products/:id", element: <Product />, handle: { title: "Товар — Arusa", description: "Детальна інформація про товар в інтернет-магазині Arusa.", isDark: true } },
+      { path: "*", element: <NotFound />, handle: { title: "404 — Arusa", description: "", isDark: true } },
     ]
   }
 ]);
