@@ -18,6 +18,9 @@ export default defineConfig(() => ({
     port: 5000,
     host: 'localhost',
     open: true,
+    proxy: {
+      '/api': 'http://localhost:3333',
+    },
   },
   plugins: [react()],
   resolve: {

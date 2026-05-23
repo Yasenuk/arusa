@@ -76,7 +76,7 @@ test.describe('Admin pages (requires ADMIN_EMAIL + ADMIN_PASSWORD env vars)', ()
     await page.goto('/orders');
     const detailLink = page.getByRole('link', { name: /деталі/i }).first();
     const hasLink = await detailLink.isVisible({ timeout: 5000 }).catch(() => false);
-    if (!hasLink) return; // No orders yet — skip gracefully
+    if (!hasLink) return;
     await detailLink.click();
     await expect(page).toHaveURL(/\/orders\/\d+/);
     await expect(page.getByText(/замовлення #/i)).toBeVisible({ timeout: 10000 });

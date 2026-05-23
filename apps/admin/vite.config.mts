@@ -19,7 +19,11 @@ export default defineConfig(() => ({
   },
   preview: {
     port: 5030,
+    open: true,
     host: 'localhost',
+    proxy: {
+      '/api': 'http://localhost:3333',
+    },
   },
   plugins: [react()],
   // Uncomment this if you are using workers.
