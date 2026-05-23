@@ -22,6 +22,7 @@ import shopOrders from "./routes/orders";
 import shopAddresses from "./routes/addresses";
 
 import payment from "./routes/payments";
+import guestRoutes from "./routes/guest";
 
 import adminRoutes from "./routes/admin";
 
@@ -54,6 +55,7 @@ app.use("/api", shopAddresses);
 
 app.use("/api", npRequest);
 app.use("/api", payment);
+app.use("/api", guestRoutes);
 
 app.use("/api", adminRoutes);
 

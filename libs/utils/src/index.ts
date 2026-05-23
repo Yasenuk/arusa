@@ -2,6 +2,7 @@ export * from './lib/utils.js';
 export * from './lib/auth.js';
 export * from './lib/_list.js';
 export * from './lib/cart.js';
+export * from './lib/guest-cart.js';
 export * from './lib/order.js';
 export * from './lib/address.js';
 export * from './lib/novaposhta.js'

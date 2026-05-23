@@ -76,7 +76,7 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
         </div>
 
         <AuthPopup />
-        {isAuth && <Cart isOpen={isCartOpen} setIsOpen={setIsCartOpen} />}
+        <Cart isOpen={isCartOpen} setIsOpen={setIsCartOpen} />
       </div>
     </header>
   );

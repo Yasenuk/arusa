@@ -10,4 +10,5 @@ export * from './lib/address.js';
 export * from './lib/shared-types.js';
 export * from './lib/payment.js';
 export * from './lib/article.js';
+export * from './lib/guest.js';
 

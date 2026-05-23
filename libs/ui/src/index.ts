@@ -1,4 +1,5 @@
 export * from './lib/forms/AddressForm';
+export { default as GuestCheckout } from './lib/forms/checkout/GuestCheckout';
 
 export * from './lib/cards/CartProductCard';
 export * from './lib/cards/ProductCard';

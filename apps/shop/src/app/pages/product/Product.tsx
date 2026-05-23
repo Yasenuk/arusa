@@ -11,13 +11,23 @@ import "../../../styles/common/swiper.module.scss";
 import styles from "./product.module.scss";
 
 import { CatalogProductVariant } from "@org/shared-types";
-import { useCartStore } from "@org/utils/index";
-import { ProductCard } from "@org/ui";
+import { useCartStore, useGuestCartStore } from "@org/utils/index";
+import { ProductCard, useAuth } from "@org/ui";
 
 export default function Product() {
 	const { id } = useParams();
 
-	const { addItem } = useCartStore();
+	const { isAuth } = useAuth();
+	const addToCart = useCartStore(s => s.addItem);
+	const addToGuestCart = useGuestCartStore(s => s.addItem);
+
+	const addItem = (variantId: number) => {
+		if (isAuth) {
+			addToCart(variantId);
+		} else {
+			addToGuestCart(variantId);
+		}
+	};
 
 	const [searchParams] = useSearchParams();
 	const variantId = searchParams.get("variant");

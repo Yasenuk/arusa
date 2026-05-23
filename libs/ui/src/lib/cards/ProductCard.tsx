@@ -1,15 +1,25 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 import { CatalogProductVariant } from "@org/shared-types";
-import { useCartStore } from "@org/utils/index";
+import { useCartStore, useGuestCartStore } from "@org/utils/index";
+import { useAuth } from "../auth/AuthProvider";
 
 import styles from "../../styles/components/product-card.module.scss";
 
 export function ProductCard({ product, variantId }: { product?: CatalogProductVariant; variantId?: number }) {
-  const { addItem } = useCartStore();
+  const { isAuth } = useAuth();
+  const addToCart = useCartStore(s => s.addItem);
+  const addToGuestCart = useGuestCartStore(s => s.addItem);
 
   if (!product) return null;
+
+  const handleAdd = () => {
+    if (isAuth) {
+      addToCart(product.id);
+    } else {
+      addToGuestCart(product.id);
+    }
+  };
 
   return (
     <div className={styles["product-card"]} data-variant={product?.id}>
@@ -39,7 +49,7 @@ export function ProductCard({ product, variantId }: { product?: CatalogProductVa
       </div>
 
       <button
-        onClick={() => addItem(product.id)}
+        onClick={handleAdd}
         className={`${styles["product-card__buy-button"]} _button _button_main _button_border _button_fill regular upper`}
       >
         До кошика
