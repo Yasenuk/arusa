@@ -126,8 +126,8 @@ router.get('/payments/:id/receipt', authMiddleware, async (req, res) => {
 
   const doc = new PDFDocument({ margin: 50 });
 
-  // doc.registerFont('Manrope-Regular', path.join(__dirname, '/assets/fonts/Manrope-Regular/Manrope-Regular.woff2'));
-  // doc.font('Manrope-Regular');
+  doc.registerFont('Manrope', path.join(__dirname, 'assets/fonts/Manrope-Regular/Manrope-Regular.ttf'));
+  doc.font('Manrope');
 
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="receipt-${payment.id}.pdf"`);
