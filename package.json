@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"nx serve shop\" \"nx serve api\" \"stripe listen --forward-to localhost:3333/api/payments/stripe/callback\"",
     "stripe": "stripe listen --forward-to localhost:3333/api/payments/stripe/callback",
-    "postinstall": "prisma generate --schema=prisma/schema.prisma"
+    "postinstall": "prisma generate --schema=prisma/schema.prisma || true"
   },
   "private": true,
   "packageManager": "npm@10.9.2",
