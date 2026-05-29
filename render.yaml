@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: arusa-api
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install && npx nx build api --configuration=production
+    startCommand: node apps/api/dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: NOVA_POST_API_KEY
+        sync: false
+      - key: R2_PUBLIC_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: API_URL
+        sync: false
