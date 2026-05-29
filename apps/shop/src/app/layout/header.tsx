@@ -18,6 +18,11 @@ export function Header({ isDark = false }: { isDark?: boolean }) {
     return () => { document.body.classList.remove("_locked"); };
   }, [isMenuOpen, isCartOpen]);
 
+  useEffect(() => {
+    document.body.classList.toggle("_header-hidden", isHidden);
+    return () => { document.body.classList.remove("_header-hidden"); };
+  }, [isHidden]);
+
   const lastScroll = useRef<number>(0);
   const rafId = useRef<number>(0);
 
