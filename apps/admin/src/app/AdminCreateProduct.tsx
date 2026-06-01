@@ -266,17 +266,6 @@ export default function AdminCreateProduct() {
                   ))}
                 </select>
               </div>
-
-              {/* <div className={styles.admin__form_group}>
-                <label className={`${styles.admin__label} reular`} htmlFor="variant-image">Зображення</label>
-                <input
-                  className={`${styles.admin__input} ${styles.admin__input_image} small _button_border`}
-                  id="variant-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, index)}
-                />
-              </div> */}
             </form>
           </div>
         ))}
