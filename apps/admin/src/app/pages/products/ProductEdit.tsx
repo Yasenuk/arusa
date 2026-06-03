@@ -39,19 +39,36 @@ export default function ProductEdit() {
   const [previews, setPreviews] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([
-      adminFetch(`/api/admin/products/${id}`).then(r => r.json()),
-      fetch('/api/categories').then(r => r.json()),
-    ]).then(([prod, cats]) => {
-      setProduct(prod);
-      setCategories(cats);
-    }).finally(() => setLoading(false));
+    const fetchProduct = adminFetch(`/api/admin/products/${id}`).then(async r => {
+      if (!r.ok) throw new Error('Товар не знайдено');
+      return r.json();
+    });
+
+    const fetchCategories = fetch('/api/categories').then(async r => {
+      const text = await r.text();
+      if (!text) return [];
+      try { return JSON.parse(text); } catch { return []; }
+    }).catch(() => []);
+
+    Promise.all([fetchProduct, fetchCategories])
+      .then(([prod, cats]) => {
+        setProduct(prod);
+        setCategories(Array.isArray(cats) ? cats : []);
+      })
+      .catch(err => setError(err.message ?? 'Помилка завантаження'))
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <p className={styles.page__empty}>Завантаження...</p>;
-  if (!product) return <p className={styles.page__empty}>Товар не знайдено</p>;
+  if (error || !product) return (
+    <div>
+      <Link to="/products" className={styles.page__back}>← Назад</Link>
+      <p className={styles.page__empty}>{error ?? 'Товар не знайдено'}</p>
+    </div>
+  );
 
   const updateField = (field: string, value: any) =>
     setProduct(prev => prev ? { ...prev, [field]: value } : prev);
@@ -140,38 +157,39 @@ export default function ProductEdit() {
       <div className={appStyles.admin__section}>
         <section className={appStyles.admin__container}>
 
-          <form className={appStyles.admin__form} onSubmit={e => e.preventDefault()}>
-            <div className={appStyles.admin__form_group}>
-              <label className={`${appStyles.admin__label} regular`}>Назва</label>
+          {/* Основні поля */}
+          <div className={styles.form} style={{ marginBottom: 24, maxWidth: '100%' }}>
+            <div className={styles.form__group}>
+              <label className={styles.form__label}>Назва</label>
               <input
-                className={`${appStyles.admin__input} small _button_border`}
+                className={styles.form__input}
                 value={product.title}
                 onChange={e => updateField('title', e.target.value)}
               />
             </div>
 
-            <div className={appStyles.admin__form_group}>
-              <label className={`${appStyles.admin__label} regular`}>Опис</label>
+            <div className={styles.form__group}>
+              <label className={styles.form__label}>Опис</label>
               <textarea
-                className={`${appStyles.admin__input} ${appStyles.admin__textarea} small _button_border`}
+                className={`${styles.form__input} ${styles.form__textarea}`}
                 value={product.description}
                 onChange={e => updateField('description', e.target.value)}
               />
             </div>
 
-            <div className={appStyles.admin__form_group}>
-              <label className={`${appStyles.admin__label} regular`}>Артикул</label>
+            <div className={styles.form__group}>
+              <label className={styles.form__label}>Артикул</label>
               <input
-                className={`${appStyles.admin__input} small _button_border`}
+                className={styles.form__input}
                 value={product.article}
                 onChange={e => updateField('article', e.target.value)}
               />
             </div>
 
-            <div className={appStyles.admin__form_group}>
-              <label className={`${appStyles.admin__label} regular`}>Категорія</label>
+            <div className={styles.form__group}>
+              <label className={styles.form__label}>Категорія</label>
               <select
-                className={`${appStyles.admin__input} small _button_border`}
+                className={`${styles.form__input} ${styles.form__select}`}
                 value={product.category_id}
                 onChange={e => updateField('category_id', Number(e.target.value))}
               >
@@ -182,8 +200,8 @@ export default function ProductEdit() {
               </select>
             </div>
 
-            <div className={appStyles.admin__form_group}>
-              <label className={`${appStyles.admin__label} regular`} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className={styles.form__group}>
+              <label className={styles.form__label} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                 <input
                   type="checkbox"
                   checked={product.is_active}
@@ -192,29 +210,32 @@ export default function ProductEdit() {
                 Активний
               </label>
             </div>
-          </form>
+          </div>
 
-          <h3 className={`${appStyles.admin__title} regular`}>Варіанти</h3>
+          {/* Варіанти */}
+          <h3 className={`${appStyles.admin__title} regular`} style={{ marginBottom: 12 }}>Варіанти</h3>
 
           {product.product_variants.map((variant, index) => (
-            <div key={variant.id ?? index} className={appStyles.admin__variant}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div key={variant.id ?? index} className={appStyles.admin__variant} style={{ flexDirection: 'column' }}>
+              {/* Заголовок варіанту */}
+              <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <strong className="small">Варіант {index + 1}</strong>
                 <button
                   type="button"
-                  className={`${appStyles.admin__button} regular _button _button_border regular`}
-                  style={{ color: '#c0392b', borderColor: '#c0392b', padding: '4px 12px' }}
+                  className={`${styles.table__btn} ${styles.table__btn_danger}`}
                   onClick={() => removeVariant(index)}
                 >
                   Видалити варіант
                 </button>
               </div>
 
+              {/* Зображення + поля */}
+              <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
               <div className={appStyles.admin__variant_preview}>
                 {(previews[index] || variant.product_images[0]?.image_url)
                   ? <img
                       className={appStyles.admin__variant_image}
-                      src={previews[index] || variant.product_images[0]?.image_url}
+                      src={`${previews[index] || variant.product_images[0]?.image_url}.png`}
                       alt={`Варіант ${index + 1}`}
                     />
                   : <div className={appStyles.admin__variant_placeholder}>Немає зображення</div>
@@ -227,60 +248,29 @@ export default function ProductEdit() {
                 />
               </div>
 
-              <form className={appStyles.admin__form} onSubmit={e => e.preventDefault()}>
+              {/* Поля варіанту */}
+              <form className={appStyles.admin__form} onSubmit={e => e.preventDefault()} style={{ flex: 1, minWidth: 300 }}>
+                {[
+                  { label: 'Розмір', field: 'size', type: 'text', value: variant.size },
+                  { label: 'Колір', field: 'color', type: 'text', value: variant.color },
+                  { label: 'SKU', field: 'sku', type: 'text', value: variant.sku },
+                  { label: 'Ціна', field: 'price', type: 'number', value: variant.price },
+                  { label: 'Кількість', field: 'quantity', type: 'number', value: variant.quantity },
+                  { label: 'Вага', field: 'weight', type: 'number', value: variant.weight },
+                ].map(({ label, field, type, value }) => (
+                  <div key={field} className={appStyles.admin__form_group}>
+                    <label className={`${appStyles.admin__lable} small`}>{label}</label>
+                    <input
+                      type={type}
+                      className={`${appStyles.admin__input} small _button_border`}
+                      value={value as string | number}
+                      onChange={e => updateVariant(index, field, type === 'number' ? Number(e.target.value) : e.target.value)}
+                    />
+                  </div>
+                ))}
+
                 <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Розмір</label>
-                  <input
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.size}
-                    onChange={e => updateVariant(index, 'size', e.target.value)}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Колір</label>
-                  <input
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.color}
-                    onChange={e => updateVariant(index, 'color', e.target.value)}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>SKU</label>
-                  <input
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.sku}
-                    onChange={e => updateVariant(index, 'sku', e.target.value)}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Ціна</label>
-                  <input
-                    type="number"
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.price}
-                    onChange={e => updateVariant(index, 'price', Number(e.target.value))}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Кількість</label>
-                  <input
-                    type="number"
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.quantity}
-                    onChange={e => updateVariant(index, 'quantity', Number(e.target.value))}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Вага</label>
-                  <input
-                    type="number"
-                    className={`${appStyles.admin__input} small _button_border`}
-                    value={variant.weight}
-                    onChange={e => updateVariant(index, 'weight', Number(e.target.value))}
-                  />
-                </div>
-                <div className={appStyles.admin__form_group}>
-                  <label className={`${appStyles.admin__label} regular`}>Матеріал</label>
+                  <label className={`${appStyles.admin__lable} small`}>Матеріал</label>
                   <select
                     className={`${appStyles.admin__input} small _button_border`}
                     value={variant.material}
@@ -293,18 +283,20 @@ export default function ProductEdit() {
                   </select>
                 </div>
               </form>
+              </div>{/* кінець flex-row */}
             </div>
           ))}
 
-          <div className={appStyles.admin__buttons}>
+          {/* Кнопки */}
+          <div className={appStyles.admin__buttons} style={{ marginTop: 16 }}>
             <button
-              className={`${appStyles.admin__button} regular _button _button_main _button_border regular upper`}
+              className={`${styles.page__button} ${styles.page__button_secondary}`}
               onClick={addVariant}
             >
-              Додати варіант
+              + Додати варіант
             </button>
             <button
-              className={`${appStyles.admin__button} regular _button _button_main _button_border regular upper`}
+              className={styles.page__button}
               onClick={handleSave}
               disabled={saving}
             >

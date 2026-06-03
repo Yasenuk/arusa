@@ -49,7 +49,7 @@ export default function UsersList() {
     return sortDir === 'asc' ? cmp : -cmp;
   });
 
-  const arrow = (key: SortKey) => sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
 
   return (
     <div>

@@ -15,6 +15,9 @@ type AdminOrder = {
   is_guest: boolean;
 };
 
+type SortKey = 'id' | 'status' | 'total_amount' | 'created_at';
+type SortDir = 'asc' | 'desc';
+
 const STATUS_OPTIONS = [
   'PENDING_CONFIRMATION', 'CONFIRMED', 'PENDING_PAYMENT',
   'PAID', 'PAYMENT_FAILED', 'PENDING_SHIPMENT',
@@ -25,6 +28,8 @@ export default function OrdersList() {
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   useEffect(() => {
     const qs = statusFilter ? `?status=${statusFilter}` : '';
@@ -33,6 +38,20 @@ export default function OrdersList() {
       .then(setOrders)
       .finally(() => setLoading(false));
   }, [statusFilter]);
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+
+  const sorted = [...orders].sort((a, b) => {
+    const av = a[sortKey] ?? '';
+    const bv = b[sortKey] ?? '';
+    const cmp = typeof av === 'number' ? av - (bv as number) : String(av).localeCompare(String(bv), 'uk');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
 
   return (
     <div>
@@ -55,10 +74,17 @@ export default function OrdersList() {
       {!loading && orders.length > 0 && (
         <table className={styles.table}>
           <thead>
-            <tr><th>#</th><th>Покупець</th><th>Статус</th><th>Сума</th><th>Дата</th><th>Дії</th></tr>
+            <tr>
+              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>#{ arrow('id')}</th>
+              <th>Покупець</th>
+              <th onClick={() => handleSort('status')} style={{ cursor: 'pointer' }}>Статус{arrow('status')}</th>
+              <th onClick={() => handleSort('total_amount')} style={{ cursor: 'pointer' }}>Сума{arrow('total_amount')}</th>
+              <th onClick={() => handleSort('created_at')} style={{ cursor: 'pointer' }}>Дата{arrow('created_at')}</th>
+              <th>Дії</th>
+            </tr>
           </thead>
           <tbody>
-            {orders.map(o => (
+            {sorted.map(o => (
               <tr key={o.id}>
                 <td>#{o.id}</td>
                 <td>{o.is_guest ? `Гість${o.guest_name ? `: ${o.guest_name}` : ''}` : (o.user_email ?? '—')}</td>

@@ -14,12 +14,17 @@ type InventoryItem = {
   color: string;
 };
 
+type SortKey = 'title' | 'sku' | 'size' | 'color' | 'quantity' | 'reserved_quantity' | 'available';
+type SortDir = 'asc' | 'desc';
+
 export default function InventoryList() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState<number | null>(null);
   const [editQty, setEditQty] = useState(0);
   const [search, setSearch] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>('title');
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   useEffect(() => {
     adminFetch('/api/admin/inventory')
@@ -40,10 +45,24 @@ export default function InventoryList() {
     setEditId(null);
   };
 
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
+
   const filtered = items.filter(i =>
     i.title.toLowerCase().includes(search.toLowerCase()) ||
     i.sku.toLowerCase().includes(search.toLowerCase())
   );
+
+  const sorted = [...filtered].sort((a, b) => {
+    const av = a[sortKey] ?? '';
+    const bv = b[sortKey] ?? '';
+    const cmp = typeof av === 'number' ? av - (bv as number) : String(av).localeCompare(String(bv), 'uk');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
 
   return (
     <div>
@@ -59,24 +78,24 @@ export default function InventoryList() {
       </div>
 
       {loading && <p className={styles.page__empty}>Завантаження...</p>}
-      {!loading && filtered.length === 0 && <p className={styles.page__empty}>Нічого не знайдено</p>}
+      {!loading && sorted.length === 0 && <p className={styles.page__empty}>Нічого не знайдено</p>}
 
-      {!loading && filtered.length > 0 && (
+      {!loading && sorted.length > 0 && (
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Товар</th>
-              <th>SKU</th>
-              <th>Розмір</th>
-              <th>Колір</th>
-              <th>Всього</th>
-              <th>Резерв</th>
-              <th>Доступно</th>
+              <th onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>Товар{arrow('title')}</th>
+              <th onClick={() => handleSort('sku')} style={{ cursor: 'pointer' }}>SKU{arrow('sku')}</th>
+              <th onClick={() => handleSort('size')} style={{ cursor: 'pointer' }}>Розмір{arrow('size')}</th>
+              <th onClick={() => handleSort('color')} style={{ cursor: 'pointer' }}>Колір{arrow('color')}</th>
+              <th onClick={() => handleSort('quantity')} style={{ cursor: 'pointer' }}>Всього{arrow('quantity')}</th>
+              <th onClick={() => handleSort('reserved_quantity')} style={{ cursor: 'pointer' }}>Резерв{arrow('reserved_quantity')}</th>
+              <th onClick={() => handleSort('available')} style={{ cursor: 'pointer' }}>Доступно{arrow('available')}</th>
               <th>Дії</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map(item => (
+            {sorted.map(item => (
               <tr key={item.id} style={{ background: item.available === 0 ? '#fff5f5' : undefined }}>
                 <td>{item.title}</td>
                 <td style={{ fontSize: 12, color: '#888' }}>{item.sku}</td>

@@ -4,10 +4,14 @@ import { adminFetch } from '../../api';
 import styles from '../pages.module.scss';
 
 type Article = { id: number; title: string; created_at: string };
+type SortKey = 'id' | 'title' | 'created_at';
+type SortDir = 'asc' | 'desc';
 
 export default function ArticlesList() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   useEffect(() => {
     adminFetch('/api/admin/articles')
@@ -22,6 +26,20 @@ export default function ArticlesList() {
     setArticles(prev => prev.filter(a => a.id !== id));
   };
 
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+
+  const sorted = [...articles].sort((a, b) => {
+    const av = a[sortKey] ?? '';
+    const bv = b[sortKey] ?? '';
+    const cmp = typeof av === 'number' ? av - (bv as number) : String(av).localeCompare(String(bv), 'uk');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
+
   return (
     <div>
       <div className={styles.page__header}>
@@ -35,10 +53,15 @@ export default function ArticlesList() {
       {!loading && articles.length > 0 && (
         <table className={styles.table}>
           <thead>
-            <tr><th>ID</th><th>Назва</th><th>Дата</th><th>Дії</th></tr>
+            <tr>
+              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>ID{arrow('id')}</th>
+              <th onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>Назва{arrow('title')}</th>
+              <th onClick={() => handleSort('created_at')} style={{ cursor: 'pointer' }}>Дата{arrow('created_at')}</th>
+              <th>Дії</th>
+            </tr>
           </thead>
           <tbody>
-            {articles.map(a => (
+            {sorted.map(a => (
               <tr key={a.id}>
                 <td>{a.id}</td>
                 <td>{a.title}</td>

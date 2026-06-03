@@ -4,10 +4,14 @@ import { adminFetch } from '../../api';
 import styles from '../pages.module.scss';
 
 type Category = { id: number; name: string; parent_id: number | null };
+type SortKey = 'id' | 'name' | 'parent_id';
+type SortDir = 'asc' | 'desc';
 
 export default function CategoriesList() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortKey, setSortKey] = useState<SortKey>('id');
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   useEffect(() => {
     adminFetch('/api/categories')
@@ -27,6 +31,27 @@ export default function CategoriesList() {
     return categories.find(c => c.id === parent_id)?.name ?? '—';
   };
 
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+
+  const sorted = [...categories].sort((a, b) => {
+    let av: string | number;
+    let bv: string | number;
+    if (sortKey === 'parent_id') {
+      av = getParentName(a.parent_id);
+      bv = getParentName(b.parent_id);
+    } else {
+      av = a[sortKey] ?? '';
+      bv = b[sortKey] ?? '';
+    }
+    const cmp = typeof av === 'number' ? av - (bv as number) : String(av).localeCompare(String(bv), 'uk');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
+
   return (
     <div>
       <div className={styles.page__header}>
@@ -40,10 +65,15 @@ export default function CategoriesList() {
       {!loading && categories.length > 0 && (
         <table className={styles.table}>
           <thead>
-            <tr><th>ID</th><th>Назва</th><th>Батьківська</th><th>Дії</th></tr>
+            <tr>
+              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>ID{arrow('id')}</th>
+              <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Назва{arrow('name')}</th>
+              <th onClick={() => handleSort('parent_id')} style={{ cursor: 'pointer' }}>Батьківська{arrow('parent_id')}</th>
+              <th>Дії</th>
+            </tr>
           </thead>
           <tbody>
-            {categories.map(c => (
+            {sorted.map(c => (
               <tr key={c.id}>
                 <td>{c.id}</td>
                 <td>{c.name}</td>

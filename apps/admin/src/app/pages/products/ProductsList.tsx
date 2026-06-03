@@ -5,6 +5,7 @@ import styles from '../pages.module.scss';
 
 type AdminProduct = {
   id: number;
+  product_id: number;
   title: string;
   article: string;
   category: string;
@@ -52,7 +53,7 @@ export default function ProductsList() {
     return sortDir === 'asc' ? cmp : -cmp;
   });
 
-  const arrow = (key: SortKey) => sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+  const arrow = (key: SortKey) => (<span style={{ position: 'absolute' }}>{sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}</span>);
 
   return (
     <div>
@@ -99,8 +100,8 @@ export default function ProductsList() {
                 <td>{p.quantity}</td>
                 <td>
                   <div className={styles.table__actions}>
-                    <Link to={`/products/${p.id}/edit`} className={styles.table__btn}>Редагувати</Link>
-                    <button className={`${styles.table__btn} ${styles.table__btn_danger}`} onClick={() => handleDelete(p.id)}>Видалити</button>
+                    <Link to={`/products/${p.product_id}/edit`} className={styles.table__btn}>Редагувати</Link>
+                    <button className={`${styles.table__btn} ${styles.table__btn_danger}`} onClick={() => handleDelete(p.product_id)}>Видалити</button>
                   </div>
                 </td>
               </tr>

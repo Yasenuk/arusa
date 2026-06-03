@@ -1,10 +1,18 @@
 import { useState } from "react";
 import styles from "../../styles/common/form-subscribe.module.scss";
 
+const STORAGE_KEY = 'subscribed_email';
+
 export default function FormSubscribe() {
 	const [email, setEmail] = useState('');
-	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-	const [message, setMessage] = useState('');
+	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>(
+		() => (localStorage.getItem(STORAGE_KEY) ? 'success' : 'idle')
+	);
+	const [message, setMessage] = useState(
+		() => localStorage.getItem(STORAGE_KEY)
+			? `Ви підписані як ${localStorage.getItem(STORAGE_KEY)}`
+			: ''
+	);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -16,6 +24,7 @@ export default function FormSubscribe() {
 				body: JSON.stringify({ email }),
 			});
 			if (res.ok) {
+				localStorage.setItem(STORAGE_KEY, email);
 				setStatus('success');
 				setMessage('Дякуємо! Ви успішно підписалися.');
 				setEmail('');
@@ -35,7 +44,11 @@ export default function FormSubscribe() {
 			<div className={styles.subscribe__container}>
 				<h2 className={`${styles.subscribe__title} h h_l center`}>Станьте частиною нашого клубу, щоб отримати знижку</h2>
 				{status === 'success'
-					? <p className={`${styles.subscribe__success ?? ''} small center`}>{message}</p>
+					? (
+						<p className="small center" style={{ color: '#fff', opacity: 0.9 }}>
+							{message}
+						</p>
+					)
 					: (
 						<form onSubmit={handleSubmit} className={styles.subscribe__form} id="subscribe-form">
 							<label htmlFor="email" className="visually-hidden">Електронна адреса</label>
@@ -57,7 +70,9 @@ export default function FormSubscribe() {
 							>
 								{status === 'loading' ? '...' : 'Підписатись'}
 							</button>
-							{status === 'error' && <p className="small" style={{ color: '#c0392b', marginTop: 8 }}>{message}</p>}
+							{status === 'error' && (
+								<p className="small" style={{ color: '#fde8e8', marginTop: 8 }}>{message}</p>
+							)}
 						</form>
 					)
 				}
