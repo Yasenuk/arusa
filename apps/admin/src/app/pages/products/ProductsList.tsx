@@ -12,10 +12,14 @@ type AdminProduct = {
   quantity: number;
   image: string;
 };
+type SortKey = 'title' | 'article' | 'category' | 'price' | 'quantity';
+type SortDir = 'asc' | 'desc';
 
 export default function ProductsList() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortKey, setSortKey] = useState<SortKey>('title');
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   useEffect(() => {
     adminFetch('/api/admin/products')
@@ -29,6 +33,26 @@ export default function ProductsList() {
     await adminFetch(`/api/admin/products/${id}`, { method: 'DELETE' });
     setProducts(prev => prev.filter(p => p.id !== id));
   };
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const sorted = [...products].sort((a, b) => {
+    const av = a[sortKey] ?? '';
+    const bv = b[sortKey] ?? '';
+    const cmp = typeof av === 'number'
+      ? (av as number) - (bv as number)
+      : String(av).localeCompare(String(bv), 'uk');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const arrow = (key: SortKey) => sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
 
   return (
     <div>
@@ -44,11 +68,17 @@ export default function ProductsList() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Фото</th><th>Назва</th><th>Артикул</th><th>Категорія</th><th>Ціна</th><th>К-сть</th><th>Дії</th>
+              <th>Фото</th>
+              <th onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>Назва{arrow('title')}</th>
+              <th onClick={() => handleSort('article')} style={{ cursor: 'pointer' }}>Артикул{arrow('article')}</th>
+              <th onClick={() => handleSort('category')} style={{ cursor: 'pointer' }}>Категорія{arrow('category')}</th>
+              <th onClick={() => handleSort('price')} style={{ cursor: 'pointer' }}>Ціна{arrow('price')}</th>
+              <th onClick={() => handleSort('quantity')} style={{ cursor: 'pointer' }}>К-сть{arrow('quantity')}</th>
+              <th>Дії</th>
             </tr>
           </thead>
           <tbody>
-            {products.map(p => (
+            {sorted.map(p => (
               <tr key={p.id}>
                 <td>
                   {p.image

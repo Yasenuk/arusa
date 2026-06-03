@@ -40,4 +40,21 @@ router.patch('/me', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/subscribe', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Невірний email' });
+    }
+    await prisma.subscriptions.upsert({
+      where: { email },
+      update: {},
+      create: { email },
+    });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Помилка підписки' });
+  }
+});
+
 export default router;

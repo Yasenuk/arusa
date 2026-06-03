@@ -39,6 +39,22 @@ export default function AdminCreateProduct() {
     setProduct(prev => ({ ...prev, [field]: value }));
   }
 
+  function removeVariant(index: number) {
+    setProduct(prev => {
+      const product_variants = prev.product_variants.filter((_, i) => i !== index);
+      return { ...prev, product_variants };
+    });
+    setPreviews(prev => {
+      const next: Record<number, string> = {};
+      Object.entries(prev).forEach(([k, v]) => {
+        const ki = Number(k);
+        if (ki < index) next[ki] = v;
+        else if (ki > index) next[ki - 1] = v;
+      });
+      return next;
+    });
+  }
+
   function addVariant() {
     setProduct(prev => ({
       ...prev,
@@ -167,6 +183,17 @@ export default function AdminCreateProduct() {
 
         {product.product_variants.map((variant, index) => (
           <div key={index} className={styles.admin__variant}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <strong className="small">Варіант {index + 1}</strong>
+              <button
+                type="button"
+                className={`${styles.admin__button} regular _button _button_border regular`}
+                style={{ color: '#c0392b', borderColor: '#c0392b', padding: '4px 12px' }}
+                onClick={() => removeVariant(index)}
+              >
+                Видалити варіант
+              </button>
+            </div>
             <div className={styles.admin__variant_preview}>
               {previews[index]
                 ? <img className={styles.admin__variant_image} src={previews[index]} alt={`Варіант ${index + 1}`} />

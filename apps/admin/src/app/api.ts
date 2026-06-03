@@ -24,7 +24,6 @@ export async function adminFetch(path: string, options: RequestInit = {}): Promi
 
   let res = await makeRequest(token);
 
-  // якщо 401 — спробуй рефреш і повтори запит
   if (res.status === 401) {
     const newToken = await refreshAdminToken();
     if (!newToken) {

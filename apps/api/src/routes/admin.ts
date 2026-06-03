@@ -39,15 +39,65 @@ router.get('/admin/products/:id', async (req, res) => {
 
 router.patch('/admin/products/:id', async (req, res) => {
   try {
-    const { title, description, is_active } = req.body;
+    const { title, description, article, category_id, is_active, product_variants } = req.body;
     const data: any = {};
     if (title !== undefined) data.title = title;
     if (description !== undefined) data.description = description;
+    if (article !== undefined) data.article = article;
+    if (category_id !== undefined) data.category_id = Number(category_id);
     if (is_active !== undefined) data.is_active = is_active;
 
-    const product = await prisma.products.update({ where: { id: Number(req.params.id) }, data });
+    const productId = Number(req.params.id);
+
+    await prisma.$transaction(async tx => {
+      await tx.products.update({ where: { id: productId }, data });
+
+      if (Array.isArray(product_variants)) {
+        for (const variant of product_variants) {
+          if (variant.id) {
+            await tx.product_variants.update({
+              where: { id: variant.id },
+              data: {
+                size: variant.size,
+                color: variant.color,
+                sku: variant.sku,
+                price: variant.price,
+                quantity: variant.quantity,
+                material: variant.material,
+                weight: variant.weight,
+              },
+            });
+          } else {
+            await tx.product_variants.create({
+              data: {
+                product_id: productId,
+                size: variant.size,
+                color: variant.color,
+                sku: variant.sku,
+                price: variant.price,
+                quantity: variant.quantity,
+                material: variant.material,
+                weight: variant.weight,
+              },
+            });
+          }
+        }
+
+        // Видалити варіанти яких немає в запиті
+        const keepIds = product_variants.filter((v: any) => v.id).map((v: any) => v.id);
+        await tx.product_variants.deleteMany({
+          where: { product_id: productId, id: { notIn: keepIds } },
+        });
+      }
+    });
+
+    const product = await prisma.products.findUnique({
+      where: { id: productId },
+      include: { product_variants: { include: { product_images: true } }, categories: true },
+    });
     res.json(product);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Помилка оновлення' });
   }
 });
@@ -271,6 +321,15 @@ router.get('/admin/users', async (req, res) => {
   }
 });
 
+router.delete('/admin/users/:id', async (req, res) => {
+  try {
+    await prisma.users.delete({ where: { id: Number(req.params.id) } });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Помилка видалення' });
+  }
+});
+
 router.patch('/admin/users/:id/role', async (req, res) => {
   try {
     const { role } = req.body;
@@ -416,6 +475,17 @@ router.patch('/admin/inventory/:id', async (req, res) => {
     res.json(item);
   } catch (err) {
     res.status(500).json({ error: 'Помилка оновлення' });
+  }
+});
+
+router.get('/admin/subscriptions', async (req, res) => {
+  try {
+    const subscriptions = await prisma.subscriptions.findMany({
+      orderBy: { created_at: 'desc' },
+    });
+    res.json(subscriptions);
+  } catch (err) {
+    res.status(500).json({ error: 'Помилка' });
   }
 });
 
