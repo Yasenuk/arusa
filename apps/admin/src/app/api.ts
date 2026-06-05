@@ -1,13 +1,23 @@
+let refreshPromise: Promise<string | null> | null = null;
+
 async function refreshAdminToken(): Promise<string | null> {
-  try {
-    const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
-    if (!res.ok) return null;
-    const { accessToken } = await res.json();
-    localStorage.setItem('admin_token', accessToken);
-    return accessToken;
-  } catch {
-    return null;
-  }
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+      if (!res.ok) return null;
+      const { accessToken } = await res.json();
+      localStorage.setItem('admin_token', accessToken);
+      return accessToken;
+    } catch {
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
 }
 
 export async function adminFetch(path: string, options: RequestInit = {}): Promise<Response> {
@@ -27,7 +37,6 @@ export async function adminFetch(path: string, options: RequestInit = {}): Promi
   if (res.status === 401) {
     const newToken = await refreshAdminToken();
     if (!newToken) {
-      // рефреш не вдався — редірект на логін
       localStorage.removeItem('admin_token');
       window.location.href = '/login';
       return res;

@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../node_modules/.vite/apps/adnim',
+  cacheDir: '../../node_modules/.vite/apps/admin',
   server: {
     port: 5030,
     open: true,
@@ -13,7 +13,8 @@ export default defineConfig(() => ({
       '/api': {
         target: 'http://localhost:3333',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        cookieDomainRewrite: 'localhost',
       }
     }
   },
