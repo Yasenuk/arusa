@@ -101,7 +101,7 @@ export default function AdminCreateProduct() {
 
   async function handleSubmit() {
     try {
-      const res = await fetch("/api/admin/products", {
+      const res = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
