@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Category } from "@org/shared-types";
 
+import { adminFetch } from "./api";
 import styles from "./app.module.scss";
 
 export default function AdminCreateCategory() {
@@ -26,11 +27,8 @@ export default function AdminCreateCategory() {
 	}, []);
 
 	async function submit() {
-		await fetch("/api/admin/categories", {
+		await adminFetch("/api/admin/categories", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
 			body: JSON.stringify({
 				name,
 				parent_id: parentId || null
