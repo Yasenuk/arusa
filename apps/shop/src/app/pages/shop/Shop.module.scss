@@ -295,6 +295,7 @@
   }
 
   &__products {
+    @include container();
     flex: 1 1 auto;
 		@include adaptiveValue("padding-inline", 15, 0);
     padding-top: toRem(20);
