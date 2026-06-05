@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNotification } from "@org/ui";
 import { Category, Product, ProductImage } from "@org/shared-types";
 
+import { adminFetch } from "./api";
 import styles from "./app.module.scss";
 
 export default function AdminCreateProduct() {
@@ -101,11 +102,8 @@ export default function AdminCreateProduct() {
 
   async function handleSubmit() {
     try {
-      const res = await fetch("/api/admin/products", {
+      const res = await adminFetch("/api/admin/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(product)
       });
 
