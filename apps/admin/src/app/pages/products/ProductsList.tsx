@@ -62,8 +62,6 @@ export default function ProductsList() {
         <Link to="/products/create" className={styles.page__button}>+ Додати товар</Link>
       </div>
 
-      { products.length }
-
       {loading && <p className={styles.page__empty}>Завантаження...</p>}
       {!loading && products.length === 0 && <p className={styles.page__empty}>Товарів немає</p>}
 
