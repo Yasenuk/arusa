@@ -23,7 +23,7 @@ export default function ProductsList() {
   const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   useEffect(() => {
-    adminFetch('/api/admin/products')
+    adminFetch('/api/admin/products?limit=100')
       .then(r => r.json())
       .then(data => setProducts(data.data ?? data))
       .finally(() => setLoading(false));
@@ -61,6 +61,8 @@ export default function ProductsList() {
         <h1 className={styles.page__title}>Товари</h1>
         <Link to="/products/create" className={styles.page__button}>+ Додати товар</Link>
       </div>
+
+      { products.length }
 
       {loading && <p className={styles.page__empty}>Завантаження...</p>}
       {!loading && products.length === 0 && <p className={styles.page__empty}>Товарів немає</p>}

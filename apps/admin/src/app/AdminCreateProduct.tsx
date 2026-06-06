@@ -94,7 +94,7 @@ export default function AdminCreateProduct() {
       const product_variants = [...prev.product_variants];
       product_variants[variantIndex] = {
         ...product_variants[variantIndex],
-        product_images: [{ image_url: file.name, position: 0 }],
+        product_images: [{ image_url: file.name?.split('.')[0], position: 0 }],
       };
       return { ...prev, product_variants };
     });
