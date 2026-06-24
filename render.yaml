@@ -29,3 +29,7 @@ services:
         sync: false
       - key: API_URL
         sync: false
+      - key: ELASTICSEARCH_URL
+        sync: false
+      - key: ELASTICSEARCH_API_KEY
+        sync: false
