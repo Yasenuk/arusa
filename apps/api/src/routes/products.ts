@@ -27,7 +27,6 @@ router.post("/admin/products", authMiddleware, adminMiddleware, async (req, res)
 
     const product = await createProduct(title, description, article, category_id, product_variants);
 
-    // Індексуємо всі варіанти нового товару в ES (не блокуємо відповідь)
     for (const v of product.product_variants ?? []) {
       indexProductVariant(v.id).catch(console.error);
     }
@@ -46,7 +45,7 @@ router.get("/products/suggest", async (req, res) => {
     const suggestions = await suggestProducts(q);
     res.json(suggestions);
   } catch (err) {
-    res.json([]); // при помилці ES просто порожній список
+    res.json([]);
   }
 });
 
@@ -80,8 +79,6 @@ router.get("/products", async (req, res) => {
       limit: req.query.limit ? Math.min(Number(req.query.limit), 100) : 12,
     };
 
-    // Якщо є пошуковий запит — використовуємо Elasticsearch (fuzzy)
-    // Інакше — Prisma з фільтрами
     if (filters.search) {
       const { variantIds, total } = await searchProducts(filters);
       const data = variantIds.length ? await getProductsByIds(variantIds) : [];

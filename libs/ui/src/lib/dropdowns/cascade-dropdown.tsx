@@ -11,12 +11,10 @@ interface CascadeDropdownProps {
 }
 
 export function CascadeDropdown({ label, tree, value, onChange }: CascadeDropdownProps) {
-  // Стек рівнів: кожен елемент — масив дітей поточного рівня
   const [stack, setStack] = useState<Category[][]>([tree]);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Знайти label для поточного value
   function findLabel(nodes: Category[], val: string): string | null {
     for (const node of nodes) {
       if (node.name === val) return node.name;
@@ -30,12 +28,11 @@ export function CascadeDropdown({ label, tree, value, onChange }: CascadeDropdow
 
   const selectedLabel = value === "all" ? null : findLabel(tree, value);
 
-  // Закрити при кліку поза компонентом
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         setIsOpen(false);
-        setStack([tree]); // скидаємо стек при закритті
+        setStack([tree]);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -44,10 +41,8 @@ export function CascadeDropdown({ label, tree, value, onChange }: CascadeDropdow
 
   function handleSelect(node: Category) {
     if (node.children?.length) {
-      // Є діти — додаємо наступний рівень у стек
       setStack((prev) => [...prev, node.children!]);
     } else {
-      // Листовий вузол — вибираємо і закриваємо
       onChange(node.name);
       setIsOpen(false);
       setStack([tree]);
@@ -79,7 +74,6 @@ export function CascadeDropdown({ label, tree, value, onChange }: CascadeDropdow
       </button>
 
       <ul className={styles.dropdown__list}>
-        {/* Назад */}
         {isNested && (
           <li>
             <button
@@ -92,7 +86,6 @@ export function CascadeDropdown({ label, tree, value, onChange }: CascadeDropdow
           </li>
         )}
 
-        {/* Всі категорії — тільки на першому рівні */}
         {!isNested && (
           <li>
             <button

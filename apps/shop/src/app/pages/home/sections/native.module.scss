@@ -6,10 +6,8 @@
 	content-visibility: auto;
 	contain-intrinsic-size: auto 500px;
 
-	// &._dark {
-		background-color: $color-opal;
-		color: $color-claudy;
-	// }
+	background-color: $color-opal;
+	color: $color-claudy;
 
 	&__container {
 		@include container();

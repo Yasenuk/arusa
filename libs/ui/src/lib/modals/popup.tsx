@@ -28,7 +28,6 @@ export default function Popup({
   const bodyRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(isOpen);
 
-  // Один useEffect для body lock + visibility — без дублювання classList calls
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
@@ -37,7 +36,6 @@ export default function Popup({
     }
 
     const timeout = setTimeout(() => setIsVisible(false), 300);
-    // Знімаємо lock одразу при закритті, не чекаємо анімацію
     document.body.classList.remove("_locked");
     return () => clearTimeout(timeout);
   }, [isOpen]);
@@ -51,7 +49,6 @@ export default function Popup({
 
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-    // classList вже керується вище — не дублюємо тут
   }, [isVisible, onClose]);
 
   function handleOutside(e: React.MouseEvent) {

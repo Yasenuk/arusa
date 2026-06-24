@@ -38,6 +38,8 @@ export default function Shop() {
   const [searchInput, setSearchInput] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const [filters, setFilters] = useState({
     category: "all",
@@ -107,6 +109,17 @@ export default function Shop() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (searchInput.trim().length < 2) { setSuggestions([]); return; }
+    const timeout = setTimeout(() => {
+      fetch(`/api/products/suggest?q=${encodeURIComponent(searchInput)}`)
+        .then(r => r.json())
+        .then(setSuggestions)
+        .catch(() => setSuggestions([]));
+    }, 200);
+    return () => clearTimeout(timeout);
+  }, [searchInput]);
+
+  useEffect(() => {
     setCurrentPage(1);
     fetchProducts(1);
   }, [fetchProducts]);
@@ -129,12 +142,20 @@ export default function Shop() {
   function handleSearchFocus() {
     clearTimeout(closeTimer.current);
     setIsSearchOpen(true);
+    if (suggestions.length) setShowSuggestions(true);
   }
 
   function handleSearchBlur() {
     closeTimer.current = setTimeout(() => {
       if (!searchInput) setIsSearchOpen(false);
-    }, 150);
+      setShowSuggestions(false);
+    }, 200);
+  }
+
+  function handleSuggestionClick(suggestion: string) {
+    setSearchInput(suggestion);
+    setFilters((f) => ({ ...f, search: suggestion }));
+    setShowSuggestions(false);
   }
 
   return (
@@ -166,7 +187,7 @@ export default function Shop() {
               <span>{response.total}</span>
               Товарів
             </span>
-            <div className={`${styles.shop__search} ${isSearchOpen ? styles["shop__search_open"] : ""}`}>
+            <div className={`${styles.shop__search} ${isSearchOpen ? styles["shop__search_open"] : ""}`} style={{ position: "relative" }}>
               <input
                 ref={searchRef}
                 type="search"
@@ -175,7 +196,7 @@ export default function Shop() {
                 placeholder="Назва, артикул, колір…"
                 className={styles["shop__search-input"]}
                 value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                onChange={(e) => { setSearchInput(e.target.value); setShowSuggestions(true); }}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
               />
@@ -187,6 +208,25 @@ export default function Shop() {
               >
                 <i className="icon-search regular"></i>
               </button>
+              {showSuggestions && suggestions.length > 0 && (
+                <ul style={{
+                  position: "absolute", top: "100%", left: 0, right: 0, zIndex: 100,
+                  background: "#fff", border: "1px solid #e0e0e0", borderRadius: "4px",
+                  listStyle: "none", margin: 0, padding: "4px 0", boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}>
+                  {suggestions.map((s) => (
+                    <li
+                      key={s}
+                      onMouseDown={() => handleSuggestionClick(s)}
+                      style={{ padding: "8px 16px", cursor: "pointer", fontSize: "14px", color: "#333" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#f5f5f5")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

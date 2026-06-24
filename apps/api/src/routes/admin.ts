@@ -84,7 +84,6 @@ router.patch('/admin/products/:id', async (req, res) => {
           }
         }
 
-        // Видалити варіанти яких немає в запиті
         const keepIds = product_variants.filter((v: any) => v.id).map((v: any) => v.id);
         await tx.product_variants.deleteMany({
           where: { product_id: productId, id: { notIn: keepIds } },
@@ -97,7 +96,6 @@ router.patch('/admin/products/:id', async (req, res) => {
       include: { product_variants: { include: { product_images: true } }, categories: true },
     });
 
-    // Реіндексуємо всі варіанти оновленого товару в ES
     for (const v of product?.product_variants ?? []) {
       indexProductVariant(v.id).catch(console.error);
     }
