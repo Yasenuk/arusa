@@ -195,6 +195,7 @@ export default function Shop() {
                 id="products-search"
                 placeholder="Назва, артикул, колір…"
                 className={styles["shop__search-input"]}
+                autoComplete="off"
                 value={searchInput}
                 onChange={(e) => { setSearchInput(e.target.value); setShowSuggestions(true); }}
                 onFocus={handleSearchFocus}
