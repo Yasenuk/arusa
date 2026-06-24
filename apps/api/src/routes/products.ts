@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createProduct, getProducts, getProductsByIds, ProductFilters } from "../services/product.service";
+import { searchProducts } from "../services/search.service";
 
 const router = Router();
 
@@ -61,6 +62,19 @@ router.get("/products", async (req, res) => {
       page: req.query.page ? Number(req.query.page) : 1,
       limit: req.query.limit ? Math.min(Number(req.query.limit), 100) : 12,
     };
+
+    // Якщо є пошуковий запит — використовуємо Elasticsearch (fuzzy)
+    // Інакше — Prisma з фільтрами
+    if (filters.search) {
+      const { variantIds, total } = await searchProducts(filters);
+      const data = variantIds.length ? await getProductsByIds(variantIds) : [];
+      return res.json({
+        data,
+        total,
+        page: filters.page ?? 1,
+        totalPages: Math.ceil(total / (filters.limit ?? 12)),
+      });
+    }
 
     const result = await getProducts(filters);
     res.json(result);
