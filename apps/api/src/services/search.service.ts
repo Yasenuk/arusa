@@ -132,3 +132,27 @@ export async function searchProducts(filters: ProductFilters): Promise<SearchRes
 
   return { variantIds, total };
 }
+
+// Автодоповнення — повертає унікальні назви товарів за prefix
+export async function suggestProducts(query: string): Promise<string[]> {
+  const response = await esClient.search({
+    index: 'product_variants',
+    size: 8,
+    _source: ['title'],
+    query: {
+      bool: {
+        must: [
+          { term: { is_active: true } },
+          {
+            match_phrase_prefix: {
+              title: { query, max_expansions: 10 },
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  const titles = response.hits.hits.map((h) => (h._source as any).title as string);
+  return [...new Set(titles)]; // унікальні назви
+}

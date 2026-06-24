@@ -3,7 +3,7 @@ import { prisma } from '../db/prisma';
 import { adminMiddleware } from '../middlewares/admin';
 import { authMiddleware } from '../middlewares/auth';
 import { createProduct, getProducts } from '../services/product.service';
-import { reindexAll } from '../services/search.service';
+import { reindexAll, indexProductVariant } from '../services/search.service';
 import { getAllArticles, createArticle, updateArticle, deleteArticle, getArticles } from '../services/article.service';
 import { getPayments } from '../services/payment.service';
 
@@ -96,6 +96,12 @@ router.patch('/admin/products/:id', async (req, res) => {
       where: { id: productId },
       include: { product_variants: { include: { product_images: true } }, categories: true },
     });
+
+    // Реіндексуємо всі варіанти оновленого товару в ES
+    for (const v of product?.product_variants ?? []) {
+      indexProductVariant(v.id).catch(console.error);
+    }
+
     res.json(product);
   } catch (err) {
     console.error(err);

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createProduct, getProducts, getProductsByIds, ProductFilters } from "../services/product.service";
-import { searchProducts } from "../services/search.service";
+import { searchProducts, indexProductVariant, suggestProducts } from "../services/search.service";
 
 const router = Router();
 
@@ -26,10 +26,27 @@ router.post("/admin/products", authMiddleware, adminMiddleware, async (req, res)
     }
 
     const product = await createProduct(title, description, article, category_id, product_variants);
+
+    // Індексуємо всі варіанти нового товару в ES (не блокуємо відповідь)
+    for (const v of product.product_variants ?? []) {
+      indexProductVariant(v.id).catch(console.error);
+    }
+
     res.json(product);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Помилка при створенні продукту" });
+  }
+});
+
+router.get("/products/suggest", async (req, res) => {
+  try {
+    const q = String(req.query.q ?? '').trim();
+    if (q.length < 2) return res.json([]);
+    const suggestions = await suggestProducts(q);
+    res.json(suggestions);
+  } catch (err) {
+    res.json([]); // при помилці ES просто порожній список
   }
 });
 
