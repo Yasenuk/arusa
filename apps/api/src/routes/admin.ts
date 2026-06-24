@@ -3,6 +3,7 @@ import { prisma } from '../db/prisma';
 import { adminMiddleware } from '../middlewares/admin';
 import { authMiddleware } from '../middlewares/auth';
 import { createProduct, getProducts } from '../services/product.service';
+import { reindexAll } from '../services/search.service';
 import { getAllArticles, createArticle, updateArticle, deleteArticle, getArticles } from '../services/article.service';
 import { getPayments } from '../services/payment.service';
 
@@ -475,6 +476,16 @@ router.patch('/admin/inventory/:id', async (req, res) => {
     res.json(item);
   } catch (err) {
     res.status(500).json({ error: 'Помилка оновлення' });
+  }
+});
+
+router.post('/admin/reindex', async (req, res) => {
+  try {
+    const count = await reindexAll();
+    res.json({ ok: true, indexed: count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Помилка індексації' });
   }
 });
 
