@@ -66,3 +66,5 @@ vitest.config.*.timestamp*
 /generated/prisma
 
 /generated/prisma
+.vscode/settings.json
+ARUSA_VIDEO_SCRIPT.md
